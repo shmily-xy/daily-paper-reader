@@ -3044,7 +3044,8 @@ article.markdown-section {
   min-height: 0;
 }
 
-.dpr-admin-panel-body[hidden] {
+.dpr-admin-panel-body[hidden],
+.dpr-admin-task-panel[hidden] {
   display: none;
 }
 
@@ -3068,20 +3069,6 @@ article.markdown-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-#arxiv-conference-panel-main {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-#arxiv-conference-panel-divider {
-  width: 1px;
-  margin: 0 12px;
-  background: #eceff5;
-  flex-shrink: 0;
 }
 
 #arxiv-conference-control-side {
@@ -3138,12 +3125,6 @@ article.markdown-section {
   }
 
   #arxiv-search-quick-run-divider {
-    width: 100%;
-    height: 1px;
-    margin: 12px 0;
-  }
-
-  #arxiv-conference-panel-divider {
     width: 100%;
     height: 1px;
     margin: 12px 0;
@@ -3217,15 +3198,9 @@ article.markdown-section {
 }
 
 .dpr-conference-pane {
-  min-height: 360px;
-}
-
-.dpr-conference-head {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .dpr-conference-title {
@@ -3235,7 +3210,6 @@ article.markdown-section {
 }
 
 .dpr-conference-subtitle {
-  margin-top: 3px;
   color: #6b7280;
   font-size: 12px;
 }

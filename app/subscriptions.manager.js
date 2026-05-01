@@ -732,7 +732,7 @@ window.SubscriptionsManager = (function () {
                 type="button"
                 role="tab"
                 aria-selected="true"
-                aria-controls="arxiv-search-panel-body"
+                aria-controls="arxiv-search-quick-run-side"
               >
                 日常管理
               </button>
@@ -742,7 +742,7 @@ window.SubscriptionsManager = (function () {
                 type="button"
                 role="tab"
                 aria-selected="false"
-                aria-controls="arxiv-conference-panel-body"
+                aria-controls="arxiv-conference-control-side"
               >
                 会议论文
               </button>
@@ -755,7 +755,7 @@ window.SubscriptionsManager = (function () {
           </div>
         </div>
 
-        <div id="arxiv-search-panel-body" class="dpr-admin-panel-body" role="tabpanel" aria-labelledby="dpr-admin-tab-daily">
+        <div id="arxiv-search-panel-body" class="dpr-admin-panel-body">
           <div id="arxiv-search-panel-main">
             <div id="dpr-smart-query-section" class="arxiv-pane dpr-smart-pane">
               <div class="dpr-display-card">
@@ -774,7 +774,12 @@ window.SubscriptionsManager = (function () {
 
           <div id="arxiv-search-quick-run-divider" aria-hidden="true"></div>
 
-          <div id="arxiv-search-quick-run-side">
+          <div
+            id="arxiv-search-quick-run-side"
+            class="dpr-admin-task-panel"
+            role="tabpanel"
+            aria-labelledby="dpr-admin-tab-daily"
+          >
             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
               <div class="chat-quick-run-title" style="margin:0;">快速抓取</div>
               <button id="arxiv-admin-open-workflow-panel-btn" class="arxiv-tool-btn" type="button" style="padding:2px 8px;">打开工作流面板</button>
@@ -796,17 +801,17 @@ window.SubscriptionsManager = (function () {
             </button>
             <div id="arxiv-admin-reset-content-msg" class="chat-quick-run-msg"></div>
           </div>
-        </div>
 
-        <div id="arxiv-conference-panel-body" class="dpr-admin-panel-body" role="tabpanel" aria-labelledby="dpr-admin-tab-conference" hidden>
-          <div id="arxiv-conference-panel-main">
-            <div class="arxiv-pane dpr-conference-pane">
-              <div class="dpr-conference-head">
-                <div>
-                  <div class="dpr-conference-title">会议论文拉取</div>
-                  <div class="dpr-conference-subtitle">独立维护会议论文数据源，不参与每日论文抓取。</div>
-                </div>
-              </div>
+          <div
+            id="arxiv-conference-control-side"
+            class="dpr-admin-task-panel"
+            role="tabpanel"
+            aria-labelledby="dpr-admin-tab-conference"
+            hidden
+          >
+            <div class="dpr-conference-pane">
+              <div class="dpr-conference-title">会议论文拉取</div>
+              <div class="dpr-conference-subtitle">独立维护会议论文数据源，不参与每日论文抓取。</div>
 
               <div class="dpr-conference-card">
                 <div class="dpr-conference-card-title">
@@ -819,40 +824,32 @@ window.SubscriptionsManager = (function () {
               </div>
 
               <div class="dpr-conference-note">
-                会议论文任务暂未接入前端触发；当前页先作为独立入口和状态区，后续可在这里接入公开状态检查与上传。
+                会议论文任务暂未接入前端触发；后续可在这里接入公开状态检查与上传。
               </div>
-            </div>
-            <div id="dpr-conference-msg" style="font-size:12px; color:#666; margin-top:10px;">
-              提示：保存、密钥配置和关闭仍与日常管理共享。
-            </div>
-          </div>
 
-          <div id="arxiv-conference-panel-divider" aria-hidden="true"></div>
-
-          <div id="arxiv-conference-control-side">
-            <div class="chat-quick-run-title" style="margin:0 0 8px;">会议论文</div>
-            <div class="chat-quick-run-row">
-              <label for="arxiv-admin-quick-run-year-select">年份</label>
-              <select id="arxiv-admin-quick-run-year-select">
-                <option value="">选择年份</option>
-              </select>
-            </div>
-            <div class="chat-quick-run-row">
-              <label for="arxiv-admin-quick-run-conference-select">会议名</label>
-              <select id="arxiv-admin-quick-run-conference-select">
-                <option value="">选择会议名</option>
-              </select>
-            </div>
-            <button
-              id="arxiv-admin-quick-run-conference-run-btn"
-              class="chat-quick-run-run-btn chat-quick-run-item--disabled"
-              type="button"
-              disabled
-            >
-              暂未接入
-            </button>
-            <div id="arxiv-admin-conference-run-msg" class="chat-quick-run-msg">
-              后续这里会接入会议公开状态检查和上传任务。
+              <div class="chat-quick-run-row">
+                <label for="arxiv-admin-quick-run-year-select">年份</label>
+                <select id="arxiv-admin-quick-run-year-select">
+                  <option value="">选择年份</option>
+                </select>
+              </div>
+              <div class="chat-quick-run-row">
+                <label for="arxiv-admin-quick-run-conference-select">会议名</label>
+                <select id="arxiv-admin-quick-run-conference-select">
+                  <option value="">选择会议名</option>
+                </select>
+              </div>
+              <button
+                id="arxiv-admin-quick-run-conference-run-btn"
+                class="chat-quick-run-run-btn chat-quick-run-item--disabled"
+                type="button"
+                disabled
+              >
+                暂未接入
+              </button>
+              <div id="arxiv-admin-conference-run-msg" class="chat-quick-run-msg">
+                后续这里会接入会议公开状态检查和上传任务。
+              </div>
             </div>
           </div>
         </div>
@@ -867,8 +864,8 @@ window.SubscriptionsManager = (function () {
     msgEl = document.getElementById('dpr-smart-msg');
     adminDailyTabBtn = document.getElementById('dpr-admin-tab-daily');
     adminConferenceTabBtn = document.getElementById('dpr-admin-tab-conference');
-    adminDailyPanel = document.getElementById('arxiv-search-panel-body');
-    adminConferencePanel = document.getElementById('arxiv-conference-panel-body');
+    adminDailyPanel = document.getElementById('arxiv-search-quick-run-side');
+    adminConferencePanel = document.getElementById('arxiv-conference-control-side');
 
     const reloadAll = () => {
       renderFromDraft();
