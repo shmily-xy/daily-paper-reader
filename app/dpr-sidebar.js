@@ -663,6 +663,32 @@
     return (paper && paper.id) || paperIdFromHref(paper && paper.href) || '';
   }
 
+  function normalizePaperIdSet(value) {
+    if (value instanceof Set) return value;
+    if (Array.isArray(value)) return new Set(value.filter(Boolean));
+    return null;
+  }
+
+  function collectUnreadPaperIdsForSnapshot(model, readMap) {
+    var ids = new Set();
+    flattenDailyPapers(model).forEach(function (record) {
+      var id = paperIdentity(record.paper);
+      if (id && !paperReadStatus(record.paper, readMap || {})) ids.add(id);
+    });
+    flattenConferencePapers(model).forEach(function (record) {
+      var id = paperIdentity(record.paper);
+      if (id && !paperReadStatus(record.paper, readMap || {})) ids.add(id);
+    });
+    return ids;
+  }
+
+  function ensureUnreadSessionPaperIds(model, readMap) {
+    if (!state.unreadResultPaperIds) {
+      state.unreadResultPaperIds = collectUnreadPaperIdsForSnapshot(model, readMap || {});
+    }
+    return state.unreadResultPaperIds;
+  }
+
   function resolveResultOptions(options) {
     var opts = options || {};
     var currentPaperId = opts.currentPaperId || paperIdFromHref(opts.currentPaperHref || '');
@@ -671,12 +697,15 @@
       readMap: opts.readMap || {},
       unreadOnly: !!opts.unreadOnly,
       currentPaperId: currentPaperId || '',
+      unreadResultPaperIds: normalizePaperIdSet(opts.unreadResultPaperIds),
     };
   }
 
   function paperMatchesResult(paper, options) {
     var opts = resolveResultOptions(options);
+    var id = paperIdentity(paper);
     if (opts.keyword && paperSearchText(paper).indexOf(opts.keyword) === -1) return false;
+    if (opts.unreadOnly && opts.unreadResultPaperIds) return id && opts.unreadResultPaperIds.has(id);
     if (opts.unreadOnly && paperReadStatus(paper, opts.readMap) && paperIdentity(paper) !== opts.currentPaperId) return false;
     return true;
   }
@@ -966,6 +995,7 @@
     unreadCountEl: null,
     filter: 'all', // 'all' | 'unread'
     search: '',
+    unreadResultPaperIds: null,
     pendingPaperHref: '',
     lastFetchAt: 0,
     expandedGroups: { conference: true, daily: true },
@@ -1176,6 +1206,7 @@
       readMap: vs.readMap || {},
       collapsedAxisSections: normalizeSet(vs.collapsedAxisSections),
       currentPaperHref: normalizeRouteHref(vs.currentPaperHref || ''),
+      unreadResultPaperIds: normalizePaperIdSet(vs.unreadResultPaperIds),
     };
   }
 
@@ -1190,6 +1221,7 @@
       readMap: map,
       unreadOnly: vs.filter === 'unread',
       currentPaperId: currentPaperHref ? paperIdFromHref(currentPaperHref) : '',
+      unreadResultPaperIds: vs.unreadResultPaperIds,
     };
     if (group === 'conference') {
       if (resultMode) return buildConferenceResultView(model, resultOptions);
@@ -1215,6 +1247,7 @@
       readMap: vs.readMap,
       unreadOnly: unreadOnly,
       currentPaperId: currentPaperHref ? paperIdFromHref(currentPaperHref) : '',
+      unreadResultPaperIds: vs.unreadResultPaperIds,
     };
     var summary = computeModelReadSummary(model, vs.readMap);
     var renderedGroups = 0;
@@ -1277,6 +1310,7 @@
   }
 
   function renderBody() {
+    var readMap = ReadState.getAll();
     var viewState = {
       expandedGroups: state.expandedGroups,
       dailyViewMode: state.dailyViewMode,
@@ -1287,7 +1321,8 @@
       activeConferenceTag: state.activeConferenceTag,
       search: state.search,
       filter: state.filter,
-      readMap: ReadState.getAll(),
+      readMap: readMap,
+      unreadResultPaperIds: state.filter === 'unread' ? ensureUnreadSessionPaperIds(state.model, readMap) : state.unreadResultPaperIds,
       collapsedAxisSections: state.collapsedAxisSections,
     };
     state.bodyEl.innerHTML = renderBodyHtml(state.model, viewState);
@@ -1974,6 +2009,8 @@
         collectReportHrefsFromModel: collectReportHrefsFromModel,
         findCurrentPaperHrefFromModel: findCurrentPaperHrefFromModel,
         findCurrentReportHrefFromModel: findCurrentReportHrefFromModel,
+        collectUnreadPaperIdsForSnapshot: collectUnreadPaperIdsForSnapshot,
+        ensureUnreadSessionPaperIds: ensureUnreadSessionPaperIds,
         buildDailyDateView: buildDailyDateView,
         buildDailyTagView: buildDailyTagView,
         buildDailyResultView: buildDailyResultView,

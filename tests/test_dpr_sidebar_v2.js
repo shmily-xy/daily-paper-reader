@@ -467,9 +467,11 @@ function testSidebarPaperVisualStateCssContract() {
   assert.ok(/\.dpr-sidebar-paper\[data-read="0"\]::after\s*{[^}]*height:\s*8px/i.test(css));
   assert.ok(/\.dpr-sidebar-paper\[data-read="0"\]::after\s*{[^}]*box-shadow:\s*0 0 0 2px #ffffff,\s*0 0 5px rgba\(239,\s*68,\s*68,\s*\.45\)/i.test(css));
   assert.ok(/\.dpr-sidebar-paper\[data-read="0"\]::after\s*{[^}]*z-index:\s*6/i.test(css));
-  assert.ok(/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-paper\.is-active\[data-read="1"\]\s*{[^}]*display:\s*block/i.test(css));
+  assert.ok(!/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-paper\[data-read="1"\]\s*{[^}]*display:\s*none/i.test(css));
+  assert.ok(!/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-paper\.is-active\[data-read="1"\]/i.test(css));
   assert.ok(!css.includes('.dpr-sidebar-axis-section.is-all-read:has(.dpr-sidebar-paper.is-active)'));
-  assert.ok(/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-axis-section\.is-all-read\.has-active-paper\s*{[^}]*display:\s*block/i.test(css));
+  assert.ok(!/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-axis-section\.is-all-read\s*{[^}]*display:\s*none/i.test(css));
+  assert.ok(!/#dpr-sidebar-v2\.is-filter-unread\s+\.dpr-sidebar-axis-section\.is-all-read\.has-active-paper/i.test(css));
 
   const mainRule = cssRule(css, '.dpr-sidebar-paper-main');
   assert.ok(/display:\s*block/i.test(mainRule));
@@ -803,6 +805,48 @@ function testUnreadResultsKeepCurrentReadPaperVisible() {
   assert.ok(/class="dpr-sidebar-paper dpr-sidebar-paper-deep is-active"/.test(html));
 }
 
+function testUnreadSessionSnapshotKeepsSeenRowsVisibleUntilReload() {
+  const sidebar = loadSidebarForTest('#/202606/24/paper-a');
+  const tools = sidebar.__test;
+  const model = tools.parseSidebar(sampleSidebar);
+  assert.equal(typeof tools.collectUnreadPaperIdsForSnapshot, 'function');
+
+  const snapshot = tools.collectUnreadPaperIdsForSnapshot(model, {
+    '202606/23/paper-d': 'read',
+  });
+  assert.deepEqual(Array.from(snapshot).sort(), [
+    '202606/24/paper-a',
+    '202606/24/paper-b',
+    'conference/iclr-2025/paper-e',
+    'conference/neurips-2024/paper-c',
+  ].sort());
+
+  const html = tools.renderBodyHtml(model, {
+    expandedGroups: { conference: true, daily: true },
+    conferenceViewMode: 'conf',
+    dailyViewMode: 'date',
+    activeConference: 'neurips-2024',
+    activeDailyDate: '20260624',
+    filter: 'unread',
+    unreadResultPaperIds: snapshot,
+    readMap: {
+      '202606/24/paper-a': 'read',
+      '202606/24/paper-b': 'read',
+      '202606/23/paper-d': 'read',
+      'conference/iclr-2025/paper-e': 'read',
+      'conference/neurips-2024/paper-c': 'read',
+    },
+  });
+
+  assert.ok(html.includes('Paper A'));
+  assert.ok(html.includes('Paper B'));
+  assert.ok(html.includes('Paper C'));
+  assert.ok(html.includes('Paper E'));
+  assert.ok(!html.includes('Paper D'));
+  assert.equal((html.match(/data-read="1"/g) || []).length, 4);
+  assert.equal((html.match(/data-read="0"/g) || []).length, 0);
+}
+
 function testUnreadClickPendingHrefKeepsClickedPaperVisibleBeforeHashUpdates() {
   const sidebar = loadSidebarForTest('#/202606/24/paper-a');
   const tools = sidebar.__test;
@@ -885,6 +929,7 @@ testSearchResultsComeFromFullModel();
 testSearchNoResultsShowsEmptyState();
 testUnreadResultsComeFromFullModel();
 testUnreadResultsKeepCurrentReadPaperVisible();
+testUnreadSessionSnapshotKeepsSeenRowsVisibleUntilReload();
 testUnreadClickPendingHrefKeepsClickedPaperVisibleBeforeHashUpdates();
 testPaperLinkClickStoresPendingHrefBeforeRouteChange();
 testStatusClickKeepsPaperRowInPlace();

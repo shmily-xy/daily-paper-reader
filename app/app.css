@@ -7590,20 +7590,6 @@ body.dpr-sidebar-resizing {
   margin-left: 0;
 }
 
-/* 筛选 / 搜索隐藏 */
-#dpr-sidebar-v2.is-filter-unread .dpr-sidebar-paper[data-read="1"] {
-  display: none;
-}
-#dpr-sidebar-v2.is-filter-unread .dpr-sidebar-paper.is-active[data-read="1"] {
-  display: block;
-}
-#dpr-sidebar-v2.is-filter-unread .dpr-sidebar-axis-section.is-all-read {
-  display: none;
-}
-#dpr-sidebar-v2.is-filter-unread .dpr-sidebar-axis-section.is-all-read.has-active-paper {
-  display: block;
-}
-
 /* 暗色模式 */
 body.dpr-dark #dpr-sidebar-v2 {
   --dpr-sidebar-surface: #0f172a;
