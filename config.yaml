@@ -25,3 +25,65 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: equipment
+      description: 帮我查找锂电行业关于匀浆制备正极浆料方面有关实验设备，比如双行星搅拌釜、高速变频分散机，用来小试初筛以及中式放大的设备的一些论文。我要输出设备机理手册，用来帮我快速在工作中上手。
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: lithium-ion battery cathode slurry
+          keyword_cn: 锂离子电池正极浆料
+          query: lithium ion battery cathode slurry preparation equipment
+        - keyword: double planetary mixer
+          keyword_cn: 双行星搅拌釜
+          query: double planetary mixer for cathode slurry
+        - keyword: high-speed frequency dispersion mixer
+          keyword_cn: 高速变频分散机
+          query: high-speed frequency dispersion mixer in battery slurry
+        - keyword: lab scale slurry preparation
+          keyword_cn: 小试浆料制备设备
+          query: lab scale equipment for cathode slurry preparation
+        - keyword: pilot scale slurry equipment
+          keyword_cn: 中试浆料设备
+          query: pilot scale equipment for battery slurry mixing
+        - keyword: slurry mixing mechanism
+          keyword_cn: 浆料混合机理
+          query: mixing mechanism in double planetary and dispersion mixer
+      intent_queries:
+        - query: application of double planetary mixer in cathode slurry preparation
+          query_cn: 双行星搅拌釜在正极浆料制备中的应用
+          enabled: true
+          source: manual
+          note: ''
+        - query: working principle of high speed frequency dispersion mixer for battery slurry
+          query_cn: 高速变频分散机在电池浆料中的工作原理
+          enabled: true
+          source: manual
+          note: ''
+        - query: lab to pilot scale equipment selection for lithium ion cathode slurry
+          query_cn: 锂离子正极浆料从小试到中试的设备选型
+          enabled: true
+          source: manual
+          note: ''
+        - query: mechanism handbook for slurry mixing equipment in lithium battery industry
+          query_cn: 锂电池行业浆料混合设备机理手册
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-07-03T01:40:41.145Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
