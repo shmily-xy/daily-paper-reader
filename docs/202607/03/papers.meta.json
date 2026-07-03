@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-03",
+  "date": "2026-07-03",
+  "generated_at": "2026-07-03T21:46:50",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/03/2606.27524v1-quantitative-interpretation-of-brookfield-dv3tlv-measurements-shear-rate-conversion-correction-factors-and-applicability-limits",
+      "section": "quick",
+      "title_en": "Quantitative interpretation of Brookfield DV3TLV measurements: shear rate conversion, correction factors, and applicability limits",
+      "authors": "A. E. Vasiliev, A. S. Besov, D. O. Andreev",
+      "date": "2026-06-25",
+      "pdf": "https://arxiv.org/pdf/2606.27524v1",
+      "score": "7.0",
+      "evidence": "适用于电池浆料非牛顿流体流变学定量测量",
+      "tldr": "针对旋转粘度计Brookfield DV3TLV的测量解释问题，通过对比高精度MCR 302流变仪，以牛顿流体（水、甘油）和非牛顿流体（瓜尔胶凝胶）为对象，确定了不同测量几何下转速与剪切速率的经验转换系数。在层流条件下，Brookfield数据可合理估计真实粘度，为缺乏高端流变仪的工业场所提供可靠表征方法。",
+      "tags": "query:equipment",
+      "abstract_en": "The flow behavior and hydrodynamic characteristics of fluids in rotational viscometry systems are investigated using the Brookfield DV3TLV viscometer, with emphasis on measurement reliability and applicability limits of different measuring geometries. The results are compared and validated using the high-precision MCR 302 rheometer manufactured by the Austrian company Anton Paar. Both Newtonian (water and glycerol) and non-Newtonian fluids (guar-based gels), exhibiting fundamentally different viscosity-shear rate behavior, were included in the study. Based on the comparison of measurements obtained with the Brookfield DV3TLV viscometer and the MCR 302 rheometer, empirical coefficients were determined that relate the spindle rotational speed to the shear rate, taking into account the geometry of the measuring systems. Analysis of the Reynolds number range showed that laminar flow conditions were maintained for all measurement systems, which justifies the application of quasi-static models that neglect possible flow turbulence within them. Comparison with high-precision measurements performed on the MCR 302 rheometer showed that, with appropriate interpretation, the data obtained using the Brookfield instrument can be used to estimate the real viscosity of process fluids with an accuracy specific to each geometry and its operating conditions. The proposed methodology enables reliable characterization of flow properties in rotational systems and can be applied in engineering practice and laboratory analysis of complex fluids, especially at oil and food production facilities where high-end rheometers are unavailable or impractical to use. The study is formulated within the framework of experimental fluid mechanics and non-Newtonian flow characterization.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

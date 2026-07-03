@@ -6,26 +6,24 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-04 ~ 2026-07-03
-- 运行时间：2026-07-03 09:19:31 UTC
+- 最新运行日期：2026-07-03
+- 运行时间：2026-07-03 21:46:45 UTC
 - 运行状态：成功
 - 本次总论文数：1
 - 精读区：0
 - 速读区：1
 
 ### 今日简报（AI）
-今日速读1篇论文，探索用物理因果AI桥接电极制备与电催化剂性能。  
-核心方向：利用因果模型揭示制备条件对催化性能的直接影响机制。  
-建议：若从事电催化剂制备研究，可借鉴该AI方法优化实验设计。
-- 详情：[/20260604-20260703/README](/20260604-20260703/README)
+今天聚焦一篇流变测量方法论文，解析Brookfield DV3TLV数据修正。该文献提供了剪切速率转换与校正因子的定量方法，是实验分析的实用参考。建议关注粘度测量的适用性限制，以便更准确处理同类数据。
+- 详情：[/202607/03/README](/202607/03/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Bridging electrode preparation and electrocatalyst performance with physics-based causal AI](/20260604-20260703/2606.30898v1-bridging-electrode-preparation-and-electrocatalyst-performance-with-physics-based-causal-ai)  
+1. [Quantitative interpretation of Brookfield DV3TLV measurements: shear rate conversion, correction factors, and applicability limits](/202607/03/2606.27524v1-quantitative-interpretation-of-brookfield-dv3tlv-measurements-shear-rate-conversion-correction-factors-and-applicability-limits)  
    标签：评分：7.0/10、query:equipment
-   evidence：用因果AI桥接电极制备与电催化剂性能
+   evidence：适用于电池浆料非牛顿流体流变学定量测量
 
 
 <div class="dpr-home-promo-card">
