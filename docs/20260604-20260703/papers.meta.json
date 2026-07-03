@@ -1,8 +1,24 @@
 {
   "label": "2026-06-04 ~ 2026-07-03",
   "date": "2026-06-04 ~ 2026-07-03",
-  "generated_at": "2026-07-03T05:15:20",
-  "count": 0,
-  "papers": [],
+  "generated_at": "2026-07-03T09:19:37",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "20260604-20260703/2606.30898v1-bridging-electrode-preparation-and-electrocatalyst-performance-with-physics-based-causal-ai",
+      "section": "quick",
+      "title_en": "Bridging electrode preparation and electrocatalyst performance with physics-based causal AI",
+      "authors": "Evelyna Wang, Linda Hung, Sam Witty, Michaela Burke Stevens, Kevin Tran",
+      "date": "2026-06-29",
+      "pdf": "https://arxiv.org/pdf/2606.30898v1",
+      "score": "7.0",
+      "evidence": "用因果AI桥接电极制备与电催化剂性能",
+      "tldr": "催化剂油墨参数优化缺乏物理数学模型，导致材料研究到器件性能的转化困难。采用基于物理的结构因果模型，从小样本但多模态数据中提取定量因果见解，分离载体-催化剂比例和总负载对催化性能的影响，解析活性位点数量与电极厚度的作用。首次将因果SCM应用于电化学材料，为电极制备-性能桥接提供新范式。",
+      "tags": "query:equipment",
+      "abstract_en": "State-of-the-art artificial intelligence (AI) and Machine-Learning (ML) tools have not yet enabled rapid design of next-generation materials. Detailed physical understanding of how material properties affect device performance is required to advance materials development. For example, optimization of ink parameters for electrocatalysts has no known physical mathematical model and thus insights are difficult to translate from material studies to device studies. Herein, we demonstrate how to use the emerging AI tool, physics-based structural causal models (SCMs), to extract quantitative causative insights from complex heterogeneous electrochemical systems with small (n < 10), but multi-modal datasets (modes > 10). Our SCM quantitatively separates the role that varying the support-to-catalyst ratios and total material loadings plays on catalytic performance. The proof of concept model developed in this work enables root-cause-analysis on the cyclic voltammograms of manganese-antimony oxide oxygen reduction electrocatalysts on Vulcan carbon supports tested in alkaline media using a rotating disc electrode device configuration. Our preliminary causal analyses quantitatively disentangle how the catalyst performance is affected by the number of active sites versus the thickness of the electrode. To the best of our knowledge, this is the first demonstration of physics-based SCMs applied to electrochemical materials and their performance.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
   "errors": []
 }

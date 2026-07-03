@@ -1,16 +1,57 @@
 {
   "mode": "standard",
-  "generated_at": "2026-07-03T05:15:20.216254+00:00",
+  "generated_at": "2026-07-03T09:18:08.476923+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
     "deep_divecandidates": 0,
     "deep_cap": 6,
     "deep_selected": 0,
-    "quick_candidates": 0,
+    "quick_candidates": 1,
     "quick_skim_target": 11,
-    "quick_selected": 0
+    "quick_selected": 1
   },
   "deep_dive": [],
-  "quick_skim": []
+  "quick_skim": [
+    {
+      "id": "2606.30898v1",
+      "source": "arxiv",
+      "title": "Bridging electrode preparation and electrocatalyst performance with physics-based causal AI",
+      "abstract": "State-of-the-art artificial intelligence (AI) and Machine-Learning (ML) tools have not yet enabled rapid design of next-generation materials. Detailed physical understanding of how material properties affect device performance is required to advance materials development. For example, optimization of ink parameters for electrocatalysts has no known physical mathematical model and thus insights are difficult to translate from material studies to device studies. Herein, we demonstrate how to use the emerging AI tool, physics-based structural causal models (SCMs), to extract quantitative causative insights from complex heterogeneous electrochemical systems with small (n < 10), but multi-modal datasets (modes > 10). Our SCM quantitatively separates the role that varying the support-to-catalyst ratios and total material loadings plays on catalytic performance. The proof of concept model developed in this work enables root-cause-analysis on the cyclic voltammograms of manganese-antimony oxide oxygen reduction electrocatalysts on Vulcan carbon supports tested in alkaline media using a rotating disc electrode device configuration. Our preliminary causal analyses quantitatively disentangle how the catalyst performance is affected by the number of active sites versus the thickness of the electrode. To the best of our knowledge, this is the first demonstration of physics-based SCMs applied to electrochemical materials and their performance.",
+      "authors": [
+        "Evelyna Wang",
+        "Linda Hung",
+        "Sam Witty",
+        "Michaela Burke Stevens",
+        "Kevin Tran"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci",
+        "physics.chem-ph"
+      ],
+      "published": "2026-06-29T20:39:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.30898v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "bridges electrode preparation and electrocatalyst performance using causal AI",
+      "llm_evidence_cn": "用因果AI桥接电极制备与电催化剂性能",
+      "llm_evidence": "用因果AI桥接电极制备与电催化剂性能",
+      "canonical_evidence": "用因果AI桥接电极制备与电催化剂性能",
+      "llm_tldr_en": "Physics-based structural causal models extract quantitative causative insights from small multi-modal datasets, linking electrode preparation parameters to performance for electrocatalysts.",
+      "llm_tldr_cn": "该论文提出基于物理的结构因果模型（SCM），从少量多模态数据中量化提取电极制备参数与电催化剂性能之间的因果关联。通过因果推断方法，无需大量实验即可指导电极制备优化，为电池电极浆料制备工艺的理性设计提供了可借鉴的方法论。",
+      "llm_tldr": "该论文提出基于物理的结构因果模型（SCM），从少量多模态数据中量化提取电极制备参数与电催化剂性能之间的因果关联。通过因果推断方法，无需大量实验即可指导电极制备优化，为电池电极浆料制备工艺的理性设计提供了可借鉴的方法论。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "processing of battery materials for electrodes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
 }
