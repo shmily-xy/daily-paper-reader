@@ -6,24 +6,22 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-03
-- 运行时间：2026-07-03 21:46:45 UTC
+- 最新运行日期：2026-07-04
+- 运行时间：2026-07-04 21:23:22 UTC
 - 运行状态：成功
-- 本次总论文数：1
+- 本次总论文数：0
 - 精读区：0
-- 速读区：1
+- 速读区：0
 
 ### 今日简报（AI）
-今天聚焦一篇流变测量方法论文，解析Brookfield DV3TLV数据修正。该文献提供了剪切速率转换与校正因子的定量方法，是实验分析的实用参考。建议关注粘度测量的适用性限制，以便更准确处理同类数据。
-- 详情：[/202607/03/README](/202607/03/README)
+> 今日无新推荐，系统未产出可展示论文。
+- 详情：[/202607/04/README](/202607/04/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Quantitative interpretation of Brookfield DV3TLV measurements: shear rate conversion, correction factors, and applicability limits](/202607/03/2606.27524v1-quantitative-interpretation-of-brookfield-dv3tlv-measurements-shear-rate-conversion-correction-factors-and-applicability-limits)  
-   标签：评分：7.0/10、query:equipment
-   evidence：适用于电池浆料非牛顿流体流变学定量测量
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">
