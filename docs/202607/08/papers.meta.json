@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-08",
+  "date": "2026-07-08",
+  "generated_at": "2026-07-08T20:12:39",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/08/biorxiv-10-64898-2026-07-06-735037-v1-cfd-based-bayesian-optimization-of-stirring-strategies-in-stirred-tank-cultures-of-pluripotent-stem-cell-spheroids",
+      "section": "quick",
+      "title_en": "CFD-based Bayesian Optimization of Stirring Strategies in Stirred Tank Cultures of Pluripotent Stem Cell Spheroids",
+      "authors": "Horiguchi, I., Okada, K., Okano, Y.",
+      "date": "2026-07-07",
+      "pdf": "https://www.biorxiv.org/content/10.64898/2026.07.06.735037v1.full.pdf",
+      "score": "7.0",
+      "evidence": "CFD与贝叶斯优化搅拌策略可迁移至电池浆料混合设备",
+      "tldr": "干细胞悬浮培养需平衡分散与剪切应力。本研究用CFD-DPM模拟iPS细胞在搅拌罐中的行为，发现底部上升流和顶部下降流对稳定悬浮至关重要。使用贝叶斯优化设计了先高速后低速的搅拌协议，提升了悬浮率并降低了滑移速度，为大规模干细胞培养提供了工程优化方法。",
+      "tags": "query:equipment",
+      "abstract_en": "The suspension culture of pluripotent stem (PS) cells in stirred bioreactors poses a delicate balance between maintaining homogeneous cell dispersion and avoiding excessive shear stress that can compromise cell viability and pluripotency. In this study, we used computational fluid dynamics (CFD) coupled with a discrete particle method (DPM) to simulate iPS cell behavior in a 5 mL delta-impeller stirred tank. Our analysis revealed that upward flow at the tank bottom and downward flow at the top are critical for maintaining a stable suspension. To optimize the stirring protocol, we applied Bayesian optimization to identify a time-dependent stirring schedule that begins with a high-speed phase for resuspension, followed by a low-speed phase for sustained suspension with minimal hydrodynamic stress. The optimized schedule demonstrated improved suspension ratio and reduced slip velocity, indicating lower mechanical stress on cells. These findings provide engineering insights into scalable bioreactor operation, contributing to the design of robust iPS cell manufacturing systems.",
+      "source": "biorxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

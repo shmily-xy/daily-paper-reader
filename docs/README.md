@@ -6,22 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-07
-- 运行时间：2026-07-07 21:43:31 UTC
+- 最新运行日期：2026-07-08
+- 运行时间：2026-07-08 20:12:33 UTC
 - 运行状态：成功
-- 本次总论文数：0
+- 本次总论文数：1
 - 精读区：0
-- 速读区：0
+- 速读区：1
 
 ### 今日简报（AI）
-> 今日无新推荐，系统未产出可展示论文。
-- 详情：[/202607/07/README](/202607/07/README)
+今天速读了一篇关于干细胞球体培养搅拌策略的CFD贝叶斯优化研究。
+值得关注的方向是将计算流体力学与贝叶斯优化结合，高效筛选搅拌参数以提升培养效果。
+建议读者后续关注该方法的实验验证及在其它悬浮培养体系中的推广。
+- 详情：[/202607/08/README](/202607/08/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-- 本次无速读推荐。
+1. [CFD-based Bayesian Optimization of Stirring Strategies in Stirred Tank Cultures of Pluripotent Stem Cell Spheroids](/202607/08/biorxiv-10-64898-2026-07-06-735037-v1-cfd-based-bayesian-optimization-of-stirring-strategies-in-stirred-tank-cultures-of-pluripotent-stem-cell-spheroids)  
+   标签：评分：7.0/10、query:equipment
+   evidence：CFD与贝叶斯优化搅拌策略可迁移至电池浆料混合设备
 
 
 <div class="dpr-home-promo-card">
