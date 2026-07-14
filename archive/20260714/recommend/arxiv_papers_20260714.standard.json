@@ -1,0 +1,54 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-14T21:19:57.387619+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "biorxiv-10-64898-2026-07-06-735037-v1",
+      "source": "biorxiv",
+      "title": "CFD-based Bayesian Optimization of Stirring Strategies in Stirred Tank Cultures of Pluripotent Stem Cell Spheroids",
+      "abstract": "The suspension culture of pluripotent stem (PS) cells in stirred bioreactors poses a delicate balance between maintaining homogeneous cell dispersion and avoiding excessive shear stress that can compromise cell viability and pluripotency. In this study, we used computational fluid dynamics (CFD) coupled with a discrete particle method (DPM) to simulate iPS cell behavior in a 5 mL delta-impeller stirred tank. Our analysis revealed that upward flow at the tank bottom and downward flow at the top are critical for maintaining a stable suspension. To optimize the stirring protocol, we applied Bayesian optimization to identify a time-dependent stirring schedule that begins with a high-speed phase for resuspension, followed by a low-speed phase for sustained suspension with minimal hydrodynamic stress. The optimized schedule demonstrated improved floating rate and reduced slip velocity, indicating lower mechanical stress on cells. These findings provide engineering insights into scalable bioreactor operation, contributing to the design of robust iPS cell manufacturing systems.\n\nHighlightsO_LICFD-DPM simulations predicted iPS spheroid motion in a stirred tank.\nC_LIO_LIBayesian optimization identified a two-step agitation strategy.\nC_LIO_LIHigh initial agitation promoted rapid particle resuspension.\nC_LIO_LILow subsequent agitation maintained suspension with lower downflow.\nC_LIO_LIParticle Reynolds number correlated with the floating rate.\nC_LI",
+      "authors": [
+        "Horiguchi, I.",
+        "Okada, K.",
+        "Okano, Y."
+      ],
+      "primary_category": "bioengineering",
+      "categories": [
+        "bioengineering"
+      ],
+      "published": "2026-07-07T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.07.06.735037v1.full.pdf",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "CFD optimization of stirring strategies, transferable to mixing mechanism in planetary mixers",
+      "llm_evidence_cn": "CFD优化搅拌策略方法可迁移至双行星搅拌器混合机理分析",
+      "llm_evidence": "CFD优化搅拌策略方法可迁移至双行星搅拌器混合机理分析",
+      "canonical_evidence": "CFD优化搅拌策略方法可迁移至双行星搅拌器混合机理分析",
+      "llm_tldr_en": "Uses CFD coupled with discrete particle method to simulate cell behavior in stirred tank, applies Bayesian optimization for time-dependent stirring schedule, provides transferable methodology for mixing mechanism analysis relevant to battery slurry equipment.",
+      "llm_tldr_cn": "该研究针对干细胞悬浮培养中的搅拌难题，采用计算流体动力学（CFD）结合离散粒子法模拟搅拌槽内细胞行为，并通过贝叶斯优化确定高-低速交替的搅拌策略。虽然应用对象为生物培养，但其优化混合均匀性和剪切应力的方法可迁移至锂电正极浆料制备中的双行星搅拌器和分散机，为理解混合机理提供CFD分析框架。研究证明了CFD在优化搅拌参数上的有效性，对电池浆料设备机理手册编制具有方法学参考价值。",
+      "llm_tldr": "该研究针对干细胞悬浮培养中的搅拌难题，采用计算流体动力学（CFD）结合离散粒子法模拟搅拌槽内细胞行为，并通过贝叶斯优化确定高-低速交替的搅拌策略。虽然应用对象为生物培养，但其优化混合均匀性和剪切应力的方法可迁移至锂电正极浆料制备中的双行星搅拌器和分散机，为理解混合机理提供CFD分析框架。研究证明了CFD在优化搅拌参数上的有效性，对电池浆料设备机理手册编制具有方法学参考价值。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "mixing mechanism in double planetary and dispersion mixer",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

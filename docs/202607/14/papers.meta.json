@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-14",
+  "date": "2026-07-14",
+  "generated_at": "2026-07-14T21:20:50",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/14/biorxiv-10-64898-2026-07-06-735037-v1-cfd-based-bayesian-optimization-of-stirring-strategies-in-stirred-tank-cultures-of-pluripotent-stem-cell-spheroids",
+      "section": "quick",
+      "title_en": "CFD-based Bayesian Optimization of Stirring Strategies in Stirred Tank Cultures of Pluripotent Stem Cell Spheroids",
+      "authors": "Horiguchi, I., Okada, K., Okano, Y.",
+      "date": "2026-07-07",
+      "pdf": "https://www.biorxiv.org/content/10.64898/2026.07.06.735037v1.full.pdf",
+      "score": "6.0",
+      "evidence": "CFD优化搅拌策略方法可迁移至双行星搅拌器混合机理分析",
+      "tldr": "多能干细胞球在搅拌罐中悬浮培养需平衡分散性与低剪切应力。本研究采用CFD-DPM模拟iPS细胞球运动，并通过贝叶斯优化设计两阶段搅拌策略：先高速重悬，后低速维持悬浮。优化策略提高了浮动率并降低了滑移速度，减少机械应力。为可放大的iPS细胞制造提供了工程见解。",
+      "tags": "query:equipment",
+      "abstract_en": "The suspension culture of pluripotent stem (PS) cells in stirred bioreactors poses a delicate balance between maintaining homogeneous cell dispersion and avoiding excessive shear stress that can compromise cell viability and pluripotency. In this study, we used computational fluid dynamics (CFD) coupled with a discrete particle method (DPM) to simulate iPS cell behavior in a 5 mL delta-impeller stirred tank. Our analysis revealed that upward flow at the tank bottom and downward flow at the top are critical for maintaining a stable suspension. To optimize the stirring protocol, we applied Bayesian optimization to identify a time-dependent stirring schedule that begins with a high-speed phase for resuspension, followed by a low-speed phase for sustained suspension with minimal hydrodynamic stress. The optimized schedule demonstrated improved floating rate and reduced slip velocity, indicating lower mechanical stress on cells. These findings provide engineering insights into scalable bioreactor operation, contributing to the design of robust iPS cell manufacturing systems.\n\nHighlightsO_LICFD-DPM simulations predicted iPS spheroid motion in a stirred tank.\nC_LIO_LIBayesian optimization identified a two-step agitation strategy.\nC_LIO_LIHigh initial agitation promoted rapid particle resuspension.\nC_LIO_LILow subsequent agitation maintained suspension with lower downflow.\nC_LIO_LIParticle Reynolds number correlated with the floating rate.\nC_LI",
+      "source": "biorxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
