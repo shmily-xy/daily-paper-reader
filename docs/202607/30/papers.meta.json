@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-30",
+  "date": "2026-07-30",
+  "generated_at": "2026-07-30T21:23:28",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/30/2607.26813v1-can-we-live-danckwerts-dream-mixing-analysis-in-a-baffled-stirred-tank-reactor-based-on-4d-particle-tracking-experiments",
+      "section": "quick",
+      "title_en": "Can we live Danckwerts' dream? Mixing Analysis in a Baffled Stirred Tank Reactor Based on 4D-Particle Tracking Experiments",
+      "authors": "Eike Steuwe, Thanh Tung Thai, Christian Weiland, Anna Klünker, Jan Hendrick Nissen, Michael Schlüter, Kathrin Padberg-Gehle, Alexandra von Kameke",
+      "date": "2026-07-29",
+      "pdf": "https://arxiv.org/pdf/2607.26813v1",
+      "score": "6.0",
+      "evidence": "搅拌槽反应器混合分析，使用4D粒子追踪",
+      "tldr": "搅拌槽反应器中混合动力学分析通常受限于观测手段。本研究采用四维粒子追踪技术，在3升反应器中追踪4万个示踪粒子的完整轨迹，克服了搅拌器和挡板的遮挡。通过拉格朗日数据分析速度和空间扩散，发现各向异性混合。利用网络分析识别出五个强内部混合但弱交换的流体隔室，它们作为传输屏障影响底物分布。该方法实现了Danckwerts和Levenspiel的思想实验，为评估和优化化工及生物过程提供了新途径。",
+      "tags": "query:equipment",
+      "abstract_en": "We present an experimental investigation of mixing dynamics within a laboratory-scale 3-liter stirred tank reactor (STR) equipped with two Rushton turbines and three baffles. Using time-resolved, four-dimensional particle tracking velocimetry, we successfully capture trajectories of up to 40,000 tracer particles in the full reactor volume despite obstructions by stirrer and baffles, providing unprecedented time-resolved flow and mixing information. From these Lagrangian data, we analyze velocities, accelerations, and spatial dispersion, revealing anisotropic mixing. By utilizing novel network-based analysis methods on the experimental particle trajectories, we identify coherent fluid compartments that exhibit strong internal mixing but weak exchange with neighboring compartments. We uncover five distinct compartments acting as transport barriers, which have a high impact on substrate distribution in chemical and biochemical processes. Our approach thus realizes and extends early thought experiments from Danckwerts and Levenspiel by providing detailed insight into the behavior of single fluid parcels and Lagrangian mixing withing chemical and biochemical reactors, offering a valuable approach for evaluation and optimization of chemical and biochemical processes. The trajectory data are made freely available to serve as an experimental reference for further research.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,59 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-07-30T21:22:13.715695+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2607.26813v1",
+      "source": "arxiv",
+      "title": "Can we live Danckwerts' dream? Mixing Analysis in a Baffled Stirred Tank Reactor Based on 4D-Particle Tracking Experiments",
+      "abstract": "We present an experimental investigation of mixing dynamics within a laboratory-scale 3-liter stirred tank reactor (STR) equipped with two Rushton turbines and three baffles. Using time-resolved, four-dimensional particle tracking velocimetry, we successfully capture trajectories of up to 40,000 tracer particles in the full reactor volume despite obstructions by stirrer and baffles, providing unprecedented time-resolved flow and mixing information. From these Lagrangian data, we analyze velocities, accelerations, and spatial dispersion, revealing anisotropic mixing. By utilizing novel network-based analysis methods on the experimental particle trajectories, we identify coherent fluid compartments that exhibit strong internal mixing but weak exchange with neighboring compartments. We uncover five distinct compartments acting as transport barriers, which have a high impact on substrate distribution in chemical and biochemical processes. Our approach thus realizes and extends early thought experiments from Danckwerts and Levenspiel by providing detailed insight into the behavior of single fluid parcels and Lagrangian mixing withing chemical and biochemical reactors, offering a valuable approach for evaluation and optimization of chemical and biochemical processes. The trajectory data are made freely available to serve as an experimental reference for further research.",
+      "authors": [
+        "Eike Steuwe",
+        "Thanh Tung Thai",
+        "Christian Weiland",
+        "Anna Klünker",
+        "Jan Hendrick Nissen",
+        "Michael Schlüter",
+        "Kathrin Padberg-Gehle",
+        "Alexandra von Kameke"
+      ],
+      "primary_category": "physics.flu-dyn",
+      "categories": [
+        "physics.flu-dyn"
+      ],
+      "published": "2026-07-29T12:02:29+00:00",
+      "link": "https://arxiv.org/pdf/2607.26813v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "mixing analysis in stirred tank reactor with 4D particle tracking",
+      "llm_evidence_cn": "搅拌槽反应器混合分析，使用4D粒子追踪",
+      "llm_evidence": "搅拌槽反应器混合分析，使用4D粒子追踪",
+      "canonical_evidence": "搅拌槽反应器混合分析，使用4D粒子追踪",
+      "llm_tldr_en": "This paper experimentally investigates mixing dynamics in a baffled stirred tank reactor using 4D particle tracking velocimetry, revealing anisotropic mixing and coherent fluid compartments through network analysis.",
+      "llm_tldr_cn": "本文通过四维粒子追踪测速技术，实验研究了带挡板搅拌槽反应器内的混合动力学。实验捕获了多达40000个示踪粒子的轨迹，分析了速度、加速度和空间弥散，揭示了各向异性混合。进一步利用基于网络的创新分析方法识别出相干流体区域，为搅拌混合机理提供了深入见解。该研究虽不直接涉及电池浆料，但其混合分析方法和实验手段对理解双行星和分散混合器中的混合机理具有方法论上的借鉴意义。",
+      "llm_tldr": "本文通过四维粒子追踪测速技术，实验研究了带挡板搅拌槽反应器内的混合动力学。实验捕获了多达40000个示踪粒子的轨迹，分析了速度、加速度和空间弥散，揭示了各向异性混合。进一步利用基于网络的创新分析方法识别出相干流体区域，为搅拌混合机理提供了深入见解。该研究虽不直接涉及电池浆料，但其混合分析方法和实验手段对理解双行星和分散混合器中的混合机理具有方法论上的借鉴意义。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "mixing mechanism in double planetary and dispersion mixer",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -6,22 +6,24 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-07-29
-- 运行时间：2026-07-29 21:42:44 UTC
+- 最新运行日期：2026-07-30
+- 运行时间：2026-07-30 21:23:20 UTC
 - 运行状态：成功
-- 本次总论文数：0
+- 本次总论文数：1
 - 精读区：0
-- 速读区：0
+- 速读区：1
 
 ### 今日简报（AI）
-> 今日无新推荐，系统未产出可展示论文。
-- 详情：[/202607/29/README](/202607/29/README)
+今日速读一篇基于4D粒子追踪的挡板搅拌槽混合分析论文。最值得关注的是该实验验证了实际混合与Danckwerts理想模型的偏差，揭示了湍流混合的复杂动态。建议后续关注4D追踪技术在反应器放大与设计优化中的应用潜力。
+- 详情：[/202607/30/README](/202607/30/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-- 本次无速读推荐。
+1. [Can we live Danckwerts' dream? Mixing Analysis in a Baffled Stirred Tank Reactor Based on 4D-Particle Tracking Experiments](/202607/30/2607.26813v1-can-we-live-danckwerts-dream-mixing-analysis-in-a-baffled-stirred-tank-reactor-based-on-4d-particle-tracking-experiments)  
+   标签：评分：6.0/10、query:equipment
+   evidence：搅拌槽反应器混合分析，使用4D粒子追踪
 
 
 <div class="dpr-home-promo-card">
