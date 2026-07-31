@@ -1,0 +1,24 @@
+{
+  "label": "2026-07-31",
+  "date": "2026-07-31",
+  "generated_at": "2026-07-31T21:53:03",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202607/31/2607.28206v1-rheology-of-dense-suspensions-of-granular-spherocylinders-by-particle-based-simulation",
+      "section": "quick",
+      "title_en": "Rheology of dense suspensions of granular spherocylinders by particle-based simulation",
+      "authors": "Alex Dixon, John Hone, Gavin Melaugh, Christopher Ness",
+      "date": "2026-07-30",
+      "pdf": "https://arxiv.org/pdf/2607.28206v1",
+      "score": "7.0",
+      "evidence": "稠密悬浮液流变模拟方法，可迁移至电池浆料流变学研究",
+      "tldr": "致密棒状颗粒悬浮液在自然界和工业中广泛存在，其流变特性至关重要。现有实验数据有限，缺乏系统预测工具。本文提出一种基于粒子的模拟方法，模拟简单剪切流下的球柱体悬浮液，考虑短程摩擦接触和润滑力，并动态确定时间步。预测粘度随体积分数和长径比增大而上升，启动时出现粘度尖峰，颗粒排列程度增加。模型与现有实验相符，为探索此类材料流变学提供基础工具。",
+      "tags": "query:equipment",
+      "abstract_en": "Dense suspensions of rod-shaped granular particles are widespread in nature and manufacturing, where their fluid mechanical properties are often paramount. We have developed a particle-based simulation that models such suspensions under simple shear flow, providing predictions of the viscosity and microstructure for a given solids volume fraction and particle aspect ratio. The model tracks the trajectories of spherocylindrical rods under the action of short-range frictional contact and hydrodynamic forces, inspired by similar tools that have generated new insight into suspensions of granular spheres. It incorporates new schemes for the computation of lubrication forces between spherocylinders and the dynamic determination of the timestep. For aspect ratios up to 20, the model predicts a viscosity spike at shear start-up, giving way to steady state viscosities that increase systematically with volume fraction and aspect ratio. Likewise, particle alignment increases with volume fraction up to an aspect-ratio-dependent critical point. Our model corroborates the limited experimental rheology data available for suspensions of granular rods, and offers a tool for fundamental exploration of the fluid mechanics, microstructure and rheology of this widespread material.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

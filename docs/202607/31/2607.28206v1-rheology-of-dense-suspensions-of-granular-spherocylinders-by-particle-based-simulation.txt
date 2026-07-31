@@ -1,0 +1,613 @@
+Title: Rheology of dense suspensions of granular spherocylinders by particle-based simulation
+
+URL Source: https://arxiv.org/pdf/2607.28206v1
+
+Published Time: Fri, 31 Jul 2026 01:04:59 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+# Rheology of dense suspensions of granular spherocylinders by particle-based simulation 
+
+Alex Dixon, 1 John Hone, 2 Gavin Melaugh, 1, 3 and Christopher Ness 1
+
+> 1
+
+School of Engineering, University of Edinburgh, Edinburgh EH9 3JL, United Kingdom 
+
+> 2
+
+Syngenta Jealott’s Hill International Research Centre, Bracknell RG42 6EY, United Kingdom 
+
+> 3
+
+School of Physics and Astronomy, The University of Edinburgh, Edinburgh EH9 3FD, United Kingdom 
+
+(Dated: July 31, 2026) Dense suspensions of rod-shaped granular particles are widespread in nature and manufacturing, where their fluid mechanical properties are often paramount. We have developed a particle-based simulation that models such suspensions under simple shear flow, providing predictions of the vis-cosity and microstructure for a given solids volume fraction and particle aspect ratio. The model tracks the trajectories of spherocylindrical rods under the action of short-range frictional contact and hydrodynamic forces, inspired by similar tools that have generated new insight into suspensions of granular spheres. It incorporates new schemes for the computation of lubrication forces between spherocylinders and the dynamic determination of the timestep. For aspect ratios up to 20, the model predicts a viscosity spike at shear start-up, giving way to steady state viscosities that in-crease systematically with volume fraction and aspect ratio. Likewise, particle alignment increases with volume fraction up to an aspect-ratio-dependent critical point. Our model corroborates the limited experimental rheology data available for suspensions of granular rods, and offers a tool for fundamental exploration of the fluid mechanics, microstructure and rheology of this widespread material. 
+
+I. INTRODUCTION 
+
+Suspensions of elongated, rod-shaped particles at high solid volume fraction appear in many natural and industrial settings, where it is critical that their rheology and, ultimately, their fluid mechanical behaviour, is well charac-terised [1]. In forested areas, for instance, fallen trees and branches can accumulate on bodies of water with their structure evolving slowly and eventually forming sprawling interlocked ‘log-jam’ structures at river narrowings, neg-atively impacting animal habitats [2]. Elsewhere, magma flows often comprise crystalline needle-like rods of much smaller size but similar aspect ratio A that generate complex flow phenomenology and lead to rapid arrest as the material cools [3, 4]. In industry, widely employed reactive crystallisation processes critical to the manufacture of spe-ciality chemicals generate concentrated suspensions of micron-sized shards or whiskers that can be well-approximated as rods [5–7]. Likewise, in paper making viscous slurries of fibres form entangled networks that give rise to non-Newtonian rheology [8, 9]. In all of these cases, the system eventually reaches sufficiently high solid volume fraction that rod-rod interactions dominate the overall stress response – that is, they are dense – and the constituent particles are large enough that diffusive motion originating from Brownian forces is significantly slower than the convective motion introduced by shearing. Additionally, the particles typically remain suspended at long times, either by neutral buoyancy with the fluid, by viscous resuspension, or by support through networks of contact forces. The basic understanding of suspension rheology has its origins in the work of Stokes [10], Einstein [11] and Batch-arXiv:2607.28206v1 [cond-mat.soft] 30 Jul 2026 2elor [12], who described how the presence of spheres enhances the viscosity under dilute and semi-dilute conditions. The extension to dense conditions is usually empirical, with the most common expression relating the suspension viscosity ηs to the volume fraction ϕ being the power law ηs ∼ (1 − ϕ/ϕ m)−ς associated with Krieger and Dougherty [13]. Here ϕm is the volume fraction at which the viscosity diverges, which is highly sensitive to microscopic details. More recently, Boyer et al. [14] expanded upon this by introducing a model that unifies suspensions of non-Brownian, non-attractive particles with dry granular flows. They demonstrated that, in simple shear with rate ˙ γ and imposed particle pressure P , the macroscopic friction coefficient and the volume fraction depend only on the viscous number 
+
+J = η ˙γ/P , where η is the liquid phase viscosity. It follows that ηs depends only on ϕ and ϕm, and is independent of ˙γ. In principle this argument holds irrespective of particle shape. For non-spherical particles, the additional degree of freedom associated with their orientation introduces complexity. In shear flows, an isolated slender rod will undergo Jeffery orbits [15], with period set by the shear rate, the particle aspect ratio A, and the inclination out of the flow-gradient plane. In sheared packings of dry rods, meanwhile, the time- and rod-averaged alignment is along the flow direction and makes a small angle with the streamlines [16]. This angle decreases with increasing A, meaning particles spend more time oriented along the flow direction. Crucially, this alignment lowers the effective instantaneous viscosity when compared to a randomly oriented assembly of the same rods at the same solids fraction [17]. The alignment of suspended particles can be markedly different, in some cases showing orientation along the vorticity direction during large amplitude oscillatory shear. This is thought to originate in a mechanism of collision minimisation, facilitated by confinement introduced at the walls [18–20]. Thus, particle shape leads to interesting microstructural phenomenology with the result that, unlike for the idealised case of non-Brownian spheres, knowledge of ϕ alone is insufficient for rheological prediction. In general, though, suspensions of rods exhibit a steady increase in ηs with ϕ, as with spheres, and this effect is enhanced as A grows [21–26]. Most experiments have focused on the dilute or semi-dilute regimes, up to around 
+
+ϕ = 0 .2, especially for large-A rods, with only limited experimental results beyond this point due to the difficulty of preparing samples and measuring the rheology in such systems (but see e.g. [25]). As a result, the rheological properties of the dense regime, where contacts and near-contact hydrodynamics dominate, remains incompletely characterised despite its importance to the application areas mentioned above. Simulations offer a complementary approach that permits controlled exploration of ϕ, A, orientational order and other microscopic details (for instance friction or adhesion) that are difficult to access experimentally. There have been many attempts to simulate suspensions of rods, spanning continuum [27, 28], particle-based [23, 29] and coupled particle-fluid [30] approaches. Stokesian dynamics (SD) [31] is a particle-based model that includes long-range many-body hydrodynamics and short-range lubrication and has successfully been used to model dilute-to-semi dilute suspensions in the limit of zero inertia [32–35]. Using a simplified SD approach, Mari [36] simulated suspensions of short rods, treating them as dimers formed from two overlapping spheres. Near jamming, frictionless rods align along the vorticity (rather than the flow) direction. Going beyond the overlapping spheres approach, Yamane et al. [29] first derived a model for the lubrication forces between rod-shaped particles, limited to normal interactions between non-parallel rod shafts (omitting parallel shafts as well as shaft-end and end-end pairs). This was later expanded by Butler and Shaqfeh [37] for spherocylinders, to include interactions with the hemispherical ends of the rods. Fan et al. [38] included the non-parallel shaft-shaft term [29] when simulating the motion of rigid, non-Brownian particles modelled as cylinders in a sheared suspension, including both short and long-range interactions. Doing so they reproduced the 3dependence of ηs on ϕ and A within the dilute to semi-dilute regime, in agreement with experimental data (although at a high computational cost). More broadly, for large ϕ where interparticle interactions dominate, fully resolving the many contacts and lubrication interactions between rods with SD can become prohibitively expensive [39] due to computationally expensive matrix inversions required to obtain particle velocities. An alternative particle-based technique to study the dense regime is the discrete element method (DEM), origi-nally developed for dry granular materials [40]. Here the zero inertia constraint is relaxed, and particle trajectories are updated directly following Newton’s second law, allowing the use of much cheaper velocity-Verlet timestepping algorithms. This approach has been used widely for modelling both spherical and non-spherical particles [41–45], and its variants are becoming a mainstay of granular suspension modelling [46–50]. There is an extensive literature on such models applied to dry granular rods, which are most commonly described as chains of spheres [51–53]. Fol-lowing this approach, rods are predicted to align with their principal axes at a small angle to the flow direction, leading to shear-induced nematic order consistent with experimental observation [16, 17, 54]. Similar models have also reproduced frictional fibres jamming at high volume fraction, forming a dense contact network [54]. Other DEM studies have modelled rods directly as ellipsoids [42, 45], cylinders [45, 55] or spherocylinders [56] and together be-gin to reveal how particle shape and friction affect the alignment of particles and bulk rheology. Collectively, these works show that velocity fluctuations follow the kinetic theory prediction up to a critical packing, demonstrating that granular gas models can be applicable beyond spheres [57]. They further show that frictional rods shear thicken at 
+
+ϕ = 0 .54 − 0.59, just below the jamming point at ϕm, with larger A associated with a stronger viscosity increase, and frictionless systems showing only shear thinning [56]. Long ( A = 4) and flat ( A = 0 .25) cylinders were found to align with the shear direction (with frictional systems having weaker induced order due to frictional torques generating relative rotations between particles), whereas the directors of the near-spherical cylinders ( A = 0 .8 − 1.0) remained disordered [55–57]. More recently, these models have been applied to suspensions, with Anzivino et al. [58] simulating systems of frictionless rod-sphere mixtures in suspension, finding that adding short rods reduces the mixture viscosity, whereas adding long rods increases it. These and other particle-based simulation studies highlight that anisotropic particles can greatly modify the rheology compared to spheres, but they also reveal limitations. Most models for elongated particles in the literature either treat rods as chains of spheres or idealise their interactions, often without the necessary hydrodynamic forces needed to simulate suspensions. In this paper we present a particle-based simulation for dense suspensions of non-bendy, non-Brownian sphero-cylinders that borrows elements from the above works to produce a model that balances a faithful rendering of the dominant microscopic physics with computational tractability. Alongside frictional particle contact forces, fluid drag and shear-induced lift, we adapt the lubrication forces of Yamane et al. [29] and Butler and Shaqfeh [37] by developing a scheme that avoids discontinuities when traversing particle-pair configurations. We track the rod trajectories using a conventional DEM algorithm complemented by a novel dynamic timestep calculation, operating in a regime where particle inertia is present but negligible. For suspensions of spheres, models containing these microscopic physics [59– 61] have proven instrumental in corroborating and extending the rheological model proposed by Boyer et al. [14]. Our model described in the following seeks to significantly extend this understanding to the broad class of suspensions of rod-shaped particles. Using the model, we advance the fundamental understanding of the rheology of suspensions of granular rods by demonstrating (i) the dependence of the viscosity ηs on the volume fraction ϕ (spanning ϕ ≈ 0 to 
+
+ϕm) and particle aspect ratio (spanning A = 1 to 20), and (ii) the complex relation between ϕ, A, and the particle 4alignment, measured using the orientational order parameter. This sets the scene for future studies that map, for instance, the full dependence of ϕm on the microstructural details, the relation between ϕ, A and the normal stresses, and the behaviour under inhomogeneous conditions, all of which are crucial for a full fluid mechanical description of dense granular rod suspensions.   
+
+> II. SIMULATION METHOD A. Equations of Motion of Suspended Granular Rods
+
+We model particles as cylinders with hemispherical caps, Figure 1, hereafter referred to as spherocylinders. This geometry resembles rod-shaped particles but simplifies interaction detection compared to alternatives such as cylin-ders [62] or spheroids [63], although it is limited to prolate particles. Each particle i is defined by its centre of mass ⃗r i, radius Ri (the same for the shaft and hemispherical caps), shaft length Li and direction unit vector ⃗u i. We define the aspect ratio as A = ( L + 2 R)/2R (so spheres have A = 1). In what follows, an arrow above a variable denotes that it is a 3D vector. The translational motion of particle i is described by the following equation 
+
+mi
+
+d⃗ v i
+
+dt = X
+
+> j
+
+⃗FC,ij + X
+
+> k
+
+⃗FL,ik +⃗ FH,i , (1) where mi is the mass of the particle, ⃗v i is its translational velocity, and t is time. The forces included in the model are pairwise contact forces ⃗ FC,ij acting between particle i and its contacting neighbours j, pairwise lubrication forces ⃗FL,ik acting between particle i and its near-neighbours k, and single-body hydrodynamic forces ⃗ FH,i . The rotational motion of each particle is similarly governed by 
+
+Ii
+
+d⃗ ω i
+
+dt = X
+
+> j
+
+⃗TC,ij + X
+
+> k
+
+⃗TL,ik +⃗ TH,i , (2) where Ii is a diagonal matrix denoting the mass moment of inertia of particle i (throughout, bold variables represent 3×3 tensors), ⃗ω i is its angular velocity, and ⃗ T the torque acting on it, which similarly has contributions from contacts, lubrication and single-body hydrodynamics labelled equivalently to the forces. For a pairwise interaction between particles i and j, the torque on particle i is calculated as ⃗ Ti =⃗ Fij ×⃗ ℓij , where ⃗ ℓij is the moment arm from the centre of mass ⃗r i to the point of interaction along rod i and ⃗ Fij is the relevant force term. After summing the forces and torques on each particle, details of which are described in turn below, the equations of motion are integrated numerically using a standard implementation of the Velocity-Verlet algorithm.  
+
+> B. Single-Body Hydrodynamic Forces
+
+Suspended neutrally buoyant particles experience hydrodynamic forces when their velocity differs from that of their surrounding fluid. Due to their anisotropic shape, suspended rods experience orientation-dependent driving, so that the forces ⃗ FH have contributions from both drag ⃗ FH,D and lift ⃗ FH,L and there also exists a torque contribution ⃗ TH.These are illustrated in Figure 1(b). Although numerical simulations have sought to model the hydrodynamic forces 5
+
+FIG. 1. Particle-based simulation of suspensions of sheared granular spherocylindrical rods. Shown in (a) is a render of a typical simulation for aspect ratio A = 5, solid volume fraction ϕ = 0 .3, with N = 1000 particles coloured according to their radii with 
+
+R in white and 1 .4R in blue. The terms present in the equation of motion of the particles are (b) single-body hydrodynamics comprising drag, lift and torque, governed by the imposed linear velocity profile sketched in red; (c) repulsive contact forces between overlapping pairs, labelled here to illustrate terms present in the interaction detection algorithm used to find pairwise contacts; (d) lubrication forces between neighbouring particles, calculated using a blending approach to incorporate end-end, end-shaft and shaft-shaft interactions. The various values labelled in (c) and (d) are defined in the main text. 
+
+on spherocylinders for limited aspect ratios and finite Reynolds number [64, 65], a generalised analytical solution does not yet exist for the drag forces experienced in Stokes flow, the regime of interest here. In lieu of this, we adopt the result for prolate spheroids, which exists in the literature in analytical form and represents a reasonable approximation for spherocylindrical rods, especially at higher aspect ratios [66]. The following summarises the work of Zhang et al. 
+
+[67]. Here single-hatted variables are defined in the particle frame of reference, which has origin at the centre of mass of the particle ⃗r i and z-axis aligned with the principal axis of the particle ⃗u i. Unhatted variables are defined in the lab frame of reference. The drag force experienced by axisymmetric particles was derived by Brenner [68] and takes a similar form to the Stokes drag on a sphere [10] ⃗FH,D,i = KπηR i · (⃗v f,i −⃗v i). (3) 6Here η is the liquid phase viscosity, ⃗v f,i is the fluid velocity at the centre of mass of particle i assuming the velocity profile to be linear across the domain, and K is a geometric resistance tensor that takes into account the orientation of the particle with respect to the background fluid velocity field. The geometric resistance tensor is first defined as a diagonal tensor in the particle frame of reference [69] as ˆkˆxˆx = ˆkˆy ˆy = 16( A2 − 1) 
+
+
+
+(2 A2 − 3) ln (A+√A2−1)√A2−1
+
+
+
++ A, (4a) ˆkˆz ˆz = 8( A2 − 1) 
+
+
+
+(2 A2 − 1) ln (A+√A2−1)√A2−1
+
+
+
+− A. (4b) Here ˆkˆz ˆz corresponds to the principal axis along the length of a rod, while the degenerate terms ˆkˆxˆx and ˆkˆy ˆy represent the short axes. This can then be transformed to the lab frame of reference ( K = M−1 ˆKM ) using the transformation matrix MM =
+
+
+
+cos ξ cos κ − cos θ sin κ sin ξ cos ξ sin κ + cos θ cos κ sin ξ sin ξ sin θ
+
+− sin ξ cos κ − cos θ sin κ cos ξ − sin ξ sin κ + cos θ cos κ cos ξ cos ξ sin θ
+
+sin θ sin κ − sin θ cos κ cos θ
+
+ , (5) where ξ, κ and θ are the Euler angles between the particle director ⃗u i and the lab frame. For axisymmetric particles degeneracy about the principal axis allows us to set ξ = 0 so that M simplifies to 
+
+M =
+
+
+
+cos κ sin κ 0
+
+− cos θ sin κ cos θ cos κ sin θ
+
+sin θ sin κ − sin θ cos κ cos θ
+
+ . (6) In addition to the drag force, a particle may experience shear-induced lift ⃗ FH,L in the presence of a velocity profile. Lift is an inertial effect so is included in our model for completeness. As will be explained in Section II D 3, however, our simulation parameters are set such that particle inertia is negligible so that in practice lift forces are significantly smaller than all other forces in the system. The lift acting on an arbitrary shaped particle [70] with a fluid velocity gradient dv x/dz in the z-direction is ⃗FH,L,i = π2R2
+
+> i
+
+√ηρ F
+
+dv x/dz 
+
+q
+
+dv x/dz 
+
+(K · LM · K) · (⃗v f,i −⃗v i), (7) where ρF is the fluid density and LM is the coefficient matrix of the lift tensor for arbitrary shapes [70] and widely used for spheroids and spherocylinders [64, 67, 71, 72] 
+
+LM =
+
+
+
+0.0501 0 .0329 0.00 0.0182 0 .0173 0.00 0.00 0.00 0.0373 
+
+ . (8) 7The hydrodynamic torque on an ellipsoidal particle in a linear shear flow is given by Jeffery [15], wherein the total torque is composed of a viscous drag component that resists rotation and an additional shear-induced component arising from the imposed velocity gradient: ⃗TH,x = 16 πηR 3A
+
+3 ( β0 + A2γ0)
+
+h
+
+(1 − A2)dˆz ˆy + (1 + A2)( wˆz ˆy − ωˆx)
+
+i
+
+, (9a) ⃗TH,y = 16 πηR 3A
+
+3 ( α0 + A2γ0)
+
+h
+
+(A2 − 1) dˆxˆz + (1 + A2)( wˆxˆz − ωˆy )
+
+i
+
+, (9b) ⃗TH,z = 32 πηR 3A
+
+3 ( α0 + β0) (wˆy ˆx − ωˆz ), (9c) where ω as before is the angular velocity of the particle (with i subscripts dropped for clarity). Additionally, d
+
+are elements of the deformation rate tensor ˆD = 12
+
+ ∇v + ( ∇v)T  and w are elements of the spin tensor ˆW =
+
+> 12
+
+ ∇v − (∇v)T , both written in the particle frame of reference. The velocity gradient tensor, naturally expressed in the lab frame, can be transformed into the particle frame via ˆG = MGM −1.The dimensionless parameters α0, β0 and γ0 [73] take into account the geometry of the particles and are given by 
+
+α0 = β0 = A2
+
+A2 − 1 + A
+
+2( A2 − 1) 3/2 ln 
+
+"
+
+A − √A2 − 1
+
+A + √A2 − 1
+
+#
+
+, (10a) 
+
+γ0 = − 2
+
+A2 − 1 − A
+
+(A2 − 1) 3/2 ln 
+
+"
+
+A − √A2 − 1
+
+A + √A2 − 1
+
+#
+
+. (10b) This shear-induced torque captures the characteristic rotational behaviour of elongated particles in viscous flows, reproducing the Jeffery orbits observed in real suspensions [15].   
+
+> C. Pairwise Interaction Forces
+> 1. Interaction Detection
+
+Before introducing the contact and lubrication forces, we first describe our algorithm for detecting whether neigh-bouring particles are close enough to be interacting. Spherocylinders have both a long and short dimension, meaning the minimum distance between their surfaces cannot be determined from the positions of their centres of mass. In-stead, detecting a contact requires computing the shortest distance between the two rod spines and comparing it to the sum of their radii. To do this, we implement the method described by Vega and Lago [74] for rods of arbitrary radii ( Ri, Rj ) although alternative methods have been used [75, 76]. In general, points along the spines of rods i and 
+
+j can be defined as ⃗ϑi =⃗r i + λ Li
+
+2⃗u i, (11a) ⃗ϑj =⃗r j + ψ Lj
+
+2⃗u j , (11b) 8where λ and ψ are fractions of the half length of a rod that signify the distances along the spine from the centres of mass ⃗r i and ⃗r j respectively. These distances are sketched in Figure 1(c). The values of ψ and λ are [ −1, 1] for finite length rods. The vector between these points ⃗r is then ⃗r =⃗ ϑj −⃗ ϑi =⃗r ij + ψ Lj
+
+2⃗u j − λ Li
+
+2⃗u i, (12) where ⃗r ij =⃗r j −⃗r i is the vector pointing between the two centres of mass. The values of λ and ψ that minimise |⃗r|
+
+(denoted λ′, ψ′) also minimise ⃗r 2, and for infinitely long rods these can be found by taking the derivative of ⃗r 2 with respect to λ and ψ, which leads to 
+
+λ′ = 2
+
+Li
+
+(⃗r ij ·⃗u i) − (⃗u i ·⃗u j )( ⃗r ij ·⃗u j )1 − (⃗u i ·⃗u j )2 , (13a) 
+
+ψ′ = − 2
+
+Lj
+
+(⃗r ij ·⃗u j ) − (⃗u i ·⃗u j )( ⃗r ij ·⃗u i)1 − (⃗u i ·⃗u j )2 . (13b) These minimising values can be [ −∞ , ∞]. If both are [ −1, 1] then the closest point between the infinitely extended rod spines falls within the finite bounds of the actual rods and λ′ and ψ′ can be used directly in Equation 11 to find the points of closest approach. If one of the fractions does not fall within [ −1, 1], then an additional step is required to find the closest distance within the finite bounds of the rod. First, whichever of the two fractions is further from the limits [ −1, 1] is trimmed to be at the limit ( e.g. λ′ = −10 .2 becomes λ′′ = −1). This truncated value ( λ′′ or ψ′′ )is then used to find the value of the complementary fraction ( ψ′′ or λ′′ ), again from the derivative of ⃗r 2, using the appropriate one of the following expressions 
+
+λ′′ = ψ′′ Lj
+
+2 (⃗u i ·⃗u j ) + ( ⃗r ij ·⃗u i), (14a) 
+
+ψ′′ = λ′′ Li
+
+2 (⃗u i ·⃗u j ) − (⃗r ij ·⃗u j ). (14b) If the value thus obtained is within the bounds [ −1, 1], then λ′′ and ψ′′ can directly replace λ and ψ in Equation 11. Otherwise, the obtained value is itself trimmed to within the bounds, and can then be used. Once ⃗ ϑi and ⃗ ϑj are found, a determination can be made of whether two particles are interacting. Particles are in direct contact if the distance between the two closest points along their spines, ⃗r, is less than the sum of their radii, that is, |⃗r| ≤ R i + Rj . This is true for spherocylinders since the vector connecting the closest points on the two rods is always normal both to the spines and to the particle surfaces. The overlap between two particles is then δn,ij =  Ri + Rj
+
+ −| ⃗r|, where the normal direction of the contact vector is given by ⃗n ij =⃗r/ |⃗r|. The point of interaction ⃗r c is then taken as the midpoint between the surfaces of the interacting particles.  
+
+> 2. Contact Forces
+
+Direct contacts between particles are modelled as Hookean with Coulombic friction, with normal and tangential components of the forces computed as follows, based on the work by Mahajan et al. [77]. The total contact force 9acting on particle i is the sum of the normal ⃗ FC,n,ij and tangential ⃗ FC,t,ij components contributed by contacting neighbours j⃗ FC,ij = X(⃗FC,n,ij +⃗ FC,t,ij ). (15) Here the normal force is modelled as a damped spring: ⃗FC,n,ij = −knδn,ij ⃗n ij + ζn⃗v n,ij , (16) where kn is the normal spring constant, ⃗n ij is the unit direction vector of the interaction as defined in the preceding section, ζn is the normal damping coefficient, and recalling that δn,ij is the scalar overlap between the contacting particles. Here ⃗v n,ij is the component of the relative velocity at the point of contact along the direction ⃗n ij , defined as ⃗v ij =⃗v j −⃗v i +⃗ω j × (⃗r c −⃗r j ) −⃗ω i × (⃗r c −⃗r i). (17) The normal damping coefficient [78] entering Equation 16 is calculated as 
+
+ζn = − 2meff 
+
+tc
+
+ln en, (18) where meff is the effective mass of the particle pair participating in the interaction ( meff = mimj 
+
+> mi+mj
+
+) and tc is the duration of the contact determined as 
+
+tc =
+
+r meff 
+
+kn
+
+(π2 + ln en2). (19) Here en is the normal restitution coefficient of the particle, which sets how much kinetic energy is preserved after an interaction in the absence of suspending fluid. The tangential contact force is modelled similarly, but with the inclusion of an upper limit set by a friction coefficient 
+
+μ and defined according to ⃗FC,t,ij =
+
+
+
+−kt⃗ δt,ij + ζt⃗v t,ij for ⃗ FC,t,ij ≤ μ⃗ FC,n,ij ,
+
+−μ⃗ FC,n,ij ⃗ tij for ⃗ FC,t,ij > μ ⃗ FC,n,ij ,
+
+(20) where ⃗ δt,ij is the tangential overlap which quantifies the elastic tangential deformation of a particle since the onset of the contact and kt is the tangential spring constant. Here ζt is the tangential damping coefficient, ⃗v t,ij is the tangential component of the relative velocity at the point of contact and ⃗ tij is the unit vector in the direction of the static tangential force, ensuring the sliding force opposes the tangential deformation and relative motion. The quantities tc, en and et can in principle be measured from simple single contact experiments, informing an appropriate choice for kn. Having specified the tangential restitution coefficient et and calculated the contact time tc, the tangential 10 stiffness kt can then be found using [78] 
+
+kt = t−2
+
+> c
+
+ 1
+
+meff 
+
++ |⃗r c −⃗r i|2
+
+⟨Ii⟩ +⃗ r c −⃗r j
+
+> 2
+
+⟨Ij ⟩
+
+
+
+> −1
+
+(π2 + ln et2), (21) where ⟨Ii⟩ is the average mass moment of inertia defined below in Equation 23 and et is the tangential restitution. The tangential damping coefficient ζt [78] is 
+
+ζt = t−1
+
+> c
+
+ 1
+
+meff 
+
++ |⃗r c −⃗r i|2
+
+⟨Ii⟩ +⃗ r c −⃗r j
+
+> 2
+
+⟨Ij ⟩
+
+
+
+> −1
+
+ln et. (22) For a spherocylinder the non-zero components of the mass moments of inertia ˆI, in the particle frame of reference, can be calculated [75, 79] as 
+
+Iˆxˆx = Iˆy ˆy = πρ P
+
+ 112 R2L3 + 815 R5 + 13 R3L2 + 34 R4L
+
+
+
+, (23a) 
+
+Iˆz ˆz = πρ P
+
+ 12 R4L + 815 R5
+
+
+
+, (23b) 
+
+⟨I⟩ = 13 (Iˆxˆx + Iˆy ˆy + Iˆz ˆz ), (23c) where ρP is the particle density. The tangential overlap ⃗ δt,ij is obtained by integrating the relative tangential velocity between two particles over the duration of the contact ⃗δt,ij (t) = 
+
+Z ttc, 0⃗v t,ij dt. (24) Together, the normal and tangential force models described above provide a description of particle contact interactions within the simulation, capturing both damped spring forces and frictional dissipation.  
+
+> 3. Lubrication forces
+
+Lubrication forces arise from short-range hydrodynamic interactions generated when two particles within a fluid move relative to each other in close proximity. These forces originate in the viscosity of the fluid in the narrow gap between the particles, opposing their relative motion. Lubrication forces become particularly important at small surface-to-surface separations h and hence are an essential component of the equation of motion for particles in dense suspension. Importantly, the discontinuity in the curvature of spherocylinders at the end-shaft junction precludes an analytical model for the lubrication force [80]. To address this, Butler and Shaqfeh [37] proposed a modification of the Yamane et al. [29] model, adapting it to spherocylinders by treating the three possible interaction configurations 11 separately, namely the shaft-shaft (SS), end-shaft (ES) and end-end (EE) interactions ⃗FL,SS ,ij = −24 ηπR 2
+
+hij 
+
+A2
+
+(2 A + 1) 
+
+h A2 + 14
+
+⃗u i ×⃗u j 
+
+> 2
+
++ A  1 + ( ⃗u i ·⃗u j )2i1/2⃗v n,ij ⃗n ij , (25a) ⃗FL,ES ,ij = − 4
+
+√2
+
+ηπR 2
+
+hij ⃗ v n,ij ⃗n ij , (25b) ⃗FL,EE ,ij = − 32
+
+ηπR 2
+
+hij ⃗ v n,ij ⃗n ij , (25c) where A is the aspect ratio, h is the separation between the surfaces of particles ( hij = |⃗r| −  Ri + Rj
+
+) and η is the fluid viscosity. This separate treatment of the different interaction modes leads to a discontinuity in the force when a pair of particles moves in time from one type of interaction to another, an issue that is amplified at higher aspect ratios. We resolve this by computing all three components (Equations 25a - 25c) for all neighbouring pairs, but assigning weights to each term dependent on the relative position of the two particles. This requires three lengths to be defined that quantify the SS, ES and EE distances, with the importance of each force term then being inversely proportional to its associated distance. The initial shaft-shaft weight is thus defined as CSS = (1 /ϖ SS )/(1 /ϖ SS + 1 /ϖ ES + 1 /ϖ EE ),
+
+with analogous expressions for CES and CEE so that by construction we have CSS + CES + CEE = 1. These weights contribute to the overall expression for the lubrication force as ⃗FL,ij = CSS ⃗ FL,SS ,ij + CES ⃗ FL,ES ,ij + CEE ⃗ FL,EE ,ij . (26) The distances ϖSS etc. must be defined such that the appropriate component dominates, i.e. CEE is most influential in an end-end interaction and CSS is most influential when rods are parallel. This is achieved by imagining the rod as split into spherical end sections with a smaller internal cylindrical shaft section. Within this representation we define the distances ϖEE = hEE + 2 R, ϖES = hES + R and ϖSS = hSS as sketched in Figure 1(d). Here each 
+
+h term is used for the respective force calculation in Equation 25, while the corresponding ϖ term is used to set the weighting assigned to that force. This scheme alone resolves the aforementioned discontinuities, but to further improve the correction the weights can be manually adjusted to produce smoother transitions between interaction types ( e.g. aC SS + bC ES + cC EE = 1, where a, b and c are manually set corrective values and within our simulations are a = 0 .1, b = 1 .0, c = 5 .0). These values are determined by considering a series of different primitive pairwise motions ( i.e. particles sliding past one another along a common axis; perpendicular to one another and so on) that involve transitions in dominance from one type of lubrication interaction to another ( e.g. transitioning from shaft-shaft to shaft-end). These weight correctors are then individually adjusted until a smooth profile is produced for each case. Having obtained these profiles, we then verify that the choice of weights has minimal impact on the rheological predictions of our model. This approach is successful for aspect ratios A ≥ 3, since the middle section needs to be at minimum a sphere for the distances to be calculated. When evaluating each of the force components in Equation 26, the corresponding separation hSS etc. is used along with the average R for interactions between particles of different sizes. To ensure numerical stability as the gap between particle surfaces vanishes, a minimum separation is specified. 12 This distance is defined as a fixed fraction hmin of the radii for an interacting pair, so that below separations of 
+
+hmin (R1 + R2) the separation hij used in calculations isn’t further decreased. Such a lengthscale might physically represent the size of asperities on the particle surfaces, which are not explicitly modelled here. Additionally, to reduce computational cost and avoid unphysical interactions with secondary neighbours ( e.g. where particles interact through other particles) a maximum separation hmax was similarly introduced to define a point above which lubrication forces between particles are not computed. These lengths are sketched in Figure 1(d).   
+
+> D. Additional Model Details
+> 1. Stress Calculation
+
+The stress within the system is calculated as the sum of the stress contributions from pairwise particle interactions 
+
+σP, and a fluid contribution σF. The former is a 3 × 3 tensor constructed from the moment arm ⃗ ℓ and force ⃗ F vectors, and is defined as [81] 
+
+σP = − 1
+
+V
+
+
+
+> NC
+
+X⃗ ℓij ⊗⃗ FC,ij +
+
+> NL
+
+X⃗ ℓik ⊗⃗ FL,ik ,
+
+ (27) where NC is the number of contacts (which occur between particles i and j), NL is the number of lubrication interactions (which occur between particles i and k), V is the total volume of the system, and ⊗ is the outer product. In the following we consider only the shear stress, written for simplicity as σP. Meanwhile the single-body forces generate an additional contribution to the shear stress (labelled here as σF to denote the fluid contribution), given for spherical particles by Einstein [11] and later modified for spherocylinders by Kuhn [82] to read 
+
+σF = η ˙γ
+
+
+
+1 + 52 ϕ + ϕ
+
+16 A2
+
+
+
+, (28) where we omit higher order terms in ϕ. This equation is strictly valid only in dilute systems, and is limited in that it does not account for particle ordering, instead assuming an isotropic and randomly distributed suspension. At the high volume fractions of interest, however, the fluid contribution becomes negligible relative to the stresses arising from particle-particle interactions. Any contribution to the fluid stress coming from particle structure, following 
+
+e.g. Dinh and Armstrong [83], would not change this, and would likely be dominated by structural contributions to the stress arising from lubrication and contact forces. In the following we report the reduced shear viscosity of the suspension as ηs = ( σF + σP)/η ˙γ = σ/η ˙γ. 
+
+> 2. Quantifying Alignment
+
+To understand the material response to flow, we characterise the microstructural arrangement of the particles borrowing insight from the Q-tensor commonly used to characterise alignment in nematic liquid crystals. We quantify the degree of collective ordering of the particles by computing the largest eigenvalue S of the order tensor T, the 13 
+
+> TABLE I. Global parameters used within all simulations reported in Figures 2-6.
+
+R1 R2 R1 : R2 ρF, ρP kn en et μ η hmin hmax 
+
+[L] [L] [-] [ML −3] [MT −2] [ - ] [ - ] [ - ] [ML −1T−1] [ - ] [ - ] 1 1.4 1:1 1 1.5 × 10 6 0.5 0.5 0.5 15 0.025 0.9 components of which are defined as 
+
+Tαβ =
+
+ 32 ui,α ui,β − 12 δαβ 
+
+
+
+. (29) Here α and β represent the Cartesian coordinates, and angle brackets indicate averaging over all particles i = 1 , . . . , N .This leads to the orientational order parameter S, a scalar metric that takes values in the range [0,1]. A value of S = 1 means that the system is perfectly regularly aligned, i.e. all particles are parallel to one another, whereas a value of 
+
+S = 0 represents completely uncorrelated particle directors. The eigenvector ⃗u princ associated with S represents the principal direction of alignment.  
+
+> 3. Simulation Setup and Parameters
+
+Particles governed by the above set of forces and torques are placed with initially random positions and orien-tations in a cubic domain consisting of periodic boundaries in the x and y directions and Lees-Edwards boundary conditions [84] across the z axis. An example snapshot of the simulated system is given in Figure 1(a). The latter is used to introduce a velocity difference across the domain that leads, through the imposed drag forces described above, to a linear fluid velocity profile vf,x = ˙ γz . The minimum domain size is then 2 × the maximum interaction length of a particle. Here this is equal to the total length of the particle plus the additional length of influence due to the lubrication force hmax R on each end. The minimum system size is therefore 2 R (A + 1 + hmax ). It is standard practice in spheres to include a bidisperse mixture of radii (typically 1:1.4) to prevent crystallisation [85–88]. For each value of A we therefore simulated a bidisperse system comprising equal numbers of particles with radius and length ratio both set to 1:1.4. It is worth noting though that this choice has little impact on the rheology reported in the following. Indeed we found little change in the steady state viscosity predicted by the simulation when moving from mono- to bi- to tridisperse systems. The parameters within the model are chosen such that (i) particle inertia can be considered insignificant ˙ γ∗ ≡
+
+ρF ˙γR 2/η < 10 −2; and (ii) rods can be assumed to be very hard ˙ γpρPR3/k n < 10 −4. Table I includes the material properties and other parameter values used throughout all of the simulations. We chose modest values of the friction coefficient and normal restitution coefficient, noting that experimentally a wide range of values both above [89] and below [90] our chosen friction coefficient μ are observed in similar systems. The same is true for the normal restitution coefficient en [90, 91]. We opted for values comfortably within the ranges found in the literature, acknowledging that they may not be representative of a specific single material. Simulations suggest that the qualitative alignment behaviour reported here is independent of the particle friction, though we defer a systematic study of the role of the friction coefficient to future work. Table II then gives the values that are altered for each test case. For each set of parameters presented the simulation was repeated for five realisations, each starting from a distinct initial 14 
+
+> TABLE II. Simulation parameters for each test case reported in Figures 2-6.
+
+N ϕ A ˙γ σfixed 
+
+[ - ] [ - ] [ - ] [T −1] [ML −1T−2]1000 0.01 5 0.07 -1000 0.1 5 0.07 -1000 0.2 5 0.07 -1000 0.3 5 0.07 -1000 0.4 5 0.07 -1000 0.47 5 0.07 -1000 0.5 5 0.07 -1000 0.52 5 0.07 -1000 0.55 5 0.07 -1000 0.3 5 0.035 -1000 0.3 5 - 2.5 1000 0.3 5 - 51000 0.01 10 0.07 -1000 0.15 10 0.07 -1000 0.25 10 0.07 -1000 0.33 10 0.07 -1000 0.4 10 0.07 -1000 0.45 10 0.07 -1000 0.5 10 0.07 -1059 0.53 10 0.07 -1119 0.56 10 0.07 -1000 0.01 15 0.07 -1000 0.13 15 0.07 -1000 0.2 15 0.07 -1144 0.28 15 0.07 -1349 0.33 15 0.07 -1553 0.38 15 0.07 -1839 0.45 15 0.07 -2003 0.49 15 0.07 -2085 0.51 15 0.07 -1000 0.01 20 0.07 -1000 0.13 20 0.07 -1660 0.24 20 0.07 -1937 0.28 20 0.07 -2284 0.33 20 0.07 -2423 0.35 20 0.07 -2631 0.38 20 0.07 -configuration.  
+
+> 4. Time step size
+
+The equations of motion given above are integrated in time to update the particle trajectories. The discrete time step 
+
+dt used for this integration needs to be carefully chosen to resolve all interactions while not adding unnecessarily to the computation time. To achieve this we therefore need to approximate the characteristic timescale of each interaction. The timescale associated with the contact force is the contact time tc (Equation 19). This timescale depends only on the material properties and the mass of the particles. It increases with aspect ratio but does not depend on the relative orientation of the contacting particles so is constant throughout an interaction. There is also a timescale 15 
+
+FIG. 2. Results of prerequisite calculations and diagnostic simulations used to determine parameter values. (a) Shown by solid lines are the characteristic timescales associated with contact and lubrication interactions, defined in Equations 19, 32 and 33, while the area shaded in green highlights the range of dynamically adjusted time step sizes dt that were used during the simulations; (b) Example plots of the rescaled steady-state velocity profiles, demonstrating that the desired linear profiles, specified through the imposed shear rate ˙ γ, are achieved. Shown are [i] A = 5, ϕ = 0 .1, ˙γ∗ = 0 .007; [ii] A = 5, ϕ = 0 .5, ˙γ∗ = 0 .007; [iii] A = 5, ϕ = 0 .3, ˙ γ∗ = 0 .0035; [iv] A = 5, ϕ = 0 .3, σfixed = 2 .5 [ML −1T−2] ( ˙ γ∗ 
+
+> avg
+
+= 0 .004); (c) Demonstration of the shear stress control algorithm described in the text, showing transients of: [i] the shear rate ˙ γ∗ and [ii] the shear stress σ
+
+rescaled by its set point values, for σfixed = {2.5, 5} [ML −1T−2] (leading to ˙ γ∗ 
+
+> avg
+
+= {0.004, 0.008 }). 
+
+associated with the lubrication force tlub ,⃗F . This can be approximated from the term in the equation of translational motion (Equation 1) corresponding to the lubrication force. For simple shear we can make the assumption that the magnitude of the relative velocity between interacting particles is |dv | ∼ R ˙γ. For simplicity we may also assume that ⃗FL,SS is the dominant component of the lubrication force, since this grows with A. With these assumptions we can approximate the timescale of a lubrication interaction as 
+
+tlub ,⃗F ,ij ≈ 136 
+
+ρPhSS R2 ˙γ⃗v n,ij η
+
+(2 A + 1)(3 A − 1) 
+
+A2
+
+
+
+A2 + 14
+
+⃗u i ×⃗u j 
+
+> 2
+
++ A
+
+
+
+1 + ( ⃗u i ·⃗u j )21/2
+
+. (30) Here, unlike the contact time, we have a timescale that is configuration-dependent and therefore changes over the course of an interaction. Moreover, unlike tc the lubrication timescale decreases with increasing aspect ratio. For elongated particles, the timescale for the force differs notably from that of the torque due to the large moment arm. The timescale associated with the lubrication torque tlub ,⃗T can be approximated from the equation of rotational motion for the lubrication torque (Equation 2). For simple shear we can make the assumption that |dω | ≈ ˙γ. As ⃗T =⃗ F ×⃗ ℓ and assuming ⃗ ℓ ≈ 0.5L, we can use the approximation ⃗ Tlub ≈ 0.5L⃗ Flub ,SS . The smallest component of ˆI is Iˆz ˆz for any aspect ratio and will lead to the limiting (smallest) timescale. With these assumptions we can approximate the timescale of the lubrication torque as 
+
+tlub ,⃗T ,ij ≈ 1360 
+
+ρPhSS R2 ˙γ⃗v n,ij η
+
+(2 A + 1)(15 A − 7) 
+
+A2(A − 1) 
+
+
+
+A2 + 14
+
+⃗u i ×⃗u j 
+
+> 2
+
++ A
+
+
+
+1 + ( ⃗u i ·⃗u j )21/2
+
+. (31) Again we have a timescale that changes over the course of an interaction and that now scales approximately with 1/A 2. The value of dt for the subsequent time step is then chosen as the smallest of these timescales, which we determined dynamically by inserting the actual values of hSS ,⃗v n,ij ,⃗u i and ⃗u j for each interaction into Equations 19, 30 and 31. This ensures that dt is always small enough to resolve ongoing interactions but never smaller than it needs 16 to be, allowing for faster simulations. Alternatively we can calculate a static value of dt by estimating the largest force or torque present when hydro-dynamics dominate. For the lubrication interactions this occurs when two parallel rods interact at their minimum distance. In this configuration we can assume that hSS = Rh min ,⃗u i ×⃗u j = 0 and ⃗u i ·⃗u j = 1. For simple shear we can additionally assume ⃗v n,ij = AR ˙γ. (This latter assumption will likely break down at higher volume fractions, where relative velocity is governed by contact forces (set by kn) rather than the fluid flow (set by η), leading to a smaller timescale than that calculated.) Substituting these assumptions into Equations 30 and 31 we get 
+
+tlub ,⃗F ≈√236 
+
+ρPhmin R2
+
+η
+
+(2 A + 1)(3 A − 1) 
+
+A5/2 , (32) 
+
+tlub ,⃗T ≈√2360 
+
+ρPhmin R2
+
+η
+
+(2 A + 1)(15 A − 7) 
+
+A5/2(A − 1) . (33) These timescales are plotted as functions of A in Figure 2(a) along with a shaded area denoting the range of actual timescales (obtained via Equations 30 and 31) used in each simulation.  
+
+> 5. System Control Modes
+
+As described in Section II B, the fluid velocity profile ⃗v f (z) determines the single-body hydrodynamic forces on each particle. Throughout we prescribe a linear velocity profile by specifying a spatially invariant value of the gradient as ˙γ = ∂v f,x/∂z . The simulation can impose this shear rate under two modes. In the first, we simply prescribe a fixed value of ˙ γ and run the dynamics. In the second, we seek to model an imposed shear stress rather than an imposed shear rate. To do so, at each time step t we calculate the overall shear stress in the system as σt, and compare it to a specified set point shear stress σfixed . The offset is then used to adjust the imposed shear rate at the next time step ˙γt+∆ t (introducing a gain parameter Kp) according to ˙γt+∆ t = ˙ γt + σfixed − σt
+
+σfixed 
+
+Kp. (34) Setting Kp ≈ 10 −3 ˙γ, and having verified that this does not introduce any unwanted transients or periodicity in the results, this control scheme keeps the overall shear stress close to the set point value. Example velocity profiles generated by binning particle velocities along z are plotted in Figure 2(b), demonstrating that the shear rate is kept close to the one prescribed, irrespective of the volume fraction, shear rate or simulation mode (shear rate vs shear stress control). The performance of the stress controller for fixed shear stresses = {2.5, 5}[ML −1T−2]( ˙ γ∗ 
+
+> avg
+
+= {0.004, 0.008 }) is shown in Figure 2(c). The set point stress is closely maintained, showing an average error of < 1% once reaching the set point. 17                     
+
+> FIG. 3. Simulation snapshots of the initial configurations of granular rod suspensions prior to shearing. Shown are systems at ˙ γt = 0, with (a) A= 5 , ϕ = 0 .3; (b) A= 10 , ϕ = 0 .33; (c) A= 15 , ϕ = 0 .33; (d) A= 20 , ϕ = 0 .33; where the particles are coloured based on radius with R= 1 particles coloured white and R= 1 .4 particles coloured blue.
+> III. RESULTS AND DISCUSSION A. Effect of volume fraction and aspect ratio on suspension viscosity
+
+We simulated aspect ratios A = {1, 5, 10 , 15 , 20 } to cover a broad range of particle shape, Figure 3. Results for 
+
+A = 1 were obtained using a separate sphere-only model with equivalent physics [46, 92]. For each aspect ratio we explored a range of volume fractions spanning from ϕ = 0 .01 up to sufficiently high values to approach the jamming point, which appears to decrease with A [25]. Transient and steady state viscosity data for each of these simulations are reported in Figure 4. In the transients ηs( ˙ γt ) for particles with A = 5, Figure 4(a), there is an initial spike in the viscosity occurring at the onset of shear around ˙ γt = 2. Comparing this transient to that of the alignment (Figure 6(a), discussed later), it appears that the material has a short-lived higher viscosity associated with the initial random distribution of particle orientations. This subsides once the particles start to align. Thereafter the viscosity falls and remains fluctuating 18 
+
+FIG. 4. Simulation results showing the viscosity ηs of granular rod suspensions under simple shear flow. Shown are (a) typical transients of the suspension viscosity ηs plotted against accumulated strain ˙ γt for aspect ratio A = 5 at various volume fractions ϕ, measured under a fixed shear rate of ˙ γ∗ = 0 .007. Thinner lines show results for each individual realisation; (b) the dependence of the steady state suspension viscosity (obtained by averaging the transient data over strains ˙ γt > 20) on the volume fraction ϕ for aspect ratios A = {1, 5, 10 , 15 , 20 }. Data for A = 1 ( i.e. spheres) are obtained from a separate model with equivalent physics [46, 92]. Shown in the solid gray line is the expression ηs = ι(1 − ϕ/ϕ m)−ς , with ϕm = 0 .57, ς = 0 .97 and 
+
+ι = 1 .2; (c) the transient suspension viscosity for ϕ = 0 .3 and A = 5, comparing fixed shear rate and fixed shear stress control modes to demonstrate their equivalence and the rate-independence of our model; (d) individual contributing components of the suspension viscosity for A = 5, measured as a function of ϕ. Included are the normal and tangential contact forces, the lubrication force, and the contributions from single-body hydrodynamics. All of the results presented represent averages taken over five realisations, each starting from distinct initial configurations. 
+
+around a steady state value at large ˙ γt . Notably, the size of the initial spike in ηs relative to the steady state value is a growing function of ϕ. This implies that the viscosity of the unsheared material may diverge more quickly with 
+
+ϕ than the steady state viscosity, suggesting microstructural dependence of the jamming point ϕm. The strain scale needed to reach steady state also grows with ϕ. The viscosity at large strain increases systematically with increasing 
+
+ϕ, consistent with a large body of experimental work on non-Brownian suspensions [93]. This trend of increasing viscosity with volume fraction is observed for all aspect ratios, Figure 4(b). In all cases 19 the curves follow approximately the power law ηs ∼ (1 − ϕ/ϕ m)−ς at large ϕ, with the example shown in Figure 4(b) for A = 5 having ϕm = 0 .57 and ς = 0 .97. Similar fits for the other curves (not plotted) are poorer, but suggest 
+
+ϕm ≈ { 0.59 , 0.49 , 0.41 } for A = {10 , 15 , 20 }. The features of the viscosity, namely the increase with respect to ϕ and the general variation of ϕm with A, are qualitatively consistent with experiment [25, 94]. At the microstructural level, particles of higher aspect ratio can, for a given volume fraction, reach further into their neighbouring packing and can thus interact with more neighbours. They can therefore reach the critical number of contacts required for mechanical stability at lower ϕ, explaining the relation between ϕm and A. In our results we see a very similar jamming point for the three lowest aspect ratio particles A = {1, 5, 10 }. This is likely due to the very high degree of alignment (Figure 6(b), discussed later) in these cases, meaning that the number of contacts is not being affected by the length (i.e. two perfectly aligned A = 5 rods would be roughly equivalent to one A = 10 rod). The higher aspect ratio rods experience much greater torques meaning they are constantly pushed out of this alignment and so their length continues to play a key role in their jamming point. Additionally, higher aspect ratio particles contribute a greater stress to the fluid component ( via Equation 28) adding further to their increased viscosity at a given ϕ. We defer a comprehensive quantification and analysis of the jamming point and its relation to aspect ratio and particle alignment to a future study. To verify the rate-independence of our model we ran simulations across both modes of operation, exploring a range of fixed shear rates and fixed shear stresses. Representative results for A = 5 and ϕ = 0 .3, Figure 4(c), demonstrate that although the precise details of the transients differ, the major features of the mechanical response are robust. Importantly, the steady state viscosity measured by averaging the transient over large strains is independent of the shear rate. Thus the viscosity divergences reported in Figure 4(b) are rate-independent, consistent with the canonical framework of Boyer et al. [14] for granular suspensions. Decomposing the viscosity into its contributions from each of the force terms detailed above, we find a crossover in dominant microphysics occurring at intermediate ϕ. Again taking A = 5 as a representative example, we plot in Figure 4(d) the viscosity contributions from contact (normal and tangential) and lubrication forces as well as the fluid stress (Equation 28), as functions of ϕ. Here we see that the contact forces become negligible at small ϕ and instead the dominant contribution to the viscosity comes from the fluid component of the stress and secondarily from lubrication interactions. As ϕ increases the contact components steadily rise and eventually dominate at ϕ ≈ 0.5. The lubrication forces increase more slowly with ϕ and plateau beyond this point. The value of the plateau is likely governed in part by our choice of hmin , which prevents the lubrication forces from diverging at particle contacts. Above ϕ = 0 .5 contacts dominate, with the normal component exceeding the tangential one, and their ratio likely governed by our choice of friction coefficient μ = 0 .5.  
+
+> B. Effect of volume fraction and aspect ratio on particle alignment
+
+Shown in Figure 5 are snapshots of simulations across A illustrating the microstructural arrangements obtained after large strain. In general we see that particles appear to strongly align along the flow direction. We quantify these microstructural features using the order parameter S defined above. Additionally, we report two angles: φh, the angle formed between the flow direction x and the projection onto the flow-vorticity ( xy ) plane of the eigenvector ⃗u princ 
+
+associated with S; and φv, the angle formed between the flow direction x and the projection onto the flow-gradient 20                     
+
+> FIG. 5. Dense suspensions of granular rods under shear, showing example snapshots of the steady state alignment obtained at ˙ γt = 200 for each aspect ratio. Shown are the same cases as Figure 3 with (a) A= 5 , ϕ = 0 .3; (b) A= 10 , ϕ = 0 .33; (c)
+> A= 15 , ϕ = 0 .33; (d) A= 20 , ϕ = 0 .33; red arrows and line sketched on the lower left coordinate system illustrate the directions of flow xand velocity gradient z, while the colour bar (common to all panels) represents the x-component of the unit director ⃗uof each rod, with blue indicating perfect alignment along x.
+
+(xz ) plane of ⃗u princ . Transients in system order S for A = 5 are shown in Figure 6(a) for a range of ϕ. In all cases there is, at small ˙ γt , an initial increase in S from the random initial state with S ≈ 0, implying a tendency toward alignment along the flow direction. The strain over which this occurs maps onto that over which the viscosity was reported to initially spike in Figure 4. This initial increase in order is followed by a slower evolution of S with strain until steady states are reached. Notably, at ϕ = 0 .01 there is oscillatory behaviour in S at large strain, indicating that the packing is sparse enough to permit Jeffery-like orbits leading to periodically evolving alignment. We verified that the period of the evolution in S is indeed consistent with the expected Jeffery orbits by separately simulating isolated rods in shear flow and measuring their alignment relative to the flow direction. Doing so systematically for three inclinations out of the flow-gradient ( xz ) plane, we obtain the transients plotted in Figure 6(a) Inset. The periods of these isolated cases follow closely that of the sheared suspension at ϕ = 0 .01, albeit with extrema in the Inset varying across the full range of S while those in the main panel of Figure 6(a) are more tightly bound around 
+
+S ≈ 0.35. Similar periodicity is initially evident at ϕ = 0 .1, before dissipating at larger strains. Computing the time averaged values of S over ˙ γt > 200, Figure 6(b), we see that there is a range of ϕ for which S21                            
+
+> FIG. 6. Simulation results showing the alignment of granular rods in suspension under simple shear flow. Shown in (a) are transients of the orientational order parameter Sfor A= 5 and a range of volume fractions ϕwith the Inset showing the period of rotation of isolated rods ( ϕ→0) under simple shear flow at angles to the flow-gradient ( xz ) plane = {0◦, 30 ◦, 60 ◦}. The steady states are plotted against volume fraction ϕin (b), which additionally shows results for A={10 ,15 ,20 }. In (c) are the steady states of the angle φhbetween the projection onto the flow-vorticity ( xy ) plane of the principal direction of alignment obtained via Equation 29, and the flow direction x. (d) The angle φvbetween the projection onto the flow-gradient ( xz ) plane of the principal direction of alignment and the flow direction x. The sketch in the Inset of (c) shows the definitions of φhand
+> φv. All of the results presented represent averages taken over five realisations, each starting from distinct initial configurations.
+
+sharply increases, spanning approximately ϕ = 0 .01 − 0.2 for A = 5. At larger ϕ we see that S maintains its very high order but does not increase any further. Further increasing ϕ then leads to a reduction in this steady state order. This indicates that the particles in the system become frustrated and are no longer as able to get into or maintain strong alignment with each other. The same phenomenology in the ordering is observed for all other aspect ratios. In addition to the extent of alignment, it is important to characterise the direction of alignment. The average alignment of the system in the xy plane φh is shown in Figure 6(c). Here an angle of 0 ◦ corresponds to particles pointing along the direction of flow, whereas an angle of 90 ◦ would correspond to particles pointing into the vorticity direction. In all cases the angle is ≈ 0 with the x-axis, indicating that the particles are preferentially aligning along the flow direction in a manner reported previously for sheared dry granular matter [16]. At very low volume fractions 
+
+ϕ = 0 .01 there is some deviation from zero, likely because these systems are not very well aligned ( S = 0 .3 − 0.5) and do not have many contacts capable of adjusting a particle’s trajectory, meaning that some particles will remain 22 aligned along other directions executing kayaking-like orbits. This flow alignment is seen for all aspect ratios. Shown in Figure 6(d) is the average inclination angle of the system φv, which takes values of 0 ◦ for particles pointing along the flow direction and 90 ◦ for particles pointing along the gradient direction. Similar to the trend seen in S we see a range of ϕ for which φv increases, spanning ϕ = 0 .01 − 0.4, a larger range than S. This positive angle with the flow direction has again been previously reported for similar systems [16]. Past this point, we see that the inclination angle begins to decrease, corresponding with (and likely a consequence of) the decrease seen in S. A similar trend is seen for the other aspect ratios. However as A is increased, the maximum φv decreases and occurs at lower ϕ.This appears as a flattening of the curve and suggests that at sufficiently high aspect ratio there will be negligible inclination.  
+
+> IV. CONCLUSION AND FUTURE OUTLOOK
+
+We have developed and implemented a numerical model containing a minimal set of physics describing dense suspensions of rod-shaped particles undergoing shear flow. The model incorporates standard forms for the contact, drag and lift forces, and modified lubrication forces that resolve a prior discontinuity. It is accelerated by a novel dynamic scheme for computing the timestep. Predictions of the viscosity reveal a strong increase with the solid volume fraction, which we varied across a broad range from ϕ = 0 .01 to values approaching the jamming point ϕm. This jamming point, at which the viscosity diverges, decreases with aspect ratio in the range A = 5 to 20, consistent with experimental observation. Measurements of the shear-induced order show flow direction alignment increasing up to a threshold volume fraction before slightly decreasing, a phenomenon seen for each aspect ratio. Our model makes possible many future lines of study directly relevant to fluid mechanical problems in engineering applications, for instance the effect of particle-particle friction coefficient on the viscosity and microstructure; the role of polydispersity both in the radius and aspect ratio of the particles; the behaviour close to the jamming transition and its dependence on the particle alignment. It also offers the opportunity to study other flow types such as pressure-imposed flow [95] as well as non-linear velocity or stress profiles, adapting ideas introduced recently for suspensions of spheres [96–98]. More broadly it can be used to study problems at the intersection of jammed entangled granular matter [99] and dense suspension rheology [100]. 
+
+> ACKNOWLEDGMENTS
+
+A.D. acknowledges financial support from Syngenta. C.N. acknowledges support from the Royal Academy of Engineering under the Research Fellowship scheme, from the Leverhulme Trust under Research Project Grant RPG-2022-095 and from EPSRC Impact Acceleration Account EP/X525698/1. G.M. thanks NBIC/BBSRC/UKRI (grant no. BB/R012415/1) for financial support. We thank Jason Butler, Eric Shaqfeh, John Brady, Holly Evans, Tyler Shendruk, Dan Hodgson, James Richards, Job Thijssen, Ben Goddard, and Diego Berzi for useful discussions. The 23 authors report no conflict of interest. 
+
+[1] J. E. Butler and B. Snook, Microstructural dynamics and rheology of suspensions of rigid fibers, Annual Review of Fluid Mechanics 50 , 299 (2018). [2] N. S. Deshpande and B. T. Crosby, Logjams are not jammed: measurements of log motions in Big Creek, Idaho, arXiv preprint arXiv:1911.01518 (2019). [3] C. Cimarelli, A. Costa, S. Mueller, and H. M. Mader, Rheology of magmas with bimodal crystal size and shape distribu-tions: Insights from analog experiments, Geochemistry, Geophysics, Geosystems 12 (2011). [4] P. Moitra and H. Gonnermann, Effects of crystal shape-and size-modality on magma rheology, Geochemistry, Geophysics, Geosystems 16 , 1 (2015). [5] T. F. Choo, M. A. Mohd Salleh, K. Y. Kok, and K. A. Matori, A review on synthesis of mullite ceramics from industrial wastes, Recycling 4, 39 (2019). [6] H. Zhang and B. W. Darvell, Synthesis and characterization of hydroxyapatite whiskers by hydrothermal homogeneous precipitation using acetamide, Acta Biomaterialia 6, 3216 (2010). [7] K. Cao, G. Liu, H. Li, and Z. Huang, Mechanical properties and microstructure of calcium sulfate whisker-reinforced cement-based composites, Materials 15 , 947 (2022). [8] B. Derakhshandeh, R. J. Kerekes, S. G. Hatzikiriakos, and C. P. Bennington, Rheology of pulp fibre suspensions: Acritical review, Chemical Engineering Science 66 , 3460 (2011). [9] Y. Jung, T. Plumb-Reyes, H.-Y. G. Lin, and L. Mahadevan, Entanglement transition in random rod packings, Proceedings of the National Academy of Sciences 122 , e2401868122 (2025). [10] G. G. Stokes, On the effect of the internal friction of fluids on the motion of pendulums, Transactions of the Cambridge Philosophical Society 9, 8–106 (1851). [11] A. Einstein, Berichtigung zu meiner arbeit: Eine neue bestimmung der molek¨ uldimensionen, Annalen der Physik 34 , 591 (1911). [12] G. Batchelor and J. Green, The determination of the bulk stress in a suspension of spherical particles to order c2, Journal of Fluid Mechanics 56 , 401 (1972). [13] I. M. Krieger and T. J. Dougherty, A mechanism for non-newtonian flow in suspensions of rigid spheres, Transactions of the Society of Rheology 3, 137 (1959). [14] F. Boyer, ´E. Guazzelli, and O. Pouliquen, Unifying suspension and granular rheology, Physical Review Letters 107 , 188301 (2011). [15] G. B. Jeffery, The motion of ellipsoidal particles immersed in a viscous fluid, Proceedings of the Royal Society of London 
+
+102 , 161 (1922). [16] T. B¨ orzs¨ onyi, B. Szab´ o, G. T¨ or¨ os, S. Wegner, J. T¨ or¨ ok, E. Somfai, T. Bien, and R. Stannarius, Orientational order and alignment of elongated particles induced by shear, Physical Review Letters 108 , 228302 (2012). [17] T. B¨ orzs¨ onyi, B. Szab´ o, S. Wegner, K. Harth, J. T¨ or¨ ok, E. Somfai, T. Bien, and R. Stannarius, Shear-induced alignment and dynamics of elongated granular particles, Physical Review E 86 , 051304 (2012). [18] A. Franceschini, E. Filippidi, E. Guazzelli, and D. J. Pine, Transverse alignment of fibers in a periodically sheared suspension: an absorbing phase transition with a slowly varying control parameter, Physical Review Letters 107 , 250603 (2011). [19] B. Snook, E. Guazzelli, and J. E. Butler, Vorticity alignment of rigid fibers in an oscillatory shear flow: Role of confinement, Physics of Fluids 24 (2012). 24 
+
+[20] A. Franceschini, E. Filippidi, E. Guazzelli, and D. J. Pine, Dynamics of non-brownian fiber suspensions under periodic shear, Soft Matter 10 , 6722 (2014). [21] T. Ralambotiana, R. Blanc, and M. Chaouche, Viscosity scaling in suspensions of non-brownian rodlike particles, Physics of Fluids 9, 3588 (1997). [22] M. A. Bibb´ o, Rheology of semiconcentrated fiber suspensions , Ph.D. thesis, Massachusetts Institute of Technology (1987). [23] M. B. Mackaplow and E. S. Shaqfeh, A numerical study of the rheological properties of suspensions of rigid, non-brownian fibres, Journal of Fluid Mechanics 329 , 155 (1996). [24] M. Chaouche and D. L. Koch, Rheology of non-brownian rigid fiber suspensions with adhesive contacts, Journal of Rheology 45 , 369 (2001). [25] F. Tapia, S. Shaikh, J. E. Butler, O. Pouliquen, and ´E. Guazzelli, Rheology of concentrated suspensions of non-colloidal rigid fibres, Journal of Fluid Mechanics 827 , R5 (2017). [26] B. Snook, L. M. Davidson, J. E. Butler, O. Pouliquen, and E. Guazzelli, Normal stress differences in suspensions of rigid fibres, Journal of Fluid Mechanics 758 , 486 (2014). [27] S. R. Strand, S. Kim, and S. J. Karrila, Computation of rheological properties of suspensions of rigid rods: stress growth after inception of steady shear flow, Journal of Non-Newtonian Fluid Mechanics 24 , 311 (1987). [28] C. Qui˜ nones and P. D. Olmsted, A smoluchowski equation for a sheared suspension of frictionally interacting rods, arXiv preprint arXiv:2512.19149 (2025). [29] Y. Yamane, Y. Kaneda, and M. Doi, Numerical simulation of semi-dilute suspensions of rodlike particles in shear flow, Journal of Non-Newtonian Fluid Mechanics 54 , 405 (1994). [30] M. Khan, R. V. More, A. A. Banaei, L. Brandt, and A. M. Ardekani, Rheology of concentrated fiber suspensions with a load-dependent friction coefficient, Physical Review Fluids 8, 044301 (2023). [31] J. F. Brady and G. Bossis, Stokesian dynamics, Annual Review of Fluid Mechanics 20 , 111 (1988). [32] T. N. Phung, J. F. Brady, and G. Bossis, Stokesian dynamics simulation of brownian suspensions, Journal of Fluid Mechanics 313 , 181 (1996). [33] D. R. Foss and J. F. Brady, Structure, diffusion and rheology of brownian suspensions by stokesian dynamics simulation, Journal of Fluid Mechanics 407 , 167 (2000). [34] A. Singh and P. R. Nott, Normal stresses and microstructure in bounded sheared suspensions via stokesian dynamics simulations, Journal of Fluid Mechanics 412 , 279 (2000). [35] R. Kutteh, Methods for stokesian dynamics simulations of nonspherical particles and chains, Physical Review E 69 ,011406 (2004). [36] R. Mari, Shear thickening of suspensions of dimeric particles, Journal of Rheology 64 , 239 (2020). [37] J. E. Butler and E. S. Shaqfeh, Dynamic simulations of the inhomogeneous sedimentation of rigid fibres, Journal of Fluid Mechanics 468 , 205 (2002). [38] X. Fan, N. Phan-Thien, and R. Zheng, A direct simulation of fibre suspensions, Journal of Non-Newtonian Fluid Mechanics 
+
+74 , 113 (1998). [39] L. Durlofsky, J. F. Brady, and G. Bossis, Dynamic simulation of hydrodynamically interacting particles, Journal of Fluid Mechanics 180 , 21 (1987). [40] P. A. Cundall and O. D. Strack, A discrete numerical model for granular assemblies, Geotechnique 29 , 47 (1979). [41] S. Plimpton, Fast parallel algorithms for short-range molecular dynamics, Journal of Computational Physics 117 , 1 (1995). [42] Z. Yousefian and M. Trulsson, Orientational arrest in dense suspensions of elliptical particles under oscillatory shear flows, Europhysics Letters 136 , 36002 (2022). [43] Y. Zhang and N. Menon, Hindered stokesian settling of discs and rods, Physical Review Letters 134 , 168202 (2025). 25 
+
+[44] M. Trulsson, Directional shear jamming of frictionless ellipses, Physical Review E 104 , 044614 (2021). [45] J. Bilotto, M. Trulsson, and J.-F. Molinari, Shear flow of frictional spheroids: Comparison between elongated and flattened particles, Physical Review E 112 , 045432 (2025). [46] C. Ness, Simulating dense, rate-independent suspension rheology using lammps, Computational Particle Mechanics 10 ,2031 (2023). [47] J. Dong and M. Trulsson, Unifying viscous and inertial regimes of discontinuous shear thickening suspensions, Journal of Rheology 64 , 255 (2020). [48] Z. Ge and L. Brandt, Implementation note on a minimal hybrid lubrication/granular dynamics model for dense suspen-sions, arXiv preprint arXiv:2005.12755 (2020). [49] S. Gallier, E. Lemaire, F. Peters, and L. Lobry, Rheology of sheared suspensions of rough frictional particles, Journal of Fluid Mechanics 757 , 514 (2014). [50] R. V. More and A. M. Ardekani, Unifying disparate rate-dependent rheological regimes in non-brownian suspensions, Physical Review E 103 , 062610 (2021). [51] Y. Guo, C. Wassgren, W. Ketterhagen, B. Hancock, B. James, and J. Curtis, A numerical study of granular shear flows of rod-like particles using the discrete element method, Journal of Fluid Mechanics 713 , 1 (2012). [52] A. Pol, R. Artoni, and P. Richard, Unified scaling law for wall friction in laterally confined flows of shape anisotropic particles, Physical Review Fluids 8, 084302 (2023). [53] W. Nan, Y. Wang, Y. Liu, and H. Tang, Dem simulation of the packing of rodlike particles, Advanced Powder Technology 
+
+26 , 527 (2015). [54] Y. Guo, C. Wassgren, B. Hancock, W. Ketterhagen, and J. Curtis, Computational study of granular shear flows of dry flexible fibres using the discrete element method, Journal of Fluid Mechanics 775 , 24 (2015). [55] D. Berzi, N. Thai-Quang, Y. Guo, and J. Curtis, Stresses and orientational order in shearing flows of granular liquid crystals, Physical Review E 93 , 040901 (2016). [56] T. Nath and C. Heussinger, Rheology in dense assemblies of spherocylinders: frictional vs. frictionless, The European Physical Journal E 42 , 1 (2019). [57] D. Berzi, K. E. Buettner, and J. S. Curtis, Dense shearing flows of soft, frictional cylinders, Soft Matter 18 , 80 (2022). [58] C. Anzivino, C. Ness, A. S. Moussa, and A. Zaccone, Shear flow of non-brownian rod-sphere mixtures near jamming, Physical Review E 109 , L042601 (2024). [59] O. Cheal and C. Ness, Rheology of dense granular suspensions under extensional flow, Journal of Rheology 62 , 501 (2018). [60] R. Seto and G. G. Giusteri, Normal stress differences in dense suspensions, Journal of Fluid Mechanics 857 , 200 (2018). [61] M. Trulsson, B. Andreotti, and P. Claudin, Transition from the viscous to inertial regime in dense suspensions, Physical Review Letters 109 , 118305 (2012). [62] J. Gan and A. Yu, Dem simulation of the packing of cylindrical particles, Granular Matter 22 , 1 (2020). [63] A. Lin and S.-P. Han, On the distance between two ellipsoids, SIAM Journal on Optimization 13 , 298 (2002). [64] V. Ch´ eron, F. Evrard, and B. van Wachem, Drag, lift and torque correlations for axi-symmetric rod-like non-spherical particles in locally linear shear flows, International Journal of Multiphase Flow 171 , 104692 (2024). [65] Z. Feng and E. E. Michaelides, A general and accurate correlation for the drag on spherocylinders, International Journal of Multiphase Flow 168 , 104579 (2023). [66] J. Happel and H. Brenner, Low Reynolds number hydrodynamics: with special applications to particulate media , Vol. 1 (Springer Science & Business Media, 2012). [67] H. Zhang, G. Ahmadi, F.-G. Fan, and J. B. McLaughlin, Ellipsoidal particles transport and deposition in turbulent channel flows, International Journal of Multiphase Flow 27 , 971 (2001). [68] H. Brenner, The stokes resistance of an arbitrary particle, Chemical Engineering Science 18 , 1 (1963). 26 
+
+[69] F.-G. Fan and G. Ahmadi, A sublayer model for wall deposition of ellipsoidal particles in turbulent streams, Journal of Aerosol Science 26 , 813 (1995). [70] E. Harper and I.-D. Chang, Maximum dissipation resulting from lift in a slow viscous shear flow, Journal of Fluid Mechanics 33 , 209 (1968). [71] J. Wang, S. Yu, S. Luo, G. Xia, and L. Zong, Lift forces on axial symmetry particles rotating in a linear shear flow of a rarefied gas, Physics of Fluids 30 (2018). [72] Y. Cui, R. Decker, D. Janocha, C. K¨ orner, and B. Weigand, On constitutive models for the momentum transfer to particles in fluid-dominated two-phase flows, in Advances in Mechanics of Materials and Structural Analysis: In Honor of Reinhold Kienzler (Springer International Publishing, Cham, 2018) pp. 1–25. [73] I. Gallily and A.-H. Cohen, On the orderly nature of the motion of nonspherical aerosol particles. ii. inertial collision between a spherical large droplet and an axially symmetrical elongated particle, Journal of Colloid and Interface Science 
+
+68 , 338 (1979). [74] C. Vega and S. Lago, A fast algorithm to evaluate the shortest distance between rods, Computers & Chemistry 18 , 55 (1994). [75] L. Pournin, M. Weber, M. Tsukahara, J.-A. Ferrez, M. Ramaioli, and T. M. Liebling, Three-dimensional distinct element simulation of spherocylinder crystallization, Granular Matter 7, 119 (2005). [76] Y. Angklomkleaw, T. R. Srinophakun, and S. Tengpavadee, Simulation of spherocylinder particle transport phenomena using discrete element method, Asian Journal of Applied Sciences 7 (2019). [77] V. V. Mahajan, T. M. Nijssen, J. Kuipers, and J. T. Padding, Non-spherical particles in a pseudo-2d fluidised bed: Modelling study, Chemical Engineering Science 192 , 1105 (2018). [78] L. Pournin, On the behavior of spherical and non-spherical grain assemblies, its modeling and numerical simulation , Tech. Rep. (EPFL, 2005). [79] D. Constantin, Why the aspect ratio? shape equivalence for the extinction spectra of gold nanoparticles, The European Physical Journal E 38 , 116 (2015). [80] F. Janoschek, J. Harting, and F. Toschi, Accurate lubrication corrections for spherical and non-spherical particles in discretized fluid simulations, arXiv preprint arXiv:1308.6482 (2013). [81] T. A. Marschall and S. Teitel, Shear-driven flow of athermal, frictionless, spherocylinder suspensions in two dimensions: Stress, jamming, and contacts, Physical Review E 100 , 032906 (2019). [82] W. Kuhn, ¨Uber quantitative deutung der viskosit¨ at und str¨ omungsdoppelbrechung von suspensionen, Kolloid-Zeitschrift 
+
+62 , 269 (1933). [83] S. M. Dinh and R. C. Armstrong, A rheological equation of state for semiconcentrated fiber suspensions, Journal of Rheology 28 , 207 (1984). [84] A. W. Lees and S. F. Edwards, The computer study of transport processes under extreme conditions, Journal of Physics C: Solid State Physics 5, 1921 (1972). [85] K. VanderWerf, W. Jin, M. D. Shattuck, and C. S. O’Hern, Hypostatic jammed packings of frictionless nonspherical particles, Physical Review E 97 (2018). [86] C. S. O’hern, Random packings of frictionless particles, Physical Review Letters 88 (2002). [87] Z. Zhang, Thermal vestige of the zero-temperature jamming transition, Nature 459 , 230 (2009). [88] A. Singh, C. Ness, A. K. Sharma, J. J. de Pablo, and H. M. Jaeger, Rheology of bidisperse non-brownian suspensions, Physical Review E 110 , 034901 (2024). [89] K. Mair, K. M. Frye, and C. Marone, Influence of grain characteristics on the friction of granular shear zones, Journal of Geophysical Research: Solid Earth 107 , ECV (2002). 27 
+
+[90] S. F. Foerster, M. Y. Louge, H. Chang, and K. Allia, Measurements of the collision properties of small spheres, Physics of Fluids 6, 1108 (1994). [91] G. Joseph, R. Zenit, M. Hunt, and A. Rosenwinkel, Particle–wall collisions in a viscous fluid, Journal of Fluid Mechanics 
+
+433 , 329 (2001). [92] X. Li, J. R. Royer, and C. Ness, Simulating the rheology of dense suspensions using pairwise formulation of contact, lubrication and brownian forces, Journal of Fluid Mechanics 984 , A67 (2024). [93] ´E. Guazzelli and O. Pouliquen, Rheology of dense granular suspensions, Journal of Fluid Mechanics 852 , P1 (2018). [94] S. Mueller, E. Llewellin, and H. Mader, The effect of particle shape on suspension viscosity and implications for magmatic flows, Geophysical Research Letters 38 (2011). [95] B. Etcheverry, Y. Forterre, and B. Metzger, Capillary-stress controlled rheometer reveals the dual rheology of shear-thickening suspensions, Physical Review X 13 , 011024 (2023). [96] K. Saitoh and B. P. Tighe, Nonlocal effects in inhomogeneous flows of soft athermal disks, Physical Review Letters 122 ,188001 (2019). [97] B. P. Bhowmik and C. Ness, Scaling description of frictionless dense suspensions under inhomogeneous flow, Physical Review Letters 132 , 118203 (2024). [98] B. P. Bhowmik and C. Ness, Unifying homogeneous and inhomogeneous rheology of dense suspensions, Journal of Rheology 
+
+69 , 423 (2025). [99] Y. Bhosale, N. Weiner, A. Butler, S. H. Kim, M. Gazzola, and H. King, Micromechanical origin of plasticity and hysteresis in nestlike packings, Physical Review Letters 128 , 198003 (2022). [100] E. Brown, H. Zhang, N. A. Forman, B. W. Maynor, D. E. Betts, J. M. DeSimone, and H. M. Jaeger, Shear thickening and jamming in densely packed suspensions of different particle shapes, Physical Review E 84 , 031408 (2011).
