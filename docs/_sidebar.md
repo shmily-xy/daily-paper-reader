@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-01 <!--dpr-date:20260801-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/01/2607.25161v1-fast-stokesian-dynamics-for-rigid-aggregates" data-sidebar-item="{&quot;title&quot;: &quot;Fast Stokesian Dynamics for Rigid Aggregates&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.25161v1-fast-stokesian-dynamics-for-rigid-aggregates&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。&quot;}">Fast Stokesian Dynamics for Rigid Aggregates</a>
   * 2026-07-31 <!--dpr-date:20260731-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202607/31/2607.28206v1-rheology-of-dense-suspensions-of-granular-spherocylinders-by-particle-based-simulation" data-sidebar-item="{&quot;title&quot;: &quot;Rheology of dense suspensions of granular spherocylinders by particle-based simulation&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2607.28206v1-rheology-of-dense-suspensions-of-granular-spherocylinders-by-particle-based-simulation&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;稠密悬浮液流变模拟方法，可迁移至电池浆料流变学研究&quot;}">Rheology of dense suspensions of granular spherocylinders by particle-based simulation</a>

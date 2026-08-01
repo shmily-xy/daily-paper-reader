@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-01",
+  "date": "2026-08-01",
+  "generated_at": "2026-08-01T20:02:29",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/01/2607.25161v1-fast-stokesian-dynamics-for-rigid-aggregates",
+      "section": "quick",
+      "title_en": "Fast Stokesian Dynamics for Rigid Aggregates",
+      "authors": "Deepak Mangal, Avinesh Ojha, Wanjiao Liu, Ronald G. Larson, Jesse Capecelatro",
+      "date": "2026-07-28",
+      "pdf": "https://arxiv.org/pdf/2607.25161v1",
+      "score": "7.0",
+      "evidence": "针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。",
+      "tldr": "针对刚性聚集体悬浮液的动力学与流变模拟，提出快速Stokesian动力学框架，并拓展至多珠刚体；通过几何约束隐式施加刚性，构建块三角预条件器高效求解鞍点系统。在HOOMD-blue中实现开源插件，验证了剪切、沉降、布朗扩散及流变行为，准确重现碳黑浆料的剪切变稀与高剪切黏度。该方法GPU扩展良好，自适应Ewald分裂可实现数量级加速。",
+      "tags": "query:equipment",
+      "abstract_en": "We present a fast Stokesian dynamics (FSD) framework for the dynamics and rheology of suspensions of rigid aggregates. The method extends the sphere-level formulation of Fiore and Swan (2019) to multi-bead rigid bodies. Rigidity is enforced implicitly through geometric constraints, enabling stable and efficient time integration. We develop a block-triangular factorization preconditioner for the resulting saddle-point system. The approach combines an approximate inverse of the far-field mobility with a block-diagonal approximation of the Schur complement, enabling independent inversion of each aggregate sub-block via LU decomposition. The method is implemented as an open-source plugin for the HOOMD-blue software suite, and validated against benchmark problems, including doublet dynamics in shear flow, pair sedimentation, Brownian diffusion, and suspension rheology across dilute and structured regimes, accurately capturing both deterministic and stochastic behavior. The framework is further validated against experimental rheology of carbon black slurries, explicitly accounting for van der Waals cohesion, Hertzian contact, and tangential friction via enhanced lubrication. The simulations accurately reproduce the shear-thinning and high-shear viscous regimes. The method exhibits favorable GPU scaling for small system sizes, with decreasing runtime per bead prior saturation. A size-dependent Ewald splitting parameter accelerates simulations at low volume fractions, yielding up to an order-of-magnitude speedup compared to constant Ewald splitting. For larger systems, a constant Ewald splitting produces linear scaling with particle number, whereas the size-dependent choice leads to quadratic scaling due to increased far-field cost. Overall, the proposed framework enables accurate and scalable simulation of rigid aggregate suspensions in Stokes flow.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

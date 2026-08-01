@@ -1,0 +1,56 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-01T20:00:39.095666+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2607.25161v1",
+      "source": "arxiv",
+      "title": "Fast Stokesian Dynamics for Rigid Aggregates",
+      "abstract": "We present a fast Stokesian dynamics (FSD) framework for the dynamics and rheology of suspensions of rigid aggregates. The method extends the sphere-level formulation of Fiore and Swan (2019) to multi-bead rigid bodies. Rigidity is enforced implicitly through geometric constraints, enabling stable and efficient time integration. We develop a block-triangular factorization preconditioner for the resulting saddle-point system. The approach combines an approximate inverse of the far-field mobility with a block-diagonal approximation of the Schur complement, enabling independent inversion of each aggregate sub-block via LU decomposition. The method is implemented as an open-source plugin for the HOOMD-blue software suite, and validated against benchmark problems, including doublet dynamics in shear flow, pair sedimentation, Brownian diffusion, and suspension rheology across dilute and structured regimes, accurately capturing both deterministic and stochastic behavior. The framework is further validated against experimental rheology of carbon black slurries, explicitly accounting for van der Waals cohesion, Hertzian contact, and tangential friction via enhanced lubrication. The simulations accurately reproduce the shear-thinning and high-shear viscous regimes. The method exhibits favorable GPU scaling for small system sizes, with decreasing runtime per bead prior saturation. A size-dependent Ewald splitting parameter accelerates simulations at low volume fractions, yielding up to an order-of-magnitude speedup compared to constant Ewald splitting. For larger systems, a constant Ewald splitting produces linear scaling with particle number, whereas the size-dependent choice leads to quadratic scaling due to increased far-field cost. Overall, the proposed framework enables accurate and scalable simulation of rigid aggregate suspensions in Stokes flow.",
+      "authors": [
+        "Deepak Mangal",
+        "Avinesh Ojha",
+        "Wanjiao Liu",
+        "Ronald G. Larson",
+        "Jesse Capecelatro"
+      ],
+      "primary_category": "cond-mat.soft",
+      "categories": [
+        "cond-mat.soft"
+      ],
+      "published": "2026-07-28T00:14:15+00:00",
+      "link": "https://arxiv.org/pdf/2607.25161v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Fast Stokesian dynamics framework for suspension rheology and dynamics, applicable to slurry rheology in battery electrode manufacturing.",
+      "llm_evidence_cn": "针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。",
+      "llm_evidence": "针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。",
+      "canonical_evidence": "针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。",
+      "llm_tldr_en": "This paper presents a fast Stokesian dynamics method for simulating dynamics and rheology of suspensions of rigid aggregates, enabling efficient particle-level modeling of slurry flow and mixing.",
+      "llm_tldr_cn": "针对刚性聚集体悬浮液，论文提出一种快速Stokesian动力学方法，通过隐式几何约束保持刚体结构并开发块三角分解预条件器，实现对多珠刚体系统的高效稳定模拟。在开源HOOMD-blue软件中实现并验证，可用于研究电池电极浆料等复杂悬浮液的流变与分散机理。该方法为理解浆料混合动力学提供了有力工具。",
+      "llm_tldr": "针对刚性聚集体悬浮液，论文提出一种快速Stokesian动力学方法，通过隐式几何约束保持刚体结构并开发块三角分解预条件器，实现对多珠刚体系统的高效稳定模拟。在开源HOOMD-blue软件中实现并验证，可用于研究电池电极浆料等复杂悬浮液的流变与分散机理。该方法为理解浆料混合动力学提供了有力工具。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "slurry rheology in battery electrode manufacturing",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
