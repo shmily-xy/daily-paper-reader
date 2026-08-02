@@ -6,26 +6,22 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-01
-- 运行时间：2026-08-01 20:02:24 UTC
+- 最新运行日期：2026-08-02
+- 运行时间：2026-08-02 20:14:59 UTC
 - 运行状态：成功
-- 本次总论文数：1
+- 本次总论文数：0
 - 精读区：0
-- 速读区：1
+- 速读区：0
 
 ### 今日简报（AI）
-今日仅速读1篇论文，无精读，筛选节奏放缓。  
-最值得关注的是《Fast Stokesian Dynamics for Rigid Aggregates》（7.0/10），聚焦刚性聚集体的快速斯托克斯动力学方法。  
-建议普通读者可先浏览该文的算法思路，了解其适用场景后再决定是否深入。
-- 详情：[/202608/01/README](/202608/01/README)
+> 今日无新推荐，系统未产出可展示论文。
+- 详情：[/202608/02/README](/202608/02/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Fast Stokesian Dynamics for Rigid Aggregates](/202608/01/2607.25161v1-fast-stokesian-dynamics-for-rigid-aggregates)  
-   标签：评分：7.0/10、query:equipment
-   evidence：针对刚性聚集体悬浮液流变与动力学的快速Stokesian动力学方法，可用于电池电极浆料流变研究。
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">
