@@ -1,0 +1,54 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-10T21:06:02.064545+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.02313v1",
+      "source": "arxiv",
+      "title": "Colloidal Systems",
+      "abstract": "This book has one primary goal: To get you moving quickly from learning basic principles of colloid science, to designing colloidal systems for function or motion in the lab. It is not intended to provide encyclopedic knowledge about all aspects of colloid and surface science; rather, I have chosen not to include many topics of genuine importance. In reaching the intended goal, I use two parallel strategies. First, I give practical results that can be used immediately. If there is a cumbersome calculation, I have worked to reframe it into a table or figure. This is the case for Hamaker constants and hydrodynamics of spheroids, for instance. Second, I describe the physics of various colloidal phenomena, so that you as a researcher can think about alternative strategies.   In balancing algorithms with explanations, I provide plug-and-chug example problems to familiarize you with units, constants, and typical values. The practice problems provide extensions to the most basic theory that open new possibilities, while also giving results that are useful in practical and research studies. Throughout the book, I provide data we commonly use for viscosities, zeta potentials, ionic phenomena, and other parameters. Rather than providing every reference and every technique, I have provided those references and techniques that we most often use in our lab. In the end, this book aims not to be an exhaustive study of colloids, but rather to be a doorway to producing desired colloidal systems as quickly as possible.",
+      "authors": [
+        "Darrell Velegol"
+      ],
+      "primary_category": "cond-mat.soft",
+      "categories": [
+        "cond-mat.soft",
+        "physics.chem-ph",
+        "physics.flu-dyn"
+      ],
+      "published": "2026-08-03T14:37:24+00:00",
+      "link": "https://arxiv.org/pdf/2608.02313v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Colloidal systems book provides rheology and dispersion principles applicable to battery electrode slurry manufacturing",
+      "llm_evidence_cn": "胶体系统书籍提供适用于电池电极浆料制造的流变与分散原理",
+      "llm_evidence": "胶体系统书籍提供适用于电池电极浆料制造的流变与分散原理",
+      "canonical_evidence": "胶体系统书籍提供适用于电池电极浆料制造的流变与分散原理",
+      "llm_tldr_en": "This book moves readers from colloid science basics to practical lab design, offering immediate formulas and physical explanations, making it a useful methodological reference for studying slurry rheology in battery electrode manufacturing.",
+      "llm_tldr_cn": "本书旨在帮助读者从胶体科学基础快速进入功能性胶体系统的实验设计，采用实用结果与物理原理并行的讲解方式。作者将繁琐计算整理成表格和图，例如Hamaker常数与椭球流体动力学，并阐明胶体现象背后的物理机制。这种以应用为导向的知识组织方式，使研究人员能够灵活设计功能或运动型胶体系统，也为理解电池正极浆料中的流变与分散问题提供了方法参考。",
+      "llm_tldr": "本书旨在帮助读者从胶体科学基础快速进入功能性胶体系统的实验设计，采用实用结果与物理原理并行的讲解方式。作者将繁琐计算整理成表格和图，例如Hamaker常数与椭球流体动力学，并阐明胶体现象背后的物理机制。这种以应用为导向的知识组织方式，使研究人员能够灵活设计功能或运动型胶体系统，也为理解电池正极浆料中的流变与分散问题提供了方法参考。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "slurry rheology in battery electrode manufacturing",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
