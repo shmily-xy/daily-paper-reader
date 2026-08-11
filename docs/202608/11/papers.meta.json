@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-11",
+  "date": "2026-08-11",
+  "generated_at": "2026-08-11T21:29:56",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/11/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels",
+      "section": "quick",
+      "title_en": "Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels",
+      "authors": "Kritagya Sharma, Bimalendu Mahapatra",
+      "date": "2026-08-09",
+      "pdf": "https://arxiv.org/pdf/2608.08547v1",
+      "score": "6.0",
+      "evidence": "研究非牛顿流体混合及数据驱动建模，可迁移至电池浆料流变与混合机理分析。",
+      "tldr": "非牛顿流体在微通道中的被动混合受限于层流扩散，挑战严峻。本研究针对正弦收敛-发散微通道，通过有限体积模拟研究壁面振幅比、相位偏移和波数的影响，发现收缩-扩张单元通过界面拉伸和剪切变稀增强混合，但增加压降。基于GPR代理模型与NSGA-II多目标优化，准确复现Pareto前沿，实现混合性能与压降的平衡，为设计提供快速精确框架。",
+      "tags": "query:equipment",
+      "abstract_en": "Micromixing of non-Newtonian fluids remains challenging because laminar flow at microscales restricts transverse transport primarily to molecular diffusion. In this study, we investigate the transport mechanisms governing passive micromixing of a Carreau--Yasuda fluid in two-dimensional sinusoidal converging--diverging microchannels and develop a surrogate-assisted framework for their multi-objective design. We perform high-fidelity finite-volume simulations by systematically varying the wall-amplitude ratio, phase offset, and wave count under creeping-flow conditions. The results show that successive contraction--expansion units enhance mixing through the combined effects of interface stretching, elevated shear rates, and shear-thinning-induced viscosity reduction. These mechanisms improve scalar transport but simultaneously increase pressure drop, creating an inherent trade-off between mixing performance and hydraulic resistance. To efficiently explore the multidimensional design space, we construct surrogate models from high-fidelity numerical simulations and identify Gaussian Process Regression (GPR) as the most accurate predictor of both the mixing index and pressure drop. Coupling the validated GPR surrogate with Non-dominated Sorting Genetic Algorithm II (NSGA-II) accurately reproduces the Pareto front obtained from the high-fidelity simulations and identifies optimal microchannel geometries that balance mixing enhancement against pressure loss. The proposed machine learning framework provides a fast, accurate, and physically consistent strategy for the multi-objective design of passive micromixers for non-Newtonian fluids.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

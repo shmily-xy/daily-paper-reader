@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-11 <!--dpr-date:20260811-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/11/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels" data-sidebar-item="{&quot;title&quot;: &quot;Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;研究非牛顿流体混合及数据驱动建模，可迁移至电池浆料流变与混合机理分析。&quot;}">Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels</a>
   * 2026-08-10 <!--dpr-date:20260810-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/10/2608.02313v1-colloidal-systems" data-sidebar-item="{&quot;title&quot;: &quot;Colloidal Systems&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.02313v1-colloidal-systems&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;胶体系统书籍提供适用于电池电极浆料制造的流变与分散原理&quot;}">Colloidal Systems</a>

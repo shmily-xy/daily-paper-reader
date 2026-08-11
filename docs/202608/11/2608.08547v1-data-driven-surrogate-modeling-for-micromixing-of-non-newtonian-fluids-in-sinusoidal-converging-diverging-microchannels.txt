@@ -1,0 +1,676 @@
+Title: Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels
+
+URL Source: https://arxiv.org/pdf/2608.08547v1
+
+Published Time: Tue, 11 Aug 2026 01:27:37 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging–Diverging Microchannels 
+
+Kritagya Sharma 1 and Bimalendu Mahapatra 2, a) 
+
+> 1)
+
+Department of Mechanical Engineering, Indian Institute of Petroleum and Energy, Visakhapatnam, Andhra Pradesh, India 
+
+> 2)
+
+Department of Mechanical Engineering, Indian Institute of Science, Bangalore-560012, India 
+
+Micromixing of non-Newtonian fluids remains challenging because laminar flow at microscales re-stricts transverse transport primarily to molecular diffusion. In this study, we investigate the trans-port mechanisms governing passive micromixing of a Carreau–Yasuda fluid in two-dimensional sinu-soidal converging–diverging microchannels and develop a surrogate-assisted framework for their multi-objective design. We perform high-fidelity finite-volume simulations by systematically varying the wall-amplitude ratio, phase offset, and wave count under creeping-flow conditions. The results show that successive contraction–expansion units enhance mixing through the combined effects of interface stretching, elevated shear rates, and shear-thinning-induced viscosity reduction. These mechanisms improve scalar transport but simultaneously increase pressure drop, creating an inherent trade-off be-tween mixing performance and hydraulic resistance. To efficiently explore the multidimensional design space, we construct surrogate models from high-fidelity numerical simulations and identify Gaussian Process Regression (GPR) as the most accurate predictor of both the mixing index and pressure drop. Coupling the validated GPR surrogate with Non-dominated Sorting Genetic Algorithm II (NSGA-II) accurately reproduces the Pareto front obtained from the high-fidelity simulations and identifies optimal microchannel geometries that balance mixing enhancement against pressure loss. The proposed machine learning framework provides a fast, accurate, and physically consistent strategy for the multi-objective design of passive micromixers for non-Newtonian fluids. 
+
+I. INTRODUCTION 
+
+Microfluidic technologies have become indispensable in chemical synthesis 1, biomedical diagnostics 2, pharma-ceutical processing 3, lab-on-a-chip systems 4–6 , and biomanufacturing 7 because they enable precise manipulation of minute fluid volumes with low reagent consumption, rapid heat and mass transfer, and excellent process con-trollability 8–10 . Despite these advantages, transport in microchannels is fundamentally constrained by the low-Reynolds-number regime, where viscous forces dominate inertia and the flow remains laminar 11–14 . Conse-quently, transverse transport is governed primarily by molecular diffusion, which is intrinsically slow for liquids and often inadequate to achieve rapid homogenization over practical channel lengths 15,16 . Efficient micromix-ing therefore remains one of the central challenges in microfluidic engineering, motivating the development of passive geometries capable of enhancing scalar transport without external energy input 17–19 .Efficient mixing under creeping-flow conditions depends on the generation of concentration gradients through the kinematic deformation of the concentration field 20 . Stretching and folding of fluid interfaces increase the interfacial area and reduce the characteristic diffusion length, thereby accelerating molecular transport even though the molecular diffusivity remains unchanged 21,22 . These mechanisms, commonly described within the framework of chaotic advection, form the physical basis of passive micromixers 23,24 . Unlike active micromixers, which employ electric 25,26 , magnetic 27 , thermal 28 , or acoustic forcing 29 , passive devices manipulate the flow solely through geometric modifications of the channel, making them attractive because of their structural simplicity, low energy consumption, and compatibility with conventional microfabrication technologies 30–33 .Among passive micromixer designs, contraction–expansion microchannels have attracted considerable atten-tion because their periodically varying geometry continuously modifies the local flow deformation, thereby promoting mixing 18,34 . Fluid acceleration through contractions generates regions of high shear rate, whereas subsequent expansions redistribute the velocity field and reorient scalar interfaces before the next contraction 35 .Repeated acceleration–deceleration cycles therefore promote interface stretching, scalar-gradient generation, and diffusion-driven homogenization 26,36 . Sinusoidal converging–diverging microchannels provide a particularly attractive configuration because the smooth variation of the channel cross-section produces continuous deforma-tion fields while avoiding the abrupt changes associated with sharp contractions and expansions 37,38 . The wall amplitude, wavelength, and relative phase collectively determine the distribution of shear rate, residence time, and scalar gradients, thereby governing the overall mixing performance 35 . Similar transport mechanisms are en-countered in vascular constrictions 39 , porous biological tissues 40 , extrusion nozzles, and additive-manufacturing flow passages 41 , where gradual geometric variations strongly influence local hydrodynamics. 
+
+> a) Electronic mail: bimalendum@iisc.ac.in arXiv:2608.08547v1 [physics.flu-dyn] 9 Aug 2026
+
+2
+
+> FIG. 1. Workflow of the surrogate-assisted optimization methodology, including CFD data generation, machine-learning surrogate development, multi-objective optimization, and model interpretation for Carreau–Yasuda fluid micromixers.
+
+Fluids commonly used in microfluidic applications, including blood, polymer solutions, hydrogels, protein sus-pensions, and bioinks, exhibit pronounced shear-thinning behavior 42–44 . Unlike Newtonian fluids, their apparent viscosity decreases with increasing shear rate, introducing a strong coupling between the flow kinematics and the local rheology 45,46 . In converging–diverging channels, the elevated shear rates generated within contractions reduce the local viscosity, thereby modifying the velocity distribution, residence time, and scalar transport 47 .Consequently, the same geometric features responsible for enhancing mixing also influence the hydraulic resis-tance, producing an intrinsic trade-off between mixing performance and pressure loss 48,49 . The Carreau–Yasuda model has become one of the most widely adopted constitutive descriptions for such fluids because it accurately captures the transition from the zero-shear Newtonian plateau to the high-shear power-law regime while re-maining computationally efficient for engineering simulations 50–52 . Nevertheless, despite extensive studies on Newtonian passive micromixers, the transport physics of shear-thinning fluids in smoothly varying sinusoidal contraction–expansion geometries remains comparatively unexplored 34 .The computational design of passive micromixers remains challenging because high-fidelity computational fluid dynamics simulations, while accurately capturing the coupled transport of momentum and species, require substantial computational resources to optimize multiple geometric design parameters. Recent advances in sur-rogate modeling provide an efficient alternative by replacing expensive CFD evaluations with data-driven models trained on a limited number of simulations 53–55 . Among the available approaches, Gaussian Process Regression is particularly attractive for deterministic CFD datasets because it accurately interpolates smooth nonlinear re-sponse surfaces while providing predictive uncertainty 56 . Although surrogate-assisted optimization has received increasing attention in fluid mechanics, its application to passive micromixers handling non-Newtonian fluids remains limited, particularly in studies that integrate high-fidelity CFD, Carreau–Yasuda fluid transport, and multi-objective optimization 55 .In this work, we develop a surrogate-assisted framework for the design and optimization of passive micromix-ers operating with shear-thinning fluids. We investigate incompressible Carreau–Yasuda fluid flow in two-dimensional sinusoidal converging–diverging microchannels and systematically assess the effects of the wall-amplitude ratio, phase offset, and wave number on mixing performance and pressure drop. A database of high-fidelity CFD simulations is used to train and evaluate multiple surrogate models, and the best-performing model is subsequently coupled with the Non-dominated Sorting Genetic Algorithm II (NSGA-II) 57 to identify Pareto-optimal microchannel geometries. The optimized designs are subsequently validated using independent CFD simulations, which confirm the surrogate predictions and provide insight into the flow and transport mechanisms governing mixing enhancement. By integrating high-fidelity simulations, surrogate modelling, and multi-objective optimization, this study links geometric modulation to shear-rate amplification, viscosity redis-tribution, mixing, and hydraulic losses, providing an efficient framework for the design of passive micromixers for complex fluids.  
+
+> II. PROBLEM FORMULATION:
+
+In this study, we investigate the transport and mixing of an incompressible shear-thinning fluid in sinusoidal converging–diverging microchannels. The overall methodology is summarized in Fig. 1. We combine high-fidelity computational fluid dynamics simulations with surrogate modelling and multi-objective optimization to evaluate the influence of geometric modulation on micromixer performance. Specifically, we quantify the mixing performance and the corresponding pressure drop over a broad range of channel geometries and identify designs that achieve an effective balance between these competing objectives. The following sections describe the physical model, channel geometry, governing equations, numerical methodology, and performance metrics. 3 
+
+> A. Geometry Definition
+
+We consider a two-dimensional sinusoidal passive micromixer consisting of a straight inlet section, a sinusoidal active section, and a straight outlet section. The total channel length is 3400 μm, comprising a 500 μm straight inlet section, a 2400 μm sinusoidal active section, and a 500 μm straight outlet section. The nominal channel half-height is h = 100 μm. To define the sinusoidal section, we introduce the local streamwise coordinate 
+
+ξ = x − Lin , where Lin = 500 μm is the inlet length. Consequently, 0 ≤ ξ ≤ Lsin , where Lsin = 2400 μm. The upper and lower channel walls are defined as 
+
+ytop (ξ) = h + A E (ξ) sin 
+
+ 2πξ λ
+
+
+
+, ybot (ξ) = −h + A E (ξ) sin 
+
+ 2πξ λ + ϕ
+
+
+
+, (1) where A is the wall amplitude, λ = Lsin /n is the wavelength, n is the number of sinusoidal waves in the active section, and ϕ is the phase offset between the upper and lower walls. The wall amplitude is smoothly modulated by the envelope function E(ξ), defined as E(ξ) = 12 [1 − cos ( πξ/L r )] for 0 ≤ ξ < L r , E(ξ) = 1 for Lr ≤ ξ ≤
+
+Lsin − Lr , and E(ξ) = 12 [1 − cos ( π(Lsin − ξ)/L r )] for Lsin − Lr < ξ ≤ Lsin , where the ramp length is Lr = λ/ 2. This envelope satisfies E(0) = E(Lsin ) = 0 and E′(0) = E′(Lsin ) = 0, ensuring that the sinusoidal walls connect to the straight inlet and outlet sections with continuous position and slope. Consequently, geometric discontinuities at x = 500 μm and x = 2900 μm are eliminated.  
+
+> B. Governing Equations
+
+The flow field is governed by the conservation equations for mass, momentum, and scalar transport. For an incompressible fluid, the continuity and momentum equations are given by 
+
+∇ · u = 0 , ρ
+
+ ∂u
+
+∂t + u · ∇ u
+
+
+
+= −∇ p + ∇ · τ , (2) where u denotes the velocity vector, ρ is the fluid density, p is the pressure, and τ is the extra-stress tensor. For a generalized Newtonian fluid, the extra-stress tensor is defined as τ = 2 μ( ˙ γ)D, where D is the rate-of-deformation tensor, D = 12
+
+ ∇u + ∇uT  , and the magnitude of the shear rate is given by ˙ γ = √2D : D.
+
+The working fluid was modeled as an incompressible shear-thinning fluid described by the Carreau–Yasuda constitutive model. We evaluated the apparent viscosity using the Carreau–Yasuda constitutive relation 50,51,58 ,
+
+μapp = μ∞ + ( μ0 − μ∞) [1 + ( λc ˙γ)a] nc −1 
+
+> a
+
+, (3) where μ0 and μ∞ denote the zero-shear and infinite-shear viscosities, respectively, λc represents the characteristic time constant governing the onset of shear-thinning, nc is the power-law index controlling the degree of shear-thinning, and a is the Yasuda transition parameter controlling the breadth of the transition region between the Newtonian plateaus. Table I summarizes the fluid properties used in the simulations. The Carreau-Yasuda model is utilized here because it accurately captures the non-Newtonian, shear-thinning behavior of blood by smoothly bounding its viscosity between physiological extremes 59 . The specific parameters reflect established empirical measurements for human blood: the zero-shear viscosity ( μ0 = 0.056 Pa s) represents the high flow resistance caused by red blood cell aggregation, while the infinite-shear viscosity ( μ∞ = 0.0035 Pa s) accounts for cellular deformation and flow alignment at high shear rates 60 . The characteristic time constant ( λc = 1.902 s), power-law index ( nc = 0.22), and Yasuda parameter ( a = 1.25) are constants tuned to govern the onset and curvature of this transition, ensuring the mathematical simulation strictly aligns with physical rheological data 61 .                          
+
+> TABLE I. Carreau–Yasuda fluid parameters used in the simulations
+> Parameter Description Value Unit
+> ρDensity 1000 kg m −3
+> μ0Zero-shear viscosity 0.056 Pa s
+> μ∞Infinite-shear viscosity 0.0035 Pa s
+> λcTime constant 1.902 s
+> ncPower-law index 0.22 —
+> aYasuda parameter 1.25 —
+> DMolecular diffusivity 1×10 −9m2s−1
+
+To quantify species transport, we solved the transient convection–diffusion equation, 
+
+∂C ∂t + u · ∇ C = D∇2C, (4) 4where C denotes the normalized scalar concentration, u is the velocity field, and D is the molecular diffusivity. We quantified the degree of mixing using the mixing index ( M I ), defined at the outlet cross-section as 
+
+M I = 1 − σσ0
+
+, σ =
+
+vuut 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+ Ci − ¯C2, (5) where σ is the standard deviation of the outlet concentration distribution, σ0 is the corresponding standard deviation for the unmixed inlet condition, N is the number of sampling points, and ¯C is the mean concentration. We evaluated the outlet mixing index ( M I ) by sampling the concentration field at 500 uniformly distributed points across the outlet cross-section ( x = 3400 μm). We define the pressure drop, ∆ p, as the difference between the cross-sectionally averaged pressures at x = 500 μm and x = 2900 μm, i.e., ∆ p = ¯ p (x = 500 μm) −
+
+¯p (x = 2900 μm), where ¯ p denotes the pressure averaged over the channel cross-section. We prescribed a uniform inlet velocity of uin = 0 .005 m s −1. Based on the channel half-height ( h = 100 μm), the Reynolds number and P´ eclet number remained fixed throughout the study, with Re = ρu in h/μ 0 ≈ 0.009 and 
+
+P e = uin h/D = 500. The low Reynolds number ensures laminar creeping flow, whereas the moderate P´ eclet number indicates convection-dominated streamwise transport with transverse mixing governed by molecular diffusion. Consequently, the sinusoidal converging–diverging geometry enhances mixing by repeatedly deforming the concentration field, increasing the interfacial area and concentration gradients that drive molecular diffusion.  
+
+> C. Numerical Solution Procedure
+
+We solved the governing equations using the finite-volume solver rheoFoam within the RheoTool frame-work 62 , which is built on Open Field Operation and Manipulation (OpenFOAM) version 9. The computa-tional domain was discretized using structured two-dimensional finite-volume meshes. The transient simulations were advanced until the flow and concentration fields attained a statistically stationary state, from which the pressure-drop and concentration distributions were obtained. Pressure–velocity coupling was achieved using the merged Pressure-Implicit with Splitting of Operators and Semi-Implicit Method for Pressure-Linked Equations 
+
+(PIMPLE) algorithm. Time integration was performed using a first-order implicit Euler scheme, while spatial discretization employed second-order Gaussian schemes. To reduce numerical diffusion, the Convergent and Universally Bounded Interpolation Scheme for the Treatment of Advection (CUBISTA) was used for the dis-cretization of scalar and constitutive convective terms, whereas corrected Gaussian schemes were applied to the diffusive terms. The pressure equation was solved using the Preconditioned Conjugate Gradient (PCG) solver with a Diagonal Incomplete Cholesky (DIC) preconditioner. The momentum, scalar transport, and constitutive equations were solved using the Preconditioned Bi-Conjugate Gradient (PBiCG) solver with a Diagonal Incom-plete Lower–Upper (DILU) preconditioner. A fixed time step of ∆ t = 10 −3 was employed while maintaining the Courant number below unity throughout the simulations. Computations were continued until both the pressure drop across the sinusoidal section and the outlet mixing index reached convergence. The upper and lower inlet streams were assigned normalized scalar concentrations of C = 1 and C = 0, respectively. No-slip and no-flux boundary conditions were imposed at the channel walls, while zero-gradient boundary conditions were prescribed at the outlet for all transported variables except pressure, for which a fixed reference value was specified. The outlet mixing index was evaluated from the converged concentration field, whereas the pressure drop was calculated from the pressure difference across the sinusoidal section.  
+
+> D. Numerical Verification
+
+We solved the governing equations using rheoFoam , a specialized solver within the open-source RheoTool 62 
+
+framework. Since its foundational validation for viscoelastic flows 62 , rheoFoam has been extensively verified against alternative numerical methods for generalized Newtonian, thixotropic, and elastoviscoplastic fluids 63,64 .The solver’s robustness in capturing severe stress gradients is well documented across complex microfluidic geometries, including abrupt converging–diverging contractions 63,65 . Here, we mainly focused on verifying the numerical discretization adopted for the present sinusoidal converging–diverging microchannels. We performed mesh and time-step independence studies using a representative geometry with A/h = 0 .5, ϕ = 120 ◦, and n = 4. We progressively refined the structured mesh and reduced the time step while monitoring the outlet mixing index ( M I ) and the pressure drop across the sinusoidal section (∆ p). As summarized in Table II, refining the mesh from Mesh 3 to Mesh 4 changed M I by less than 0 .1% and ∆ p by less than 0 .05%. Likewise, reducing the time step from 10 −3 to 10 −4 changed M I by less than 0 .1% and ∆ p by less than 0 .04%. These negligible differences confirm mesh and temporal independence. Accordingly, we adopted Mesh 3 and a time step of 10 −3
+
+for all subsequent simulations. Each simulation was continued until both M I and ∆ p reached steady values, ensuring numerically converged solutions. 5                                                                                       
+
+> TABLE II. Mesh and time-step independence studies for the representative geometry ( A/h = 0 .5, ϕ= 120 ◦, and n= 4).
+> Study Case Nodes Min. Size (m) Max. Size (m) M I ∆p(Pa)
+> Mesh Mesh 1 29 069 3×10 −65×10 −60.227 27.751 Mesh 2 45 135 2×10 −64×10 −60.226 27.780 Mesh 3 80 240 1×10 −63×10 −60.226 27.792 Mesh 4 178 770 8×10 −71×10 −60.226 27.777 Time Step ∆t= 10 −180 240 1×10 −63×10 −60.223 25.824 ∆t= 10 −280 240 1×10 −63×10 −60.226 27.805 ∆t= 10 −380 240 1×10 −63×10 −60.226 27.804 ∆t= 10 −480 240 1×10 −63×10 −60.226 27.792
+> III. SURROGATE-MODELING METHODOLOGY
+
+High-fidelity CFD simulations provide accurate predictions of micromixer performance but make exhaustive exploration of the design space computationally expansive. To enable rapid design exploration, we developed surrogate models that relate the geometric design parameters to the mixing index ( M I ) and pressure drop (∆ p). We trained and evaluated multiple regression models using the CFD-generated dataset and assessed their predictive capability through cross-validation, internal testing, and an independent holdout dataset. We subsequently employed the best-performing surrogate for response-surface analysis, Pareto-front construction, and multi-objective optimization to identify micromixer geometries that achieve an optimal balance between mixing performance and pressure drop.  
+
+> A. Dataset and Feature Representation
+
+The CFD database comprises 218 simulations, including 169 cases for surrogate-model development and 49 independently generated cases reserved for external validation. The primary dataset consists of 168 sinusoidal microchannel geometries and one straight-channel reference case is assigned sin ϕ = cos ϕ = 0 and λ = 0, since the phase offset and wave count are undefined in the absence of wall modulation. Sinusoidal geometries span A/h = {0.3, 0.5, 0.7, 0.9}, ϕ = {0◦, 30 ◦, 60 ◦, 90 ◦, 120 ◦, 150 ◦, 180 ◦}, and n = {2, 3, 4, 5, 6, 8}, corresponds to wavelengths λ = Lsin /n = {1200 , 800 , 600 , 480 , 400 , 300 } μm. We represented each geometry by the feature vector x = [ A/h, sin ϕ, cos ϕ, λ ]T. The trigonometric encoding preserves the periodicity of the phase offset and eliminates the discontinuity at 0 ◦ ≡ 360 ◦, while replacing the discrete wave count n with the continuous wavelength λ facilitates interpolation between neighboring geometries. Across the primary dataset, the mixing index ranges from 0 .21 to 0 .38, whereas the pressure drop spans 15 .68 to 817 .27 Pa. We therefore trained the pressure-drop surrogate using log(∆ p). The external validation set contains 49 unseen geometries, including intermediate n = 7 configurations, providing a stringent test of interpolation capability.  
+
+> B. Surrogate Models
+
+We used the CFD dataset to construct surrogate models that approximate the mapping between the geo-metric parameters and the corresponding performance metrics, namely the mixing index ( M I ) and pressure drop (∆ p). To assess the influence of model complexity, we evaluated four regression algorithms with increasing representational flexibility: ordinary least-squares linear regression, polynomial ridge regression (PRR), Gaus-sian process regression (GPR), and Extreme Gradient Boosting (XGBoost). We adopted ordinary least-squares linear regression as the baseline model. To account for nonlinear feature interactions, we developed polynomial ridge regression models using second- and third-degree polynomial feature expansions. We selected the regu-larization parameter from α ∈ { 10 −6, 10 −4, 10 −2, 1}. Cross-validation identified the third-degree expansion as optimal for both targets, with α = 10 −4 for M I and α = 10 −2 for log(∆ p). To provide a probabilistic nonlinear surrogate, we trained separate GPR models for M I and log(∆ p) using exact Gaussian process inference 54 . We adopted a Mat´ ern- 52 covariance function with automatic relevance determination (ARD) and an additive white-noise term, 
+
+k(exi, exj ) = σ2 
+
+> f
+
+1 + √5 rij + 5r2
+
+> ij
+
+3
+
+!
+
+exp 
+
+
+
+−√5 rij 
+
+
+
++ σ2
+
+> n
+
+δij , rij =
+
+vuut 4X
+
+> d=1
+
+(exi,d − exj,d )2
+
+ℓ2
+
+> d
+
+, (6) where σ2 
+
+> f
+
+is the signal variance, ℓd is the ARD length scale for feature d, σ2 
+
+> n
+
+is the white-noise variance, and δij is the Kronecker delta. Because the CFD responses are deterministic, we used the white-noise term 6only as a numerical nugget to improve covariance-matrix conditioning and absorb minor residual variation arising from iterative convergence; we did not interpret it as discretization error. We standardized each target before training and estimated the kernel hyperparameters by maximizing the log marginal likelihood using the L-BFGS-B optimizer. During validation, we used three optimizer restarts and screened initial white-noise levels of 10 −8, 10 −6, and 10 −4, selecting 10 −6 for M I and 10 −8 for log(∆ p). We increased the number of optimizer restarts to ten when fitting the final Gaussian process (GP) models. Under the Gaussian posterior assumption, the GP posterior mean and standard deviation were used to construct approximate 95% predictive intervals. For the mixing index, the interval was computed as ˆ y ± 1.96 ˆ σ. For the pressure drop, which was modeled in logarithmic space, the interval was obtained by back-transforming the bounds, exp(ˆ μlog ± 1.96 ˆ σlog ), yielding asymmetric predictive intervals in physical units. The GP posterior variance was used solely to quantify predictive uncertainty. We further considered XGBoost as a nonlinear tree-ensemble benchmark 66 . Cross-validation selected 600 boosting iterations for both targets. For the M I model, the optimal hyperparameters were a learning rate of 0.05, maximum tree depth of 2, minimum child weight of 1, subsampling fraction of 0.9, and an ℓ2-regularization strength of 1.0. For the log(∆ p) model, the optimal configuration consisted of a learning rate of 0.02, maximum tree depth of 3, minimum child weight of 1, subsampling fraction of 0.9, and the same ℓ2-regularization strength. We interpreted the trained XGBoost models using Tree SHapley Additive exPlanations (TreeSHAP) values 67 .For the pressure surrogate, we computed SHapley Additive exPlanations (SHAP) values in the transformed (log(∆ p)) space. Because the phase angle was encoded using the pair (sin ϕ, cos ϕ), we combined their mean absolute SHAP values to quantify the overall importance of the phase variable. This grouped importance represents the combined contribution of the two encoded features and should not be interpreted as a SHAP interaction value. We interpret SHAP values solely as measures of model attribution rather than evidence of physical causality. We assessed surrogate performance using the coefficient of determination (R2), root-mean-square er-ror ( RM SE ), mean absolute error ( M AE ), maximum absolute error ( ϵmax ), and prediction bias. For CFD targets yi, surrogate predictions ˆyi, target mean ¯y, and N samples, these metrics are defined as 
+
+R2 = 1 − P
+
+> i
+
+(yi − ˆyi)2/ P
+
+> i
+
+(yi − ¯y)2, RM SE = pP 
+
+> i
+
+(yi − ˆyi)2/N , M AE = P 
+
+> i
+
+|yi − ˆyi|/N , ϵmax = max i |yi − ˆyi|,and Bias = P
+
+> i
+
+(ˆ yi − yi)/N . The R2 score quantifies the fraction of variance explained by the surrogate, RM SE 
+
+and M AE measure the average prediction error, ϵmax identifies the worst-case deviation, and Bias detects systematic over- or under-prediction.  
+
+> C. Validation and Model-Selection Protocol
+
+We established a unified validation framework to ensure an unbiased comparison of surrogate-model perfor-mance. The framework defines the data partitioning, hyperparameter optimization, cross-validation procedure, and evaluation metrics used for model selection. We generated the partition in Table III deterministically using           
+
+> TABLE III. Validation hierarchy used for surrogate development. Assessment tier Cases Role Training 119 Model fitting Internal validation 25 Hyperparameter selection Internal test 25 Same-fit performance assessment Five-fold cross-validation 168 (5 folds) Post-selection stability check External holdout 49 Independent unseen-design assessment
+
+greedy maximin selection on the standardized feature space. This procedure selected mutually distant sinusoidal geometries to construct a space-filling holdout sample, which we subsequently divided into disjoint validation and test sets. We selected the model hyperparameter by minimizing the validation RMSE, using the MAE as a secondary criterion when multiple configurations produced similar RMSE values. Throughout model selec-tion, we excluded the internal-test and external-holdout sets from training and hyperparameter tuning. After selecting the optimal hyperparameter, we performed five-fold cross-validation on the 168 sinusoidal geometries to assess model robustness across different data partitions. Because we kept the hyperparameter fixed during cross-validation, this step evaluated model stability rather than serving as an additional model-selection stage. To compare the four surrogate models, we first trained each model using the same 119-case training set and evaluated its performance on the internal-test and external-holdout sets. After selecting the best-performing configuration, we retrained the final model using all 169 primary cases and performed a final evaluation on the 49 unseen external cases. We used this final surrogate for all subsequent analyses, including parity and error assessment, response-surface construction, feature-importance analysis, and multi-objective optimization. 7  
+
+> IV. MULTI-OBJECTIVE OPTIMIZATION FRAMEWORK A. Design Variables, Feasible Domain, and Objectives
+
+We formulated the surrogate-based multi-objective optimization problem to maximize the GP-predicted outlet mixing index while simultaneously minimizing the GP-predicted pressure drop. We defined the design vector as 
+
+z = [ A/h, ϕ, n ], subject to 0 .3 ≤ A/h ≤ 0.9, 0 ◦ ≤ ϕ ≤ 180 ◦, and n ∈ { 2, 3, 4, 5, 6, 7, 8}. We excluded A/h = 0 because the wall modulation vanishes in this limit, reducing the geometry to a straight channel in which neither the phase shift ϕ nor the number of sinusoidal periods n influences the flow. We treated n as an integer design variable because it specifies the number of complete sinusoidal periods over the fixed active-section length. Accordingly, we performed independent NSGA-II optimizations for each admissible value of n, thereby avoiding a mixed-integer optimization problem. Optimization for n = 7 also allowed us to assess the interpolation capability of the GP surrogate because this configuration is located between the training levels n = 6 and n = 8. We coupled the final-refit GP surrogates with NSGA-II by solving min 
+
+> z∈Z
+
+h
+
+−dM I GP (z), exp( by∆p, GP (z)) 
+
+i
+
+, (7) where dM I GP and by∆p, GP denote the GP predictions of the mixing index and log(∆ p), respectively. We applied an exponential transformation to the prediction of the pressure to recover the pressure drop (in Pa), allowing us to optimize the physical hydraulic performance together with the mixing efficiency.  
+
+> B. Pareto-Front Construction and Knee Selection
+
+We extracted the CFD Pareto front from the 168 sinusoidal primary simulations using the non-dominance criterion 68 and constructed the GP–NSGA-II front from the globally non-dominated surrogate solutions. We then identified the geometric knee, which represents the best trade-off between the competing objectives, as the point with the maximum perpendicular distance from the chord connecting the low-pressure and high-mixing extremes of the Pareto front, 
+
+zknee = arg max  
+
+> z∈P
+
+d⊥
+
+ep(z), epmin epmax 
+
+
+
+, (8) where we normalized the CFD and GP–NSGA-II fronts using common objective bounds obtained from their union. As a sensitivity check, we also identified the equal-weight ideal-point solution, 
+
+zideal = arg min 
+
+> z∈P
+
+rf∆p 2
+
++
+
+
+
+1 − gM I 
+
+2
+
+, (9) and, for a prescribed pressure limit ε, determined the pressure-constrained optimum from 
+
+zε = arg max 
+
+> z∈P
+
+dM I GP (z) subject to c∆pGP (z) ≤ ε. (10)  
+
+> C. GP-Assisted Multi-Objective Optimization and CFD Validation
+
+We coupled the final-refit GP surrogates with NSGA-II 57 using the pymoo framework 69 . For each integer wave count n, we performed three independent optimization runs with random seeds 11, 42, and 101. Each run used a population of 120, initialized by uniform random sampling, and evolved over 200 generations, with simulated binary crossover (crossover probability 0.90, crossover distribution index 15), polynomial mutation (mutation distribution index 20), and per-generation duplicate elimination. We then combined the non-dominated solu-tions obtained from all optimization runs and wave counts, eliminated near-duplicate designs, and applied a global non-dominance filter to obtain the final GP–NSGA-II Pareto front. We reconstructed the GP–NSGA-II knee geometry and evaluated it using an independent OpenFOAM sim-ulation with the same governing equations, numerical settings, boundary conditions, convergence criteria, and post-processing procedures used for the primary CFD database. To ensure an unbiased assessment, we ex-cluded this confirmation case from surrogate training, hyperparameter selection, and optimization. We then compared the GP predictions with the corresponding CFD values of M I and ∆ p, and report the corresponding discrepancies in Sec. V. 8(c)             
+
+> (e) (d)
+> (g)
+> (f)
+> (i) (h)
+> (b) (a)
+> FIG. 2. Contours of concentration distribution, velocity gradient, and apparent viscosity for (a–c) the straight channel, (d–f) the sinusoidal channel with A/h = 0 .5, ϕ= 90 ◦, and n= 4, and (g–i) the sinusoidal channel with A/h = 0 .9,
+> ϕ= 150 ◦, and n= 6.
+> V. RESULTS AND DISCUSSION
+
+The present flow remains in the creeping-flow regime ( Re ≈ 0.009), where viscous forces dominate inertia and turbulence is absent. Under these conditions, sinusoidal wall modulation cannot enhance mixing through inertial instabilities or turbulent dispersion. Instead, mixing originates from the coupled interaction between geometric deformation, shear-thinning rheology, and molecular diffusion. Figure 2 presents the concentration, velocity-gradient, and apparent-viscosity contours for a straight channel and two sinusoidal microchannels with different degrees of geometric modulation, illustrating the physical mechanisms governing the scalar transport and flow field.   
+
+> A. Flow Physics of Mixing Enhancement 1. Effect of Geometric Modulation on Scalar Transport
+
+The concentration contours in Fig. 2(a,d,g) demonstrate that geometric modulation alters the scalar transport mechanism. In the straight channel (Fig. 2(a)), the concentration interface remains nearly sharp throughout the domain because the streamlines remain almost parallel under creeping-flow conditions. Consequently, molec-ular diffusion acts across a relatively small interfacial area, resulting in slow transverse mass transport and limited outlet homogenization. Introducing sinusoidal wall modulation continuously perturbs this otherwise stable interface. As the fluid traverses successive converging–diverging sections, alternating acceleration and de-celeration repeatedly stretch and elongate the concentration interface, increasing both its length and curvature. This geometric deformation continuously generates new concentration gradients normal to the interface, thereby enlarging the effective diffusion area without altering the molecular diffusivity. Repeated interface stretching continually increases local concentration gradients, thereby enhancing molecular diffusion and accelerating scalar homogenization along the channel. Increasing the wall modulation further intensifies this mechanism. Com-pared with the moderately modulated geometry ( A/h = 0 .5, ϕ = 90 ◦, n = 4; Fig. 2(d)), the strongly modulated channel ( A/h = 0 .9, ϕ = 150 ◦, n = 6; Fig. 2(g)) produces significantly greater interface elongation and re-peated curvature during each contraction–expansion cycle. The cumulative stretching generated over successive sinusoidal units therefore increases scalar-gradient production and promotes substantially higher outlet mixing. These observations indicate that, in the absence of inertial mixing, sinusoidal geometric modulation enhances transport primarily by increasing interfacial area and strengthening diffusion-driven homogenization.  
+
+> 2. Shear-Rate Amplification and Shear-Thinning Response
+
+The enhanced scalar transport directly couples with the non-Newtonian rheology of the Carreau–Yasuda fluid. The velocity-gradient contours in Fig. 2(b,e,h) show that each converging section generates localized regions high velocity gradient regions. These regions consistently occur near the contraction throats, whereas the expanding sections allow partial relaxation of the deformation field. This kinematic response produces a corresponding rheological response through the Carreau–Yasuda constitutive model. As shown in Fig. 2(c,f,i), the regions of maximum velocity gradient coincide with the lowest apparent viscosity because the local shear rate exceeds the transition between the Newtonian plateau and the shear-thinning regime. Consequently, the apparent viscosity decreases within the contraction regions while remaining comparatively larger in the low-shear expansion zones. The spatial redistribution of viscosity further amplifies interfacial deformation. The reduced apparent viscosity lowers the local viscous resistance, allowing the fluid to accelerate more readily through successive contractions 9and increasing the stretching rate of the concentration interface. Consequently, geometric modulation and shear-thinning rheology act synergistically: stronger contractions produce larger velocity gradients, the elevated shear rates reduce the apparent viscosity, and the resulting reduction in flow resistance promotes even greater interface deformation. This positive coupling explains the substantial improvement in mixing observed as the wall amplitude increases.  
+
+> 3. Origin of the Hydraulic Penalty
+
+Although stronger geometric modulation enhances scalar transport, it simultaneously increases the hydraulic cost required to sustain the prescribed flow rate. Figure 2(b,e,h) shows that increasing the wall amplitude progressively concentrates large velocity gradients within the contraction regions. Maintaining a constant vol-umetric flow rate through these narrower passages therefore requires larger pressure gradients to overcome the increased viscous resistance associated with repeated acceleration and deceleration of the fluid. The shear-thinning response partially alleviates this hydraulic penalty by reducing the apparent viscosity within the high-shear regions, as illustrated in Fig. 2(c,f,i). However, this rheological benefit cannot fully compensate for the increased geometric confinement imposed by larger wall amplitudes and repeated contraction–expansion cy-cles. Consequently, viscous dissipation accumulates along the channel, producing progressively larger pressure losses as the geometric modulation becomes stronger. The simultaneous enhancement of mixing and pressure drop therefore reflects two competing consequences of the same physical mechanism. The velocity gradients responsible for stretching the concentration interface and accelerating molecular diffusion also increase viscous resistance within the flow. As a result, geometries that maximize scalar transport inevitably incur larger pressure drop. This intrinsic competition between transport enhancement and flow resistance defines the fundamental design trade-off investigated throughout the remainder of this work and motivates the subsequent surrogate-assisted multi-objective optimization. The representative flow fields in Fig. 2 reveal the mechanisms governing mixing enhancement in sinusoidal converging–diverging microchannels. However, they cannot fully capture the coupled effects of wall-amplitude ratio, phase offset, and wave count across the design space. To overcome the computational cost of exhaustive high-fidelity CFD simulations, we develop surrogate models from the CFD database to rapidly predict the mixing index and pressure drop. The following subsection evaluates their predictive performance.  
+
+> B. Surrogate Model Development and Validation
+
+The nonlinear coupling between geometric modulation, shear-thinning rheology, and scalar transport pro-duces a complex relationship between the design variables and the corresponding mixing and pressure drop behavior. Although the CFD database accurately resolves these interactions, its computational cost limits ex-haustive exploration of the multidimensional design space. We therefore developed surrogate models to rapidly approximate the mappings between the geometric parameters and the outlet mixing index ( M I ) and pressure drop (∆ p). This section compares the predictive performance of the candidate surrogate models, evaluates their robustness on unseen geometries, and examines their generalization capability.  
+
+> 1. Selection of the Optimal Surrogate Model
+
+We evaluated the predictive performance of Linear Regression (LR), Polynomial Ridge Regression (PRR), XGBoost, and Gaussian Process Regression (GPR) to identify the most suitable surrogate model for subsequent optimization. Figure 3 compares the predictions of the four models, and Table IV summarizes their quantitative performance metrics on the internal test dataset.                                
+
+> TABLE IV. Internal-test performance of surrogate models Mixing Index ( M I )Model R2RMSE MAE ϵmax Bias Linear Reg. 0.6900 0.02172 0.01696 0.05177 −0.00495 Poly. Ridge 0.9909 0.00371 0.00249 0.01145 −0.00073 XGBoost 0.9960 0.00248 0.00174 0.00689 −0.00050 GPR 0.9968 0.00222 0.00085 0.01052 −0.00027 Pressure Drop (∆ pin Pa) Model R2RMSE MAE ϵmax Bias Linear Reg. 0.4557 104.69 32.84 513.52 −19 .45 Poly. Ridge 0.9906 13.73 5.39 57.75 −0.85 XGBoost 0.9976 6.97 2.69 31.54 −1.06 GPR 0.9999 0.54 0.29 1.82 0.15
+
+Linear regression consistently exhibits the weakest predictive capability for both objectives. As shown in Fig. 3(a), it achieves only R2 = 0 .6900 for the mixing index and R2 = 0 .4557 for the pressure drop. The corresponding RMSE values listed in Table IV are 2 .17 × 10 −2 for M I and 104 .69 Pa for ∆ p, nearly two orders 10      
+
+> FIG. 3. Comparison of surrogate-model performance for predicting the mixing index ( M I ) and pressure drop (∆ p) in sinusoidal converging–diverging microchannels. (a,b) Coefficient of determination ( R2) for Linear Regression, Polynomial Regression, XGBoost, and Gaussian Process Regression (GPR) on the internal test set ( N= 25) and external holdout set ( N= 49), respectively. (c,d) Violin plots of the absolute prediction errors for M I and ∆ pon the external holdout set.
+
+of magnitude larger than those obtained using the nonlinear surrogate models. These results demonstrate that additive linear relationships cannot adequately represent the coupled influence of wall amplitude ratio, phase offset, and wavelength on the transport characteristics. Geometric modulation simultaneously alters the local shear rate, apparent viscosity, and concentration-field, producing highly nonlinear interactions that extend beyond the capability of a linear approximation. Introducing higher-order feature interactions substantially improves predictive accuracy. The third-degree PRR model increases the coefficient of determination to R2 = 0 .9909 for M I and R2 = 0 .9906 for ∆ p, while reducing the RMSE to 3 .71 ×10 −3 and 13 .73 Pa, respectively. This marked improvement indicates that nonlinear combinations of the geometric parameters account for a significant fraction of the response variability. The result further suggests that the governing transport mechanisms arise from coupled interactions among the design variables rather than from their independent contributions. Among the nonlinear models, XGBoost and GPR both achieve excellent agreement with the CFD simulations on the internal test set. XGBoost attains 
+
+R2 = 0 .9960 for M I and R2 = 0 .9976 for ∆ p, whereas GPR further improves these values to R2 = 0 .9968 and 
+
+R2 = 0 .9999, respectively. GPR also yields the smallest RMSE (2 .22 × 10 −3 for M I and 0.54 Pa for ∆ p) and MAE (8 .5 × 10 −4 for M I and 0.29 Pa for ∆ p), together with the lowest maximum error for ∆ p (1.82 Pa) among all candidate models. The negligible prediction bias further indicates that the GPR surrogate reproduces the CFD responses without systematic over-prediction or under-prediction. The superior performance of GPR reflects the characteristics of the present design problem. The CFD-generated response surfaces remain continuous and smoothly varying throughout the investigated parameter space despite their strong nonlinearity. The Mat´ ern covariance kernel therefore interpolates efficiently between neighboring geometries while preserving localized variations associated with contraction-induced deformation and shear-thinning rheology. In contrast, XGBoost approximates the response using piecewise tree partitions. Although this strategy accurately captures the dominant nonlinear trends, it is inherently less effective for smoothly varying deterministic response surfaces. Figure 3(b) further evaluates the models using the indepen-dent external holdout dataset, providing a more stringent assessment of predictive capability. GPR maintains excellent predictive accuracy, achieving R2 = 0 .9955 for M I and R2 = 0 .9948 for ∆ p. PRR also generalizes well, with corresponding R2 values of 0.9920 and 0.9897. In contrast, XGBoost exhibits a noticeable reduction in predictive accuracy ( R2 = 0 .7840 for M I and R2 = 0 .6601 for ∆ p), indicating weaker interpolation capability outside the training configurations. Linear regression remains the least accurate model, confirming that the geometric–transport relationship is intrinsically nonlinear. The error distributions shown in Figs. 3(c) and (d) provide additional insight into model robustness. GPR and PRR produce narrow error distributions for both objectives, indicating consistently accurate predictions throughout the investigated design space. In contrast, Linear Regression and XGBoost exhibit broader distri-butions with longer tails, reflecting larger prediction errors for specific geometric configurations. The predictive intervals for the pressure drop are consistently wider than those for the mixing index because ∆ p is strongly in-11     
+
+> FIG. 4. Parity plots comparing Gaussian Process Regression (GPR) predictions with CFD results for the external holdout dataset ( N= 49). (a) Mixing index ( M I ) and (b) pressure drop (∆ p). The dashed line represents excellent agreement between surrogate predictions and CFD data. The high coefficients of determination ( R2), together with the low RMSE and MAE values, demonstrate the excellent predictive accuracy of the GPR surrogate model.
+
+fluenced by localized velocity gradients and viscous dissipation in the contraction regions, where small geometric changes can produce substantial variations in the pressure field. By contrast, M I is an integral measure of scalar transport over the entire channel length, which averages the effects of local flow variations. Consequently, ∆ p
+
+exhibits greater sensitivity to geometric perturbations and is therefore more challenging to predict accurately. Overall, the combined quantitative metrics and error distributions identify GPR as the most accurate and robust surrogate model for the present application. Its excellent interpolation capability, minimal prediction bias, and consistently low prediction errors establish it as the most suitable surrogate for subsequent design-space exploration and multi-objective optimization.  
+
+> 2. Predictive Accuracy on Independent CFD Data
+
+Having identified GPR as the most accurate surrogate model, we next assess its predictive capability using the independent external holdout dataset. Figure 4 compares the GPR predictions with the corresponding CFD results for both the mixing index and pressure drop. Because none of the 49 holdout geometries participated in surrogate training, feature engineering, or hyperparameter selection, this dataset provides a stringent assessment of the model’s ability to predict previously unseen configurations. Figure 4 demonstrates excellent agreement between the GPR surrogate predictions and the CFD simulations for both the mixing index and pressure drop. The mixing-index surrogate achieves R2 = 0 .9961, an RMSE of 2.5 × 10 −3, and an MAE of 1 .6 × 10 −3, with predictions closely following the one-to-one parity line and ex-hibiting no noticeable bias. Similarly, the pressure-drop surrogate attains R2 = 0 .9947, an RMSE of 10 .61 Pa, and an MAE of 4 .02 Pa. Although the pressure-drop predictions show slightly greater scatter, they remain tightly clustered about the parity line, reflecting the greater sensitivity of ∆ p to localized velocity gradients and viscous dissipation. Overall, the parity plots confirm that the GPR surrogate accurately captures the nonlin-ear relationship between the geometric design variables and both performance metrics. The parity plots also demonstrate that the surrogate accurately reproduces both low- and high-performance designs without loss of accuracy near the boundaries of the response space. No systematic overprediction or underprediction is observed for either objective, indicating that the selected Mat´ ern covariance function successfully captures the smooth yet highly nonlinear response surfaces generated by the CFD simulations. This agreement confirms that the GPR surrogate reconstructs the underlying geometric–transport relationship rather than simply interpolating individual training points. To assess model robustness, we performed five-fold cross-validation using the selected hyperparameters. GPR consistently achieved R2 = 0 .997 ± 0.002 and RMSE = 0 .00175 ± 0.00075 for M I , and R2 = 0 .999 ± 0.002 with RMSE = 3 .38 ± 3.51 Pa for ∆ p, demonstrating stable performance across different training partitions. On the 49-case external holdout set, the empirical coverage of the nominal 95% predictive intervals reached 91 .8% (45/49) for M I and 93 .9% (46/49) for ∆ p, indicating well-calibrated uncertainty estimates. The close agreement among the internal test, cross-validation, and independent external-validation results confirms GPR as a robust and unbiased surrogate for the present micromixer design problem. We note that Fig. 3 reports same-fit metrics, with all candidate models trained on the common 119-case training set to enable a fair comparison, whereas Fig. 4 presents the performance of the final GPR model refitted on all 169 primary cases and used in the subsequent optimization. Having established its predictive accuracy, we next examine how the interpolation errors are distributed throughout the multidimensional design space.  
+
+> 3. Spatial Distribution of Prediction Errors
+
+While the parity plots establish the overall predictive accuracy of the GPR surrogate, they do not reveal how the prediction errors vary throughout the multidimensional design space. Figure 5 therefore maps the 12         
+
+> FIG. 5. Error topology of the Gaussian Process Regression (GPR) surrogate model evaluated on the external holdout dataset. The prediction errors are visualized in the design space defined by the channel amplitude ratio ( A/h ), phase offset ( ϕ), and wave count ( n). (a) Absolute mixing-index error, |ˆM I −M I CFD |, and (b) absolute pressure-drop error,
+> |ˆ∆p−∆pCFD |. The color scale represents the magnitude of the prediction error.
+
+absolute prediction errors over the external holdout dataset as functions of the wall-amplitude ratio ( A/h ), phase offset ( ϕ), and wave count ( n), providing a direct assessment of the surrogate’s interpolation capability across previously unseen geometries. Figure 5(a) shows that the absolute errors in the predicted mixing index remain uniformly small throughout most of the design space, with the majority of the holdout cases exhibiting errors below 5 × 10 −3. The error dis-tribution does not exhibit large contiguous regions of poor performance, indicating that the surrogate accurately reconstructs the continuous dependence of mixing on the geometric design variables. Slightly larger deviations appear only for configurations combining relatively large wall amplitudes, high phase offsets, and shorter geo-metric wavelengths, where repeated contraction–expansion cycles generate stronger interfacial deformation and consequently a more rapidly varying response surface. A similar trend is observed for the pressure-drop predic-tion in Fig. 5(b). The surrogate maintains low prediction errors over most of the parameter space, while the largest deviations remain confined to a small number of geometries located near the boundaries of the design domain. These configurations correspond to the strongest geometric modulation, where severe flow acceleration through the contraction regions produces localized peaks in velocity gradient and viscous dissipation. Because the pressure drop depends directly on these highly localized flow features, its response surface exhibits steeper gradients than that of the outlet mixing index, making accurate interpolation inherently more challenging. Despite these localized increases, the prediction errors remain small relative to the overall ranges of both objective functions, with no systematic high-error regions across the design space. The consistently low errors for the external holdout dataset, including the excluded intermediate n = 7 geometries, demonstrate that the surrogate accurately interpolates between neighboring designs and captures the underlying response surfaces. Together with the parity plots, the error-topology analysis confirms that the GPR surrogate reliably predicts both M I and ∆ p across the design space, providing an accurate and computationally efficient alternative to CFD for subsequent response-surface analysis and multi-objective optimization.   
+
+> C. Design-Space Exploration 1. Response Surfaces of Mixing and Hydraulic Resistance
+
+To gain insight into the relationship between the geometric design parameters and the micromixer perfor-mance, we used the trained Gaussian Process Regression (GPR) surrogate to reconstruct continuous response surfaces over the design space. Figure 6 shows the predicted mixing index ( M I ) and pressure drop (∆ p) as functions of the wall-amplitude ratio ( A/h ) and phase offset ( ϕ) for representative wave counts ( n = 2 , 4, 6,
+
+and 8). These response surfaces provide a comprehensive visualization of the multidimensional design space and reveal how geometric modulation simultaneously governs solute mixing and pressure drop. The upper row of Fig. 6 shows that the mixing index generally increases with wall-amplitude ratio for all wave counts. Larger values of A/h strengthen the converging–diverging sections, producing greater interface stretch-ing and increasing the interfacial area available for molecular diffusion. At a fixed wall-amplitude ratio, the phase offset controls the relative alignment of the upper and lower channel walls. As the phase offset increases, the contractions and expansions become progressively staggered, promoting stronger transverse fluid motion and repeated interface deformation that enhance scalar transport. Although this dependence is not strictly monotonic throughout the design space, larger phase offsets generally yield higher mixing indices. Increasing the wave count further improves mixing by shortening the geometric wavelength and increasing the number of contraction–expansion cycles within the fixed sinusoidal section, allowing repeated stretching of the concentra-tion field. Consequently, the highest mixing indices are obtained for geometries combining large wall amplitudes, 13      
+
+> FIG. 6. Gaussian Process Regression (GPR) response surfaces for the predicted mixing index ( M I , top row) and pressure drop (∆ p, bottom row) as functions of the amplitude ratio ( A/h ) and phase offset ( ϕ) for different wave counts (n= 2 ,4,6,and 8). The surfaces illustrate the combined influence of geometric parameters on micromixing performance and hydraulic resistance.
+
+large phase offsets, and high wave counts. The lower row of Fig. 6 shows that the pressure drop exhibits similar trends but a stronger nonlinear dependence on the geometric parameters. Increasing the wall-amplitude ratio markedly increases hydraulic resistance by generating larger velocity gradients and greater viscous dissipation in the throat regions. The influence of the phase offset is comparatively weaker because it primarily redistributes the contraction–expansion sequence without substantially altering the minimum hydraulic cross-section. In-creasing the wave count also raises the pressure drop by increasing the number of contraction–expansion events, leading to greater cumulative viscous losses along the channel. Comparing the two response surfaces reveals the intrinsic trade-off governing the present design space. The geometric modifications responsible for increasing interfacial stretching also intensify the local velocity gradients that generate viscous dissipation. Consequently, the configurations that maximize mixing invariably produce larger pressure drops. This competition between transport enhancement and hydraulic resistance defines the Pareto-optimal design space explored in the subsequent optimization section. The smooth variation of both response surfaces further demonstrates that the selected GPR surrogate faithfully reconstructs the continuous dependence of the transport characteristics on the geometric parameters. The absence of artificial discontinu-ities confirms that the surrogate provides a physically consistent representation of the CFD response surfaces, enabling rapid exploration of the multidimensional design space without additional numerical simulations.  
+
+> 2. Physical Interpretation of Feature Importance
+
+While the response surfaces identify the global trends within the design space, they do not quantify the relative contribution of each geometric parameter. Figure 7 therefore presents SHAP values computed from the final refit XGBoost surrogate, providing a quantitative interpretation of the influence of each feature on the predicted mixing index and pressure drop. For the mixing index, shown in Fig. 7(a), the grouped mean absolute SHAP attribution identifies the wall-amplitude ratio as the dominant design variable (50.0%), followed by the geometric wavelength (28.3%) and the joint phase encoding (sin ϕ, cos ϕ) (21.6%). Larger amplitude ratios consistently produce positive SHAP values, confirming that stronger wall modulation enhances mixing by increasing interface stretching and scalar homogenization, consistent with the CFD flow fields. Shorter wavelengths further improve mixing by introducing additional contraction–expansion cycles, whereas the phase offset exerts a weaker but generally positive influence through increased geometric asymmetry. The pressure-drop SHAP values shown in Fig. 7(b) indicates that the grouped mean absolute SHAP attribution ranks the wall-amplitude ratio as the most influential parameter (48.9%), followed by the joint phase encoding (sin ϕ, cos ϕ) (34.4%) and the geometric wavelength (16.6%). The dominant role of A/h reflects its direct control over the minimum hydraulic cross-section, which governs the contraction-induced velocity gradients and the associated viscous dissipation. Unlike the mixing index, the secondary importance shifts from wavelength to phase offset. The SHAP rankings are consistent with the trends identified from the CFD simulations and the surrogate response surfaces, where the wall-amplitude ratio dominates both mixing enhancement and pressure loss, while the phase offset and wavelength play secondary roles. This agreement indicates that the surrogate has learned physically meaningful relationships between the design variables and the target responses. However, SHAP explains how the surrogate attributes its predictions 14  
+
+> FIG. 7. SHapley Additive exPlanations (SHAP) summary plots derived from the final refit XGBoost surrogate (a) Feature contributions to the predicted mixing index ( M I ) and (b) feature contributions to the predicted pressure drop (log(∆ p)). Each point represents a sample from the dataset, with the horizontal position indicating the SHAP value and the color denoting the corresponding feature magnitude.
+
+to the input features and should not be interpreted as establishing physical causality.  
+
+> D. Pareto Front and Optimal Design
+
+After establishing the predictive accuracy of the Gaussian Process (GP) surrogate, we coupled it with the NSGA-II algorithm to identify micromixer geometries that simultaneously maximize the mixing index and minimize the pressure drop. Figure 8 compares the Pareto fronts obtained directly from the CFD database and from the GP-assisted NSGA-II optimization. The close agreement between the two fronts demonstrates that the surrogate accurately reconstructs the trade-off between mixing enhancement and hydraulic resistance across the design space. The GP Pareto front closely follows the CFD Pareto boundary over the entire range of objective values, confirming that the surrogate preserves both the shape and topology of the underlying objective landscape. The CFD Pareto front spans approximately 0 .21 ≲ M I ≲ 0.38 and 15 .68 ≲ ∆p ≲ 817 .27 Pa. As shown in Fig. 8(a), the Pareto front exhibits a pronounced concave shape. At low pressure drops, relatively small increases in ∆ p produce substantial improvements in the mixing index because moderate geometric modulation significantly increases interfacial stretching while introducing only a modest hydraulic resistance. Beyond this region, however, the slope of the Pareto front decreases markedly, indicating diminishing returns in mixing performance. Additional increases in wall modulation continue to intensify contraction-induced deformation, but the corresponding gain in mixing becomes progressively smaller, whereas the pressure drop increases rapidly owing to the accumulation of viscous dissipation within successive contraction–expansion units. The knee point therefore represents the most favorable compromise between transport enhancement and hydraulic resistance, marking the onset of diminishing returns beyond which further mixing gains demand disproportionately larger increases in pumping power. For the GP-selected knee geometry ( A/h = 0 .90, ϕ = 106 .77 ◦, n = 8), the GP surrogate predicts M I = 0 .335 and ∆ p = 194 .9 Pa. Independent CFD simulations confirm these predictions with M I = 0 .338 and ∆ p =195 .4 Pa, corresponding to relative errors of only 0 .89% and 0 .26%, respectively. The nominal 95% GP posterior predictive intervals encompass both CFD values, demonstrating that the surrogate reliably identifies optimal designs. Compared with the CFD knee solution ( A/h = 0 .90, ϕ = 120 .00 ◦, n = 8; M I = 0 .349, ∆ p = 237 .5 Pa), the GP-selected design reduces the pressure drop by 17 .9% while decreasing the mixing index by only 3 .2%. Although the two knee solutions differ only in phase offset, they occupy the same high-amplitude, high-wave-count region of the Pareto front, and the GP-selected design provides the more hydraulically efficient trade-off. Figure 8(b–g) compares the concentration, velocity gradient, and apparent-viscosity fields of the GP-selected and corresponding CFD-database designs. The two geometries exhibit closely similar concentration evolution, velocity gradients, and shear-thinning behavior, indicating that the surrogate reproduces the same transport mechanisms, hydraulic response, and rheological characteristics captured by the high-fidelity CFD simulations. This close agreement confirms that the surrogate identifies a physically consistent optimum rather than merely fitting the training data. Consequently, the GP-assisted framework enables rapid and reliable optimization of shear-thinning micromixers while reducing the computational cost by several orders of magnitude compared with repeated high-fidelity CFD simulations. We further validated the GP surrogate by independently simulating the pressure-constrained optimal designs listed in Table V. The GP surrogate predicted the pressure drop with relative errors below 1% for all five designs, corresponding to a mean relative absolute error of approximately 0 .38%, while the mixing-index predictions differed from the CFD values by at most 2 .74%. These results demonstrate that the surrogate accurately identifies designs that satisfy the prescribed pressure constraints while reliably predicting the corresponding mixing performance across the constrained design space. The close correspondence between the CFD and GP 15 (e) (b)    
+
+> (c) (f) (d) (g) (a)
+> CFD Knee GP Knee GP Knee GP Knee CFD Knee CFD Knee
+
+FIG. 8. Comparison of CFD- and GP-derived Pareto fronts and corresponding knee-point designs. The left panel shows the Pareto-optimal trade-off between mixing index ( M I ) and pressure drop (∆ p), with the CFD and GP knee solutions highlighted. The right panels compare the concentration field, velocity gradient, and apparent viscosity contours for the CFD-based (b–d) and GP-based (e–g) knee designs. TABLE V. Independent CFD confirmation of the pressure-constrained designs ∆plim A/h ϕ n M I GP M I CFD eM I ∆pGP ∆pCFD e∆p
+
+(Pa) (◦) (%) (Pa) (Pa) (%) 100 0.9 46.05 8 0.310585 0.311075 0.157 99.183 99.145 0.039 150 0.9 84.92 8 0.323961 0.324135 0.054 147.670 147.638 0.022 200 0.9 107.89 8 0.335858 0.338586 0.806 197.919 198.318 0.201 300 0.9 132.12 8 0.350289 0.360148 2.737 294.459 292.532 0.659 400 0.9 145.89 8 0.358778 0.367018 2.245 392.158 388.358 0.979 
+
+Pareto fronts also demonstrates the interpolation capability of the surrogate. Rather than reproducing only the discrete CFD database, the GP model reconstructs the continuous objective landscape and enables efficient exploration of previously unsampled regions of the design space. Consequently, surrogate-assisted optimization substantially reduces the computational cost associated with exhaustive CFD searches while preserving the physical trade-offs governing micromixer performance. 
+
+VI. CONCLUSIONS 
+
+We developed a surrogate-assisted computational framework for the rapid design and multi-objective opti-mization of sinusoidal converging–diverging micromixers transporting shear-thinning Carreau–Yasuda fluids. We generated a CFD database comprising 218 simulations to quantify the effects of the wall-amplitude ratio (A/h ), phase offset ( ϕ), and wave count ( n) on the mixing index ( M I ) and pressure drop (∆ p). Among the four surrogate models investigated, Gaussian Process Regression (GPR) delivered the highest predictive accuracy and captured the nonlinear relationships between the geometric parameters and the transport characteristics. Our CFD simulations showed that sinusoidal geometric modulation enhances mixing through the combined ef-fects of interface stretching, elevated shear rates, and shear-thinning rheology. Successive contraction–expansion cycles continuously stretched and elongated the concentration interface, increasing the interfacial area available for molecular diffusion. At the same time, elevated shear rates reduced the apparent viscosity through the Carreau–Yasuda constitutive model and promoted further interface deformation. These coupled mechanisms enhanced scalar transport while increasing hydraulic resistance. We found that the wall-amplitude ratio domi-nated both mixing enhancement and pressure loss, whereas the phase offset and wave count provided secondary control by altering the spatial distribution and frequency of fluid deformation. We used the GPR surrogate to reconstruct the CFD response surfaces and efficiently explore the multidi-mensional design space. By coupling the surrogate with NSGA-II, we reproduced the CFD Pareto front and identified optimal geometries that balanced mixing performance and pressure loss. Independent CFD simu-lations confirmed the surrogate predictions of M I and ∆ p with excellent agreement. Although the surrogate predicts only these scalar objectives, the confirmation simulations reproduced the concentration, pressure, veloc-ity gradient, and apparent-viscosity fields of the corresponding CFD-database designs, demonstrating that the surrogate identifies physically meaningful optimal geometries that preserve the underlying transport mechanisms rather than merely fitting the objective values. Overall, the proposed CFD–machine-learning framework offers a fast, accurate, and physically consistent strategy for designing shear-thinning micromixers while substantially reducing the computational cost of re-peated high-fidelity CFD simulations. Although we focused on two-dimensional Carreau–Yasuda flows and interpolation within the sampled design space, we can readily extend the framework to more complex mi-16 crofluidic systems. In future work, we will apply the framework to three-dimensional micromixer geometries, incorporate additional generalized-Newtonian and viscoelastic constitutive models, and validate the optimized designs experimentally to broaden the applicability of surrogate-assisted microfluidic design. 
+
+VII. ACKNOWLEDGMENTS 
+
+B.M. acknowledges support from the Department of Science and Technology(DST), India, through the IN-SPIRE Faculty Fellowship (Grant No. DST/INSPIRE/04/2024/003069). 
+
+VIII. DATA AVAILABILITY STATEMENT 
+
+The datasets generated and analyzed during the current study, together with the machine-learning surrogate models and NSGA-II optimization codes are publicly available in the surrogate-micromixer-optimization 
+
+GitHub repository: https://github.com/BimalenduMahapatra/surrogate-micromixer-optimization .
+
+> 1
+
+Katherine S Elvira, Xavier Casadevall i Solvas, Robert CR Wootton, and Andrew J deMello. The past, present and potential for microfluidic reactor technology in chemical synthesis. Nature Chemistry , 5(11):905–915, 2013. doi:10.1038/nchem.1753. 
+
+> 2
+
+Paul Yager, Thayne Edwards, Elain Fu, Kristen Helton, Kjell Nelson, Milton R Tam, and Bernhard H Weigl. Microfluidic diagnostic technologies for global public health. Nature , 442(7101):412–418, 2006. doi:10.1038/nature05064. 
+
+> 3
+
+Petra S Dittrich and Andreas Manz. Lab-on-a-chip: microfluidics in drug discovery. Nature Reviews Drug Discovery , 5(3): 210–218, 2006. doi:10.1038/nrd1985. 
+
+> 4
+
+Daniel Mark, Stefan Haeberle, G¨ unter Roth, Felix von Stetten, and Roland Zengerle. Microfluidic lab-on-a-chip platforms: requirements, characteristics and applications. Chemical Society Reviews , 39(3):1153–1182, 2010. doi:10.1039/b820557b. 
+
+> 5
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Numerical analysis of combined electroosmotic-pressure driven flow of a viscoelastic fluid over high zeta potential modulated surfaces. Physics of Fluids , 33(1):012001, 01 2021. ISSN 1070-6631. doi: 10.1063/5.0033088. 
+
+> 6
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Electroosmosis of a viscoelastic fluid over non-uniformly charged surfaces: Effect of fluid relaxation and retardation time. Physics of Fluids , 32(3):032005, 03 2020. ISSN 1070-6631. doi:10.1063/5.0003457. 
+
+> 7
+
+Devon M Headen, Guillaume Aubry, Hang Lu, and Andr´ es J Garc´ ıa. Microfluidic-based generation of size-controlled, biofunctionalized synthetic polymer microgels for cell encapsulation. Advanced Materials , 26(19):3003–3008, 2014. doi: 10.1002/adma.201304880. 
+
+> 8
+
+Petra S Dittrich, Kazuo Tachikawa, and Andreas Manz. Micro total analysis systems. latest advancements and trends. Analytical Chemistry , 78(12):3887–3908, 2006. doi:10.1021/ac0605602. 
+
+> 9
+
+Howard A Stone, Abraham D Stroock, and Armand Ajdari. Engineering flows in small devices: microfluidics toward a lab-on-a-chip. Annual Review of Fluid Mechanics , 36:381–411, 2004. doi:10.1146/annurev.fluid.36.050802.122124. 
+
+> 10
+
+George M Whitesides. The origins and the future of microfluidics. Nature , 442(7101):368–373, 2006. doi:10.1038/nature05058. 
+
+> 11
+
+Evgeny S Asmolov, Alexander L Dubov, Tatiana V Nizkaya, Jens Harting, and Olga I Vinogradova. Inertial focusing of finite-size particles in microchannels. Journal of fluid mechanics , 840:613–630, 2018. doi:10.1017/jfm.2018.95. 
+
+> 12
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Microconfined electroosmotic flow of a complex fluid with asymmetric charges: Interplay of fluid rheology and physicochemical heterogeneity. Journal of Non-Newtonian Fluid Mechanics , 289:104479, 2021. ISSN 0377-0257. doi:https://doi.org/10.1016/j.jnnfm.2021.104479. 
+
+> 13
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Effect of skimming layer in an electroosmotically driven viscoelastic fluid flow over charge modulated walls. Electrophoresis , 43(5-6):724–731, 2022. doi:https://doi.org/10.1002/elps.202100221. 
+
+> 14
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Alterations in electroosmotic slip velocity: combined effect of vis-coelasticity and surface potential undulation. The European Physical Journal Special Topics , 232(6):935–948, 2023. doi: https://doi.org/10.1140/epjs/s11734-022-00756-7. 
+
+> 15
+
+Abraham D Stroock, Stephan KW Dertinger, Armand Ajdari, Igor Mezi´ c, Howard A Stone, and George M Whitesides. Chaotic mixer for microchannels. Science , 295(5555):647–651, 2002. doi:10.1126/science.1066238. 
+
+> 16
+
+William A Braff, Martin Z Bazant, and Cullen R Buie. Inertial effects on the generation of co-laminar flows. Journal of Fluid Mechanics , 767:85–94, 2015. doi:10.1017/jfm.2014.742. 
+
+> 17
+
+Guixue Cai, Lisha Xue, Hai Zhang, and Jianzhong Lin. A review on micromixers. Micromachines , 8(9):274, 2017. doi: 10.3390/mi8090274. 
+
+> 18
+
+Chia-Yen Lee, Chin-Lung Chang, Yao-Nan Wang, and Lung-Ming Fu. Microfluidic mixing: A review. International Journal of Molecular Sciences , 12(5):3263–3287, 2011. ISSN 1422-0067. doi:10.3390/ijms12053263. 
+
+> 19
+
+Danial Soltani, Tim Persoons, and Sajad Alimohammadi. Micromixing strategies for efficient mixing processes: a comprehensive review. Journal of Micromechanics and Microengineering , 34(11):113001, 2024. doi:10.1088/1361-6439/ad809a. 
+
+> 20
+
+Sanjeeva Balasuriya. Approach for maximizing chaotic mixing in microfluidic devices. Physics of Fluids , 17(11):118103, 2005. doi:10.1063/1.2042507. 
+
+> 21
+
+Conor P. Schlick, Ivan C. Christov, Paul B. Umbanhowar, Julio M. Ottino, and Richard M. Lueptow. A mapping method for distributive mixing with diffusion: Interplay between chaos and diffusion in time-periodic sine flow. Physics of Fluids , 25(5): 052102, 05 2013. ISSN 1070-6631. doi:10.1063/1.4803897. 
+
+> 22
+
+Z. B. Stone and H. A. Stone. Imaging and quantifying mixing in a model droplet micromixer. Physics of Fluids , 17(6):063103, 06 2005. ISSN 1070-6631. doi:10.1063/1.1929547. 
+
+> 23
+
+Jo Eun Park, Tae Gon Kang, and Seon Yeop Jung. The impact of thixotropic behavior on microfluidic mixing in a staggered-herringbone mixer. Physics of Fluids , 36(4):042008, 04 2024. ISSN 1070-6631. doi:10.1063/5.0198381. 
+
+> 24
+
+Shuai Yuan, Ming Zhou, Tao Peng, Qing Li, and Feng Jiang. An investigation of chaotic mixing behavior in a planar microfluidic mixer. Physics of Fluids , 34(3):032007, 2022. doi:10.1063/5.0082831. 
+
+> 25
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Efficacy of microconfined fluid mixing in a combined electroosmotic and pressure driven transport of complex fluid over discrete electrodes. Physics of Fluids , 34:042012, 2022. doi:10.1063/5.0086541. 17 
+
+> 26
+
+Bimalendu Mahapatra, Rupayan Jana, and Aditya Bandopadhyay. Solute band transport in electroosmotic-pressure-driven flow of carreau–yasuda fluid over micropillar arrays. Physics of Fluids , 36:022013, 2024. doi:10.1063/5.0188991. 
+
+> 27
+
+Gui-Ping Zhu and Nam-Trung Nguyen. Rapid magnetofluidic mixing in a uniform magnetic field. Lab on a Chip , 12(22): 4772–4780, 10 2012. ISSN 1473-0197. doi:10.1039/c2lc40818j. 
+
+> 28
+
+Shuxiang Cai, Yawen Jin, Yun Lin, Yingzheng He, Peifan Zhang, Zhixing Ge, and Wenguang Yang. Micromixing within microfluidic devices: Fundamentals, design, and fabrication. Biomicrofluidics , 17(6):061503, 12 2023. ISSN 1932-1058. doi: 10.1063/5.0178396. 
+
+> 29
+
+Resonant mode-hopping micromixing. Sensors and Actuators A: Physical , 138(1):179–186, 2007. ISSN 0924-4247. doi: https://doi.org/10.1016/j.sna.2007.04.052. 
+
+> 30
+
+Wenbo Han, Wei Zhang, et al. A comprehensive review on the fundamental principles, innovative designs, and multidisciplinary applications of micromixers. Physics of Fluids , 36(10):101306, 2024. doi:10.1063/5.0238393. 
+
+> 31
+
+T. Tajik Ghanbari, M. Rahimi, A. A. Ranjbar, Y. Pahamli, and A. Torbatinejad. Mixing performance improvement of t-shaped micromixer using novel structural design of channel and obstacles. Physics of Fluids , 35(12):122013, 12 2023. ISSN 1070-6631. doi:10.1063/5.0177344. 
+
+> 32
+
+Promasree Majumdar and Debabrata Dasgupta. Enhancing micromixing using external electric and magnetic fields. Physics of Fluids , 36(8):082013, 2024. doi:10.1063/5.0221764. 
+
+> 33
+
+Bimalendu Mahapatra and Aditya Bandopadhyay. Experimental investigations on geometry modulated solute mixing in vis-coelastic media. Industrial & Engineering Chemistry Research , 62:4095–4108, 2023. doi:10.1021/acs.iecr.2c03663. 
+
+> 34
+
+Di Jiang, Chen Ni, Wenlai Tang, Di Huang, and Nan Xiang. Inertial microfluidics in contraction–expansion microchannels: A review. Biomicrofluidics , 15(4):041501, 07 2021. ISSN 1932-1058. doi:10.1063/5.0058732. 
+
+> 35
+
+Dong Sung Kim, Se Hwan Lee, Tai Hun Kwon, and Chong H. Ahn. A serpentine laminating micromixer combining split-ting/recombination and advection. Lab on a Chip , 5(7):739–747, 06 2005. ISSN 1473-0197. doi:10.1039/b418314b. 
+
+> 36
+
+Ali Asgar S. Bhagat, Sathyakumar S. Kuntaegowdanahalli, and Ian Papautsky. Continuous particle separation in spiral microchan-nels using dean flows and differential migration. Lab on a Chip , 8(11):1906–1914, 11 2008. ISSN 1473-0197. doi:10.1039/b807107a. 
+
+> 37
+
+Sandeep Goli, Sandip K. Saha, and Amit Agrawal. Physics of fluid flow in an hourglass (converging–diverging) microchannel. 
+
+Physics of Fluids , 34(5):052006, 05 2022. ISSN 1070-6631. doi:10.1063/5.0090190. 
+
+> 38
+
+SW Gepner and JM Floryan. Flow dynamics in sinusoidal channels at moderate reynolds numbers. Journal of Fluid Mechanics ,972:A22, 2023. doi:10.1017/jfm.2023.719. 
+
+> 39
+
+Jun Gao, Yan Zhang, Yuan Ma, Qiao Wang, and Yu Bai. Analysis of physiological pulsating flow of fractional maxwell fluid in a locally narrow artery. Physics of Fluids , 35(11):113105, 11 2023. ISSN 1070-6631. doi:10.1063/5.0175142. 
+
+> 40
+
+R. Abdi, M. Krzaczek, and M. Abdi. From darcy to turbulent flow: Investigating flow characteristics and regime transitions in porous media. Physics of Fluids , 36(10):103372, 10 2024. ISSN 1070-6631. doi:10.1063/5.0232176. 
+
+> 41
+
+Weiwei Wu, Jiangyuan Fu, Jie Zhang, and Hai Gu. Application of fluid dynamics methods in additive manufacturing. Physics of Fluids , 37(1):011304, 01 2025. ISSN 1070-6631. doi:10.1063/5.0248530. 
+
+> 42
+
+R Byron Bird, Robert C Armstrong, and Ole Hassager. Dynamics of Polymeric Liquids, Volume 1: Fluid Mechanics . John Wiley & Sons, 2nd edition, 1987. ISBN 978-0471802457. 
+
+> 43
+
+Howard A Barnes, John F Hutton, and Ken Walters. An Introduction to Rheology . Elsevier, 1989. ISBN 978-0444871404. 
+
+> 44
+
+Francesco Del Giudice, Shivani Sathish, Gaetano D’Avino, and Amy Q Shen. “from the edge to the center”: viscoelastic migration of particles and cells in a strongly shear-thinning liquid flowing in a microchannel. Analytical chemistry , 89(24):13146–13159, 2017. doi:10.1021/acs.analchem.7b02450. 
+
+> 45
+
+Helena Herrada-Manch´ on, Manuel Alejandro Fern´ andez, and Enrique Aguilar. Essential guide to hydrogel rheology in extrusion 3d printing: How to measure it and why it matters? Gels , 9:517, 2023. doi:10.3390/gels9070517. 
+
+> 46
+
+Hossein Rahmani and Seyed Mohammad Taghavi. Yield stress fluids in microfluidics: research, applications and opportunities. 
+
+Lab on a Chip , 26(13):3916–3949, 06 2026. ISSN 1473-0197. doi:10.1039/d5lc00864f. 
+
+> 47
+
+K. Zografos, F. Pimenta, M. A. Alves, and M. S. N. Oliveira. Microfluidic converging/diverging channels optimised for homoge-neous extensional deformation. Biomicrofluidics , 10, 2016. doi:10.1063/1.4954814. 
+
+> 48
+
+Shakhawat Hossain, Afzal Husain, and Kwang-Yong Kim. Optimization of micromixer with staggered herringbone grooves on top and bottom walls. Engineering Applications of Computational Fluid Mechanics , 5:506–516, 2011. doi: 10.1080/19942060.2011.11015390. 
+
+> 49
+
+Noureddine Kaid, Sultan Alqahtani, Younes Menni, and Ali J. Chamkha. Comparative study of mixing performance in non-newtonian xanthan gum solutions and water using various injection techniques in a cylindrical channel with vortex generators. 
+
+Physics of Fluids , 36, 2024. doi:10.1063/5.0229566. 
+
+> 50
+
+Pierre J Carreau. Rheological equations from molecular network theories. Transactions of the Society of Rheology , 16(1):99–127, 1972. doi:10.1122/1.549276. 
+
+> 51
+
+K Yasuda, RC Armstrong, and RE Cohen. Shear flow properties of concentrated solutions of linear and star branched polystyrenes. 
+
+Rheologica Acta , 20(2):163–178, 1981. doi:10.1007/BF01513059. 
+
+> 52
+
+Venu Gopal Agarwal, Rattandeep Singh, Supreet Singh Bahga, and Amit Gupta. Dynamics of droplet formation and flow regime transition in a t-shaped microfluidic device with a shear-thinning continuous phase. Phys. Rev. Fluids , 5:044203, Apr 2020. doi:10.1103/PhysRevFluids.5.044203. 
+
+> 53
+
+Alexander Forrester, Andras Sobester, and Andy Keane. Engineering Design via Surrogate Modelling: A Practical Guide . John Wiley & Sons, 2008. doi:10.1002/9780470770801. 
+
+> 54
+
+Carl Edward Rasmussen and Christopher K. I. Williams. Gaussian Processes for Machine Learning . MIT Press, 2006. doi: 10.7551/mitpress/3206.001.0001. 
+
+> 55
+
+Steven L Brunton, Bernd R Noack, and Petros Koumoutsakos. Machine learning for fluid mechanics. Annual Review of Fluid Mechanics , 52:477–508, 2020. doi:10.1146/annurev-fluid-010719-060214. 
+
+> 56
+
+Bobak Shahriari, Kevin Swersky, Ziyu Wang, Ryan P Adams, and Nando De Freitas. Taking the human out of the loop: Areview of bayesian optimization. Proceedings of the IEEE , 104(1):148–175, 2016. doi:10.1109/JPROC.2015.2494218. 
+
+> 57
+
+Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, and T. Meyarivan. A fast and elitist multiobjective genetic algorithm: NSGA-II. 
+
+IEEE Transactions on Evolutionary Computation , 6(2):182–197, 2002. doi:10.1109/4235.996017. 
+
+> 58
+
+R Byron Bird, Robert C Armstrong, and Ole Hassager. Dynamics of Polymeric Liquids , volume 1. Wiley, 1987. 
+
+> 59
+
+Jared C Weddell, JaeHyuk Kwack, PI Imoukhuede, and Arif Masud. Hemodynamic analysis in an idealized artery tree: differences in wall shear stress between newtonian and non-newtonian blood models. PloS one , 10(4):e0124575, 2015. doi: https://doi.org/10.1371/journal.pone.0124575. 
+
+> 60
+
+Bin-Jie Lai, Li-Tao Zhu, Zhe Chen, Bo Ouyang, and Zheng-Hong Luo. Review on blood flow dynamics in lab-on-a-chip systems: An engineering perspective. Chem & Bio Engineering , 1(1):26–43, 2024. doi:https://doi.org/10.1021/cbe.3c00014. 18 
+
+> 61
+
+Nitesh Kumar, R Pai, SM Abdul Khader, SH Khan, and PA Kyriacou. Influence of blood pressure and rheology on oscillatory shear index and wall shear stress in the carotid artery. Journal of the Brazilian Society of Mechanical Sciences and Engineering ,44(11):510, 2022. doi:https://doi.org/10.1007/s40430-022-03792-5. 
+
+> 62
+
+F. Pimenta and M. A. Alves. Stabilization of an open-source finite-volume solver for viscoelastic fluid flows. Journal of Non-Newtonian Fluid Mechanics , 239:85–104, 2017. doi:10.1016/j.jnnfm.2016.12.002. 
+
+> 63
+
+Hugo A. Castillo-S´ anchez, Leandro F. de Souza, and Antonio Castelo. Numerical simulation of rheological models for complex fluids using hierarchical grids. Polymers , 14(22):4958, 2022. doi:10.3390/polym14224958. 
+
+> 64
+
+C. Fernandes, S.A. Faroughi, O.S. Carneiro, J. Miguel N´ obrega, and G.H. McKinley. Fully-resolved simulations of particle-laden viscoelastic fluids using an immersed boundary method. Journal of Non-Newtonian Fluid Mechanics , 266:80–94, 2019. doi:10.1016/j.jnnfm.2019.02.007. 
+
+> 65
+
+R. Rodrigues, T. Rodrigues, and L. Campo-Dea˜ no. On flow disturbances caused by pressure taps in highly elastic flows around a microfluidic cylinder. Physics of Fluids , 35(12):123109, 12 2023. ISSN 1070-6631. doi:10.1063/5.0175376. 
+
+> 66
+
+Tianqi Chen and Carlos Guestrin. XGBoost: A scalable tree boosting system. In Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining , pages 785–794, 2016. doi:10.1145/2939672.2939785. 
+
+> 67
+
+Scott M. Lundberg and Su-In Lee. A unified approach to interpreting model predictions. In Advances in Neural Information Processing Systems , volume 30, pages 4765–4774, 2017. 
+
+> 68
+
+Kaisa Miettinen. Nonlinear Multiobjective Optimization . Kluwer Academic Publishers, Boston, 1999. doi:10.1007/978-1-4615-5563-6. 
+
+> 69
+
+Julian Blank and Kalyanmoy Deb. pymoo: Multi-objective optimization in python. IEEE Access , 8:89497–89509, 2020. doi: 10.1109/ACCESS.2020.2990567.

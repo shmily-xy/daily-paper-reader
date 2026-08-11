@@ -6,26 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-10
-- 运行时间：2026-08-10 21:12:03 UTC
+- 最新运行日期：2026-08-11
+- 运行时间：2026-08-11 21:29:51 UTC
 - 运行状态：成功
 - 本次总论文数：1
 - 精读区：0
 - 速读区：1
 
 ### 今日简报（AI）
-今日仅速读1篇论文，聚焦胶体系统方向。  
-其中《Colloidal Systems》评分7.0/10，值得关注胶体稳定性与相互作用机制。  
-建议下一步优先精读该文，并补充相关经典综述加深理解。
-- 详情：[/202608/10/README](/202608/10/README)
+今日共速读1篇论文，暂无精读，聚焦数据驱动建模方向。  
+最值得关注的是利用代理模型模拟非牛顿流体在正弦收敛-发散微通道中的微混合行为，为复杂流体混合优化提供新思路。  
+建议后续可深入对比该代理模型与传统数值方法的精度与效率，或拓展至更多非牛顿流体场景。
+- 详情：[/202608/11/README](/202608/11/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Colloidal Systems](/202608/10/2608.02313v1-colloidal-systems)  
-   标签：评分：7.0/10、query:equipment
-   evidence：胶体系统书籍提供适用于电池电极浆料制造的流变与分散原理
+1. [Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels](/202608/11/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels)  
+   标签：评分：6.0/10、query:equipment
+   evidence：研究非牛顿流体混合及数据驱动建模，可迁移至电池浆料流变与混合机理分析。
 
 
 <div class="dpr-home-promo-card">
