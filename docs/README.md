@@ -6,26 +6,22 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-08-11
-- 运行时间：2026-08-11 21:29:51 UTC
+- 最新运行日期：2026-08-12
+- 运行时间：2026-08-12 20:54:50 UTC
 - 运行状态：成功
-- 本次总论文数：1
+- 本次总论文数：0
 - 精读区：0
-- 速读区：1
+- 速读区：0
 
 ### 今日简报（AI）
-今日共速读1篇论文，暂无精读，聚焦数据驱动建模方向。  
-最值得关注的是利用代理模型模拟非牛顿流体在正弦收敛-发散微通道中的微混合行为，为复杂流体混合优化提供新思路。  
-建议后续可深入对比该代理模型与传统数值方法的精度与效率，或拓展至更多非牛顿流体场景。
-- 详情：[/202608/11/README](/202608/11/README)
+> 今日无新推荐，系统未产出可展示论文。
+- 详情：[/202608/12/README](/202608/12/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels](/202608/11/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels)  
-   标签：评分：6.0/10、query:equipment
-   evidence：研究非牛顿流体混合及数据驱动建模，可迁移至电池浆料流变与混合机理分析。
+- 本次无速读推荐。
 
 
 <div class="dpr-home-promo-card">
