@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-13",
+  "date": "2026-08-13",
+  "generated_at": "2026-08-13T21:24:04",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/13/2608.07960v1-splashing-velocity-of-a-viscous-liquid-squeezed-between-two-parallel-disks",
+      "section": "quick",
+      "title_en": "Splashing velocity of a viscous liquid squeezed between two parallel disks",
+      "authors": "Navin Kumar Chandra, Pierre Perrier, David Brutin",
+      "date": "2026-08-08",
+      "pdf": "https://arxiv.org/pdf/2608.07960v1",
+      "score": "6.0",
+      "evidence": "平行圆盘间挤压薄膜流体动力学与双行星搅拌机的混合机理相关。",
+      "tldr": "平行圆盘间挤压粘性液体可产生高速飞溅，但现有理论显著高估实测速度，定量预测尚未解决。本文提出新理论框架，通过同时计入局部与对流惯性，并引入动量平均喷射速度替代峰值速度来表征飞溅。新模型在广泛参数范围内与实验数据良好吻合，解决了惯性处理不完整与峰值速度表征不当造成的理论-实验偏差，为挤压飞溅动力学提供了可靠预测方法。",
+      "tags": "query:equipment",
+      "abstract_en": "Squeezing of a liquid film between two approaching solid surfaces can generate a high-speed peripheral splash. Despite extensive studies on squeeze-film hydrodynamics, quantitative prediction of the splash velocity remains unresolved, with existing theory significantly overestimating experiments. Here, we present a theoretical framework to predict the ejection velocity of viscous liquid squeezed between two parallel circular disks. We show that discrepancy of theory from experiments arise due to incomplete treatment of liquid inertia and from using peak ejection velocity to represent splash velocity. By accounting for both local and convective inertia, and introducing a momentum-averaged ejection velocity, we obtain good agreement with experiments over a wide range of parameters.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

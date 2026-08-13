@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-13 <!--dpr-date:20260813-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/13/2608.07960v1-splashing-velocity-of-a-viscous-liquid-squeezed-between-two-parallel-disks" data-sidebar-item="{&quot;title&quot;: &quot;Splashing velocity of a viscous liquid squeezed between two parallel disks&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.07960v1-splashing-velocity-of-a-viscous-liquid-squeezed-between-two-parallel-disks&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;平行圆盘间挤压薄膜流体动力学与双行星搅拌机的混合机理相关。&quot;}">Splashing velocity of a viscous liquid squeezed between two parallel disks</a>
   * 2026-08-11 <!--dpr-date:20260811-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/11/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels" data-sidebar-item="{&quot;title&quot;: &quot;Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.08547v1-data-driven-surrogate-modeling-for-micromixing-of-non-newtonian-fluids-in-sinusoidal-converging-diverging-microchannels&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;研究非牛顿流体混合及数据驱动建模，可迁移至电池浆料流变与混合机理分析。&quot;}">Data-Driven Surrogate Modeling for Micromixing of Non-Newtonian Fluids in Sinusoidal Converging-Diverging Microchannels</a>
