@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-15",
+  "date": "2026-08-15",
+  "generated_at": "2026-08-15T20:18:24",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/15/2608.07958v1-libad-a-multimodal-anomaly-detection-benchmark-for-li-ion-battery-electrode-manufacturing",
+      "section": "quick",
+      "title_en": "LIBAD: A Multimodal Anomaly Detection Benchmark for Li-Ion Battery Electrode Manufacturing",
+      "authors": "Wenbo Sui, Daniel Lichau, Harold Phelippeau, Zhao Liu",
+      "date": "2026-08-08",
+      "pdf": "https://arxiv.org/pdf/2608.07958v1",
+      "score": "6.0",
+      "evidence": "涉及锂离子电池电极制造与处理相关的数据基准",
+      "tldr": "现有工业异常检测多针对离散产品且模态强相关，对连续过程制造与弱相关模态研究不足。本文构建首个锂电池电极制造多模态异常检测基准LIBAD，含对齐双面可见光、高分辨X射线及在线低分辨X射线图像。发现现有方法在线兼容设置下迁移性差且误报高，提出DA-Core，利用特征空间覆盖与局部密度联合选择核心集，以0.05比例将FPR95从60.4%降至54.3%，并提升推理效率。",
+      "tags": "query:equipment",
+      "abstract_en": "Multimodal industrial anomaly detection has largely focused on discrete products using strongly correlated RGB and 3D observations, leaving continuous process manufacturing and weakly correlated sensing modalities underexplored. We introduce LIBAD, the first multimodal anomaly detection benchmark for Li-ion battery electrode manufacturing. Collected from real roll-to-roll production lines, LIBAD provides aligned double-sided visible-light imaging, high-resolution X-ray radiography, and inline-compatible low-resolution X-ray radiography. Electrode patches in LIBAD exhibit highly homogeneous material appearance, while defect evidence can be strong in one modality but weak or absent in another, resulting in pronounced cross-modal anomaly inconsistency. Benchmarks of representative methods under the inline-compatible visible-light and low-resolution X-ray setting exhibit limited transferability and consistently high false-positive rates. We therefore propose DA-Core, a memory-based method that jointly considers feature-space coverage and local density of normal features during coreset selection, allowing compact memory banks to better preserve fine-grained normal variations. With a coreset ratio of 0.05, DA-Core reduces FPR95 from 60.4% to 54.3% compared with standard farthest point sampling. At this ratio, DA-Core also outperforms the best standard coreset result (obtained at 0.20) while reducing inference time by 43.9%. These results suggest that both the data distribution of normal features and the modality relationship itself require explicit consideration when designing anomaly detection methods for process manufacturing.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

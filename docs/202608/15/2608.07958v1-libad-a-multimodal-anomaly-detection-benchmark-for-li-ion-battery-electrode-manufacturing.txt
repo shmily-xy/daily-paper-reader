@@ -1,0 +1,1264 @@
+LIBAD: A Multimodal Anomaly Detection Benchmark for Li-Ion Battery
+Electrode Manufacturing
+Wenbo Sui1,2∗, Daniel Lichau1, Harold Phelippeau1 , Zhao Liu3
+1Thermo Fisher Scientific, 39 Rue d’Armagnac, Bordeaux, 33800, France
+2DTU Energy, Technical University of Denmark, Fysikvej 310, Kgs. Lyngby, 2800, Denmark
+3Thermo Fisher Scientific, 5350 NE Dawson Creek Dr, Hillsboro, OR 97124, USA
+wenbo.sui@thermofisher.com
+Abstract
+Multimodal industrial anomaly detection has largely focused
+on discrete products using strongly correlated RGB and
+3D observations, leaving continuous process manufacturing
+and weakly correlated sensing modalities underexplored. We
+introduce LIBAD, the first multimodal anomaly detection
+benchmark for Li-ion battery electrode manufacturing. Col-
+lected from real roll-to-roll production lines, LIBAD provides
+aligned double-sided visible-light imaging, high-resolution X-
+ray radiography, and inline-compatible low-resolution X-ray
+radiography. Electrode patches in LIBAD exhibit highly ho-
+mogeneous material appearance, while defect evidence can be
+strong in one modality but weak or absent in another, resulting
+in pronounced cross-modal anomaly inconsistency. Bench-
+marks of representative methods under the inline-compatible
+visible-light and low-resolution X-ray setting exhibit limited
+transferability and consistently high false-positive rates. We
+therefore propose DA-Core, a memory-based method that
+jointly considers feature-space coverage and local density of
+normal features during coreset selection, allowing compact
+memory banks to better preserve fine-grained normal varia-
+tions. With a coreset ratio of 0.05, DA-Core reduces FPR95
+from 60.4% to 54.3% compared with standard farthest point
+sampling. At this ratio, DA-Core also outperforms the best
+standard coreset result (obtained at 0.20) while reducing in-
+ference time by 43.9%. These results suggest that both the data
+distribution of normal features and the modality relationship
+itself require explicit consideration when designing anomaly
+detection methods for process manufacturing.
+Code&Datasets — https://github.com/evenrose/LIBAD
+Introduction
+With the rapid development of smart manufacturing, indus-
+trial anomaly detection (IAD) has become an important tool
+for quality control, yield improvement, and process moni-
+toring. Recent multimodal methods improve inspection reli-
+ability by combining complementary sensing signals. Most
+existing studies focus on RGB and 3D observations, where
+appearance and geometry provide strongly correlated cues
+for identifying surface defects and structural deformations
+[12–14].
+Despite this progress, existing multimodal IAD bench-
+marks remain limited in two respects. First, most datasets are
+∗Corresponding author.
+Figure 1: Example defects in LIBAD across four visibility
+patterns. Each row shows VIS, X-rayH, X-rayL, and the pre-
+dicted anomaly map of DA-Core.
+built around discrete, object-centric products [3, 4, 11, 24],
+leaving continuous process manufacturing, such as roll-to-
+roll production, largely unexplored. Second, existing bench-
+marks commonly assume that an anomaly produces corre-
+sponding evidence across modalities, which is reasonable
+for RGB and 3D observations of the same object surface but
+does not generally hold for sensing modalities that measure
+different physical properties. In real systems, a defect may
+be visible in one modality yet weak or absent in another,
+resulting in inconsistent cross-modal anomaly evidence.
+To address these limitations, we introduce LIBAD, the
+first multimodal anomaly detection benchmark for Li-ion
+battery electrode manufacturing. LIBAD contains 744 elec-
+arXiv:2608.07958v1  [cs.CV]  8 Aug 2026
+
+
+trode samples collected from real roll-to-roll production
+lines, with three spatially aligned modalities: visible-light
+grayscale imaging (VIS), high-resolution X-ray radiography
+(X-rayH), and inline-compatible low-resolution X-ray radio-
+graphy (X-rayL). These modalities capture complementary
+surface and internal properties of double-sided coated elec-
+trodes, for which subsurface defects cannot be reliably identi-
+fied through surface inspection alone. LIBAD covers 11 real-
+world defect categories and provides image-level anomaly
+labels for each electrode patch. Because visible light and X-
+ray probe surface appearance and bulk density respectively,
+defects that are prominent in one modality may be weak or
+entirely absent in the other, as illustrated in Fig. 1. LIBAD
+therefore evaluates whether a method can integrate comple-
+mentary but potentially conflicting modality evidence, rather
+than relying on redundant anomaly cues shared across modal-
+ities. At the same time, it is designed to address a pressing
+industrial need: undetected electrode defects can compro-
+mise battery safety and performance in electric vehicles and
+energy storage systems [1, 9].
+Our benchmark shows that existing multimodal IAD meth-
+ods transfer poorly to LIBAD. Popular methods based on
+cross-modal reconstruction often assume stable semantic
+correspondence between modalities, causing normal modal-
+ity differences to be confused with anomalies [6, 8, 23].
+Methods designed specifically for RGB–3D inputs addition-
+ally rely on appearance–geometry priors that do not gener-
+alize to visible-light and X-ray observations [10, 21]. We
+therefore establish a memory-based baseline that avoids ex-
+plicitly enforcing cross-modal reconstruction or correspon-
+dence. However, conventional farthest point sampling (FPS)
+[18] prioritizes global coverage but ignores local sample den-
+sity, which is problematic for electrode data with highly
+concentrated normal patterns and subtle intra-class varia-
+tions. By favoring sparse regions over dense normal clusters,
+FPS tends to produce a memory bank that under-represents
+the most common normal patterns, leading to unnecessary
+false positives during nearest-neighbor scoring. We therefore
+propose DA-Core, a density-aware coreset selection strategy
+that combines global coverage with local feature density dur-
+ing memory construction, reducing false-positive detections
+while maintaining a compact memory bank.
+Our contributions are summarized as follows:
+• We introduce LIBAD, the first multimodal IAD bench-
+mark for Li-ion battery electrode manufacturing, com-
+prising 744 real-world samples, three spatially aligned
+sensing modalities, and 11 defect categories collected
+from a roll-to-roll production line.
+• We characterize cross-modal anomaly inconsistency in
+electrode inspection, where defect evidence is often
+modality-selective rather than shared.
+• We benchmark representative multimodal IAD methods
+under a unified evaluation protocol and analyze the lim-
+itations of existing fusion, reconstruction, and modality-
+specific designs.
+• We propose DA-Core, a density-aware coreset selection
+method that constructs a more representative memory
+bank from non-uniform distributions of normal features
+and reduces false-positive detections.
+Related Work
+Industrial Anomaly Detection Benchmarks
+Public benchmarks have played a central role in the develop-
+ment of IAD methods. MVTec AD [2] established a widely
+used benchmark with multiple object and texture categories
+and pixel-level annotations. MVTec 3D-AD [3] further in-
+troduced paired RGB and 3D point cloud data, laying an im-
+portant foundation for multimodal industrial anomaly detec-
+tion based on appearance and geometry. Recent benchmarks
+extend toward richer sensing: Real-IAD D3 [24] provides
+aligned 2D, pseudo-3D, and 3D data for real-world indus-
+trial anomaly detection, while MulSen-AD [11] unifies RGB
+cameras, laser scanners, and infrared thermography to cap-
+ture appearance, geometry, and internal properties. Despite
+these advances, existing benchmarks mainly focus on in-
+spection of discrete, object-centric products, leaving process
+manufacturing underexplored. LIBAD complements them
+with spatially aligned visible-light and X-ray data from a
+real roll-to-roll electrode production line.
+Multimodal Industrial Anomaly Detection
+Most existing multimodal IAD methods are developed for
+RGB and 3D data, where appearance and geometry provide
+strongly related descriptions of the same object. M3DM [22]
+introduces patch-wise contrastive learning to align RGB and
+3D features from the same spatial location, while separating
+features from different locations within the same modality.
+CFM [6], CFR [8], and CPMAD [23] instead learn cross-
+modal feature mappings and detect anomalies through re-
+construction residuals. However, in LIBAD’s visible-light
+and X-ray setup, the weak correspondence between modali-
+ties can cause reconstruction failure even for normal samples.
+G2SF [21] exploits geometry-guided structural fusion, and
+HGCF [10] further models hierarchical color-geometry in-
+teractions. Both methods rely on RGB-3D priors that are not
+available in visible-light and X-ray inspection. These limi-
+tations suggest that LIBAD requires methods that can better
+handle weak and inconsistent multimodal evidence.
+Memory-based Anomaly Detection and Coreset
+Selection
+SPADE [5] and PaDiM [7] model normality with stored
+normal features and estimate anomalies by nearest-neighbor
+matching. PatchCore [18] further introduces coreset selec-
+tion to reduce memory size while preserving feature-space
+coverage. Recent extensions include zero-shot/few-shot re-
+trieval methods like DMMGNet [15], ReMP-AD [16], as
+well as multimodal adaptations such as MulSen-TripleAD
+[11] with a decision gating unit, D3-Memory [24] with
+channel-spatial swapping. However, existing coreset selec-
+tion strategies mainly optimize global coverage, which tends
+to under-represent dense local structures in the normal fea-
+ture distribution.
+
+
+The LIBAD Dataset
+Dataset Construction
+Electrode manufacturing produces continuous webs at high
+throughput, where defects are often sparse, making full-web
+annotation too expensive. Thus, we formulate LIBAD as
+an image-level anomaly detection dataset with physically
+cropped electrode patches as the basic unit. This design of-
+fers three practical advantages: (1) it makes data collection
+and registration more tractable; (2) it allows the dataset to
+easily scale to new defect types or process conditions; (3) it
+enables highly parallel inference for inline evaluation.
+Sample Collection and Annotation
+All electrode patches
+are collected from real roll-to-roll Li-ion battery electrode
+production lines (see Appendix), covering multiple cathode
+and anode compositions and production conditions. Candi-
+date defective regions are identified through offline inspec-
+tion based on visible appearance and measurable physical
+deviations. Once a candidate defective region is located on
+the electrode web, a physical sample slightly larger than
+50 × 40 mm is cut from the corresponding position. Initial
+defect labels are assigned by experienced process engineers
+from the lines and reviewed with the assistance of battery re-
+searchers. After multimodal image acquisition, all labels are
+re-examined using both visible-light and X-ray observations
+by joint experts. Each sampled region is assigned a single
+defect label according to its dominant defect pattern.
+A major concern in sample collection is that anomalous
+and normal samples may differ not only in defect patterns,
+but also in material composition, production batch, or pro-
+cess settings. To reduce these confounding effects, normal
+patches are collected near the defective samples or under
+the same manufacturing conditions whenever possible, so
+they are naturally grouped by the associated defect collec-
+tion conditions. These groups are used for dataset statistics
+and stratified splitting, but all selected normal samples are
+pooled together during training to construct a single model.
+This design encourages the benchmark to focus on defect-
+related evidence rather than unrelated material, batch, or
+process differences.
+Multimodal Data Acquisition
+Each electrode patch is
+characterized using visible-light imaging and two X-ray
+radiography settings. Visible-light images (VIS) are ac-
+quired under coaxial illumination, producing double-sided
+grayscale surface images of the coated electrode with an
+effective pixel size of approximately 0.048 mm/pixel. High-
+resolution X-ray radiographs (X-rayH) are acquired using
+a micro-CT system (45 kV, 85 µA), with an effective pixel
+size of approximately 0.045 mm/pixel and providing internal
+structure and density information at a resolution comparable
+to VIS. This setting is used for analyzing defects with weak
+or missing surface signatures, but its relatively long exposure
+time makes it only suitable for offline inspection. Although
+X-rayH is available for every sample, we use it only for
+label annotation to align with the practical inline VIS+X-
+rayL scenario. Low-resolution X-ray radiographs (X-rayL)
+are acquired using an inline X-ray system for roll-to-roll pro-
+duction. The resulting images have an effective pixel size of
+approximately 1.1 mm/pixel, trading spatial resolution for
+acquisition speed while retaining sensitivity to density vari-
+ations (see Appendix for detailed imaging-system configu-
+rations). In particular, visible-light imaging and inline X-ray
+sensing can be integrated into the same inspection line for
+deployment, with lightweight spatial calibration for aligned
+patch-wise inference.
+Multimodal Registration
+We first crop and orient each
+sample from the raw images to isolate the electrode region.
+All images are then registered to one side of the visible-
+light grayscale image, which serves as the fixed reference.
+Registration is performed by optimizing an affine transform
+to maximize a correlation-ratio similarity measure between
+the fixed and moving images [17]. For a fixed image X
+and a moving image Y over the overlapping region, with
+paired intensity samples {(xi, yi)}N
+i=1, the correlation ratio
+is defined as:
+η(Y |X) =
+P
+k nk (¯yk −¯y)2
+PN
+i=1(yi −¯y)2 ,
+(1)
+where pixels are grouped by their intensity xi = k in the
+fixed image, ¯yk is the mean intensity of the corresponding
+pixels in the moving image, ¯y is the global mean, and nk is
+the number of pixels in group k. The numerator measures the
+between-group variance of Y explained by grouping accord-
+ing to X, while the denominator is the total variance of Y . A
+higher ratio indicates stronger cross-modal correspondence,
+meaning the two images are better aligned. This measure
+captures functional intensity dependence without assuming
+linearity, making it well suited for this kind of registration.
+We use a coarse-to-fine derivative-free line search opti-
+mizer to find the affine parameters (without shear) that max-
+imize η(Y |X). Registration quality is verified using the final
+correlation-ratio score, and we set the acceptance threshold
+to 0.65 based on empirical separation between aligned and
+misaligned cases. All samples pass this threshold and quanti-
+tative evaluation on 20 randomly selected pairs yields a mean
+reprojection error of 2.1 ± 1.5 pixels (0.08 mm), confirming
+reliable alignment. After registration, the aligned 50 × 40
+mm physical region is resampled to a common 1280 × 1024
+grid using bicubic interpolation which provides a sufficiently
+fine coordinate grid for alignment. Before feature extraction,
+all modality inputs are resized to 640 × 512 pixels.
+Dataset Statistics and Characteristics
+LIBAD contains 744 electrode patches, including 361 nor-
+mal and 383 anomalous patches from 11 real-world defect
+categories as shown in Table 1. Following MVTec 3D-AD
+[3], training and validation sets contain normal samples only,
+while the test set contains both normal and anomalous sam-
+ples. To mitigate evaluation bias caused by random parti-
+tioning, we provide 10 official splits generated by randomly
+partitioning normal samples within each defect group. In
+each split, approximately 55% of the normal patches are
+used for training, 15% for validation, and the remaining 30%
+for testing. The resulting numbers of samples in each subset
+are summarized in Table 1. Normal samples are grouped by
+their matched defect collections for stratified splitting and are
+
+
+Group
+# Train
+# Val
+# Test
+(normal)
+# Test
+(anomalous)
+Wrinkling
+21
+6
+11
+38
+Particle
+17
+5
+9
+34
+Pit
+19
+5
+11
+37
+Unevenness
+19
+5
+10
+31
+Barefoil
+16
+5
+9
+30
+Scratch
+20
+6
+11
+35
+Polarity
+19
+5
+10
+35
+Debonding
+20
+6
+12
+20
+Crack
+19
+5
+11
+35
+Streak
+18
+5
+10
+35
+Pinhole
+9
+2
+5
+53
+Total
+197
+55
+109
+383
+Table 1: Dataset split statistics of LIBAD.
+pooled across all groups to train a single model. Compared
+with MVTec 3D-AD, LIBAD retains a larger proportion of
+normal samples in the test set to support the evaluation of
+false-positive behavior.
+Beyond the class distribution, LIBAD exhibits modality-
+dependent defect visibility. As shown in Fig. 1, some defects
+are visible in both VIS and X-ray with similar appearance,
+while others are visible in both imaging settings but show dif-
+ferent patterns. Some defects are predominantly detectable
+in X-ray, indicating internal or density-related abnormalities
+with weak surface evidence, whereas others are mainly vis-
+ible in VIS and become weak or ambiguous in X-ray. This
+property makes LIBAD different from MVTec 3D-AD or
+Real-IAD D3 where anomalous evidence is largely shared
+across modalities. Accurately defining which defects are vis-
+ible in which modality is difficult, given the limited physical
+prior knowledge of defects and their complex appearance. We
+provide an analysis using mutual information scores between
+registered modalities, supplemented by manual inspection
+(see Appendix). Another characteristic of LIBAD is the ho-
+mogeneous appearance of electrode patches. Unlike other
+datasets where the target object occupies the center part of
+the image and often contains rich semantic structures, each
+LIBAD patch is entirely covered by electrode material, mak-
+ing normal regions from different locations visually similar.
+Benchmark Protocol
+Task Definition
+LIBAD follows the standard unsupervised anomaly detection
+setting: normal samples are used for training and validation,
+reflecting the practical scenario where defects are unseen
+during training but normality is well-defined. During evalu-
+ation, each test sample is assigned an image-level anomaly
+score and classified as normal or anomalous. We adopt this
+sample-level evaluation because defect boundaries can be
+ambiguous across imaging modalities, while patch rejection
+is sufficient for the considered inspection setting. We use
+VIS and X-rayL as the main benchmark modalities because
+they represent the most practical inline inspection setting,
+combining surface appearance with density-sensitive X-ray
+measurement. We report unimodal results on VIS and X-rayL
+as references, and use VIS+X-rayL as the main multimodal
+setting. X-rayH is not used in the benchmark. It is reserved
+for label annotation and defect analysis due to its offline ac-
+quisition setting.
+Evaluation Metrics
+We report image-level AUROC, AUPR, F1-max, and FPR95
+for anomaly detection. AUROC and AUPR are widely used
+threshold-independent metrics that measure the ranking
+quality of anomaly scores. However, industrial inspection
+systems must eventually operate with a decision threshold,
+and strong ranking performance does not necessarily imply a
+low false alarm rate in deployment. We therefore emphasize
+FPR95, which measures the false positive rate when the true
+positive rate reaches 95%. This metric is particularly impor-
+tant for electrode inspection, where excessive false alarms
+can make an automatic inspection system impractical. We
+also report inference speed as an efficiency metric, since in-
+line inspection requires both reliable detection and efficient
+scoring. All results are reported as the mean and standard
+deviation over the 10 official random splits.
+Baselines
+We benchmark recent representative methods in IAD, in-
+cluding PatchCore [18], M3DM [22], CFM [6], G2SF [21],
+and CFR [8]. For methods originally designed for RGB–
+3D inputs, we adapt their modality branches to VIS and
+X-rayL, since LIBAD does not provide point-cloud observa-
+tions. To enable a fair comparison, we replace their origi-
+nal DINOv2/DINOv1 backbones with DINOv3 [19], which
+yields consistent improvements (see Appendix).
+Method
+We propose DA-Core, a memory-based anomaly detec-
+tion method for LIBAD. DA-Core improves the standard
+PatchCore-style pipeline by introducing density-aware core-
+set selection during memory bank construction. This design
+suppresses false positives caused by under-represented dense
+normal patterns. The method consists of four steps as shown
+in Fig. 2. First, frozen encoders extract patch-level features
+from visible-light and X-ray images. Second, normal patch
+features are stored in modality-specific memory banks and
+selected by density-aware farthest point sampling (DA FPS).
+Third, test samples are scored by nearest-neighbor matching
+with reweighted image-level anomaly scores. Finally, a One-
+Class Support Vector Machine (OCSVM) late-fusion mod-
+ule combines VIS and X-rayL scores into the final anomaly
+score, following the strategy used in M3DM.
+Feature Extraction
+DA-Core uses frozen DINOv3 ViT-S/16 [19] to extract patch-
+level features. For visible-light imaging, the two electrode
+sides (a and b) are processed by the same encoder but treated
+as independent inputs. Their patch tokens are inserted into a
+shared VIS memory candidate set:
+Zv =
+[
+i
+
+Fv(xv,a
+i
+) ∪Fv(xv,b
+i )
+
+.
+(2)
+
+
+Figure 2: Overview of DA-Core.
+For X-rayL, patch tokens are extracted by a separate encoder
+and form the X-rayL memory candidate set:
+Zx =
+[
+i
+Fx(xx
+i ).
+(3)
+Density-aware Coreset Construction
+For each modality m ∈{v, x}, let Zm denote the full can-
+didate set. The goal of coreset selection is to construct a
+compact memory bank Mm ⊂Zm while preserving repre-
+sentative normal patterns. Standard farthest point sampling
+selects the next feature according to its distance to the current
+memory bank [18]:
+rM
+i
+= min
+u∈Mm d(zi, u),
+(4)
+z∗= arg
+max
+zi∈Zm\Mm rM
+i ,
+(5)
+where d(·, ·) denotes the feature-space distance. This strat-
+egy provides broad coverage of the feature space of normal
+patches, but considers only geometric distance and ignores
+the empirical density of normal features. Dense regions often
+correspond to common electrode coating textures and con-
+tain subtle but valid normal variations. Representing such
+regions with too few memory features can increase nearest-
+neighbor distances for hard normal samples.
+To account for the local distribution of normal features,
+DA-Core estimates the density of each feature before coreset
+selection. For a feature zi, we compute its k nearest neighbors
+in the full normal feature set and define
+ρi =
+X
+zj∈Nk(zi)
+exp
+ 
+−
+d(zi, zj)
+τ
+2!
+,
+(6)
+where Nk(zi) denotes the k nearest neighbors of zi, and τ is
+the median k-nearest-neighbor distance of sampled normal
+features. The density score is log-transformed as
+ˆρi = log(1 + ρi),
+(7)
+followed by quantile normalization to obtain ˜ρi.
+DA-Core combines the coverage distance and local density
+into a density-aware FPS score:
+qi = ˜rM
+i
+(1 + λ˜ρi) ,
+(8)
+where ˜rM
+i
+is obtained by Min–Max normalization of the
+distances to the current memory bank across all remaining
+candidates, and λ controls the contribution of local density.
+The next memory feature is selected as
+z∗= arg
+max
+zi∈Zm\Mm qi.
+(9)
+The distance term preserves the global coverage behavior of
+farthest point sampling, while the density term favors repre-
+sentative variations in densely populated normal regions.
+Anomaly Scoring
+DA-Core follows the nearest-neighbor anomaly scoring strat-
+egy and adopts late decision fusion with OCSVM to keep
+modality-specific evidence before the final decision, similar
+to M3DM [22] and CMDIAD [20]. At inference time, VIS
+and X-ray feature maps are compared with their correspond-
+ing memory banks, producing two modality-level anomaly
+scores. An OCSVM decision function C is then applied to
+obtain the final image-level anomaly score:
+A(x) = C (αψ(F v, Mv), βψ(F x, Mx)) ,
+(10)
+where F v and F x denote the VIS and X-ray feature maps,
+Mv and Mx are their corresponding memory banks, and α
+and β are modality scaling factors. The OCSVM is trained
+using only normal training evidence.
+The modality-level score ψ(F, M) is computed from the
+most anomalous patch feature in a feature map. Specifically,
+ψ(F, M) = d(z∗, u∗),
+(11)
+where the most anomalous patch feature z∗and its nearest
+memory feature u∗are defined as
+z∗= arg max
+z∈F min
+u∈M d(z, u),
+(12)
+u∗= arg min
+u∈M d(z∗, u).
+(13)
+This formulation follows the standard PatchCore-style scor-
+ing, where the image-level anomaly score is the maximum
+nearest-neighbor distance across all patches. For VIS, side a
+and b are scored independently using the same VIS memory
+bank, and the larger score is used as ψ(F v, Mv). For X-ray,
+the score is computed directly from the X-ray feature map
+and memory bank.
+Experiments
+Anomaly Detection on LIBAD
+Table 2 reports image-level anomaly detection results on
+LIBAD using VIS and X-rayL across the 10 official splits. In
+the unimodal setting, VIS substantially outperforms X-rayL,
+with PatchCore achieving 84.2% vs. 71.2% AUROC and
+67.6% vs. 89.9% FPR95. This indicates that low-resolution
+X-ray alone is less reliable for inspection. DA-Core reduces
+
+
+Method
+Input
+FPR95 ↓
+AUROC ↑
+AUPR ↑
+F1-max ↑
+Time ↓
+Unimodal settings
+PatchCore [18]
+VIS
+0.676 ± 0.036
+0.842 ± 0.012
+0.951 ± 0.005
+0.891 ± 0.004
+8.63 ms
+PatchCore [18]
+X-rayL
+0.899 ± 0.025
+0.712 ± 0.016
+0.912 ± 0.006
+0.877 ± 0.002
+4.10 ms
+DA-Core
+VIS
+0.645 ± 0.041
+0.845 ± 0.016
+0.951 ± 0.006
+0.896 ± 0.004
+8.65 ms
+DA-Core
+X-rayL
+0.918 ± 0.035
+0.706 ± 0.013
+0.909 ± 0.006
+0.876 ± 0.001
+4.08 ms
+Multimodal settings
+PatchCore [18]
+VIS+X-rayL
+0.604 ± 0.039
+0.865 ± 0.013
+0.957 ± 0.005
+0.900 ± 0.005
+12.99 ms
+M3DM [22]
+VIS+X-rayL
+0.616 ± 0.032
+0.862 ± 0.011
+0.957 ± 0.004
+0.898 ± 0.003
+24.54 ms
+CFM [6]
+VIS+X-rayL
+0.618 ± 0.037
+0.834 ± 0.017
+0.947 ± 0.006
+0.897 ± 0.004
+7.24 ms
+G2SF [21]
+VIS+X-rayL
+0.595 ± 0.048
+0.852 ± 0.018
+0.953 ± 0.007
+0.903 ± 0.005
+19.74 ms
+CFR [8]
+VIS+X-rayL
+0.681 ± 0.037
+0.833 ± 0.015
+0.948 ± 0.006
+0.892 ± 0.005
+10.61 ms
+DA-Core
+VIS+X-rayL
+0.543 ± 0.057
+0.867 ± 0.016
+0.957 ± 0.006
+0.906 ± 0.006
+13.12 ms
+Table 2: Image-level anomaly detection results on LIBAD. Results are reported as mean and standard deviation over 10 official
+splits. Inference time is measured per sample on an NVIDIA RTX PRO 6000 Blackwell GPU (300W) under the same evaluation
+setting, excluding data loading (see Appendix for full hardware and software specifications).
+VIS FPR95 from 67.6% to 64.5%, but shows no improve-
+ment on X-rayL alone, consistent with the expectation that
+density-aware FPS is beneficial when the feature distribution
+of normal patches contains rich within-class variations.
+Combining VIS and X-rayL improves over either modality
+alone: PatchCore with VIS+X-rayL reduces FPR95 to 60.4%
+and improves AUROC to 86.5%. However, the adapted mul-
+timodal baselines show limited transferability to LIBAD,
+with FPR95 ranging from 59.5% (G2SF) to 69.7% (CFR),
+barely improving over PatchCore under the VIS+X-rayL set-
+ting (60.4%). The results are consistent with two likely ex-
+planations. For reconstruction-based methods such as CFM
+and CFR, the weak correlation between visible-light and
+X-ray images causes large reconstruction residuals even for
+normal samples, making anomaly discrimination unreliable.
+For methods relying on RGB-3D priors such as M3DM and
+G2SF, the appearance-geometry consistency assumption is
+violated in the present multimodal setting. These results sug-
+gest that LIBAD poses challenges beyond those addressed by
+existing multimodal IAD methods.
+DA-Core achieves the best overall performance, with
+54.3% FPR95, 86.7% AUROC, 95.7% AUPR, and 90.6%
+F1-max. Compared with multimodal PatchCore, DA-Core
+reduces FPR95 by 6.1 percentage points at comparable infer-
+ence speed (13.12 ms vs. 12.99 ms per electrode sample). It
+also outperforms the best baseline (G2SF) by 5.2 percentage
+points in FPR95 and runs 1.5× faster with similar memory
+bank structure (13.12 ms vs. 19.74 ms). The improvement is
+largely driven by false-positive suppression, which reflects
+the design goal of DA-Core.
+Ablation Study
+Effect of density-aware coreset selection.
+We first study
+the effect of density-aware coreset selection under differ-
+ent memory budgets, keeping all other components fixed.
+Fig. 3(a,b) compares standard FPS and density-aware FPS
+across coreset ratios ranging from 0.05 to 1.0. DA-Core im-
+proves the performance significantly under compact memory
+budgets. With a coreset ratio of 0.05, standard FPS obtains
+60.4% FPR95, while density-aware FPS reduces it to 54.3%,
+corresponding to a 6.1 percentage point reduction. A similar
+trend is observed at a coreset ratio of 0.10, where FPR95
+decreases from 58.7% to 53.6%.
+Density-aware FPS also reaches strong performance with a
+smaller memory bank. Using only 5% of the memory candi-
+dates, it achieves 54.3% FPR95, lower than the best standard
+FPS result among the tested ratios, 56.6% at a coreset ratio
+of 0.20. The UMAP visualizations in Fig. 3(c,d) further il-
+lustrate the difference between the two selection strategies.
+Standard FPS mainly emphasizes boundary and sparse re-
+gions, whereas density-aware FPS retains global coverage
+while selecting more representatives from densely populated
+normal regions. Consequently, normal test features falling
+in these high-density regions are more likely to find close
+memory neighbors, reducing their anomaly scores and sup-
+pressing false positives. At the 5% ratio, DA-Core requires
+13.12 ms per electrode sample, compared with 23.39 ms for
+PatchCore at a 0.20 coreset ratio. As the coreset ratio ap-
+proaches 1.0, the two strategies become equivalent because
+all memory candidates are retained.
+Sensitivity to density weight.
+We also analyze the sen-
+sitivity of DA-Core to the density weight λ using a fixed
+coreset ratio of 0.05. Table 3 reports the mean and standard
+deviation of FPR95 over the 10 official splits. Without den-
+sity weighting, the model obtains 60.4% FPR95. Introducing
+density awareness consistently reduces FPR95, with the best
+result achieved at λ = 0.7 (54.3%). This indicates that an
+appropriate density weight strikes the best trade-off between
+maintaining global feature-space coverage and prioritizing
+representative patterns in dense normal regions.
+Conclusion
+We introduced LIBAD, a multimodal industrial anomaly de-
+tection benchmark for Li-ion battery electrode manufactur-
+ing. The dataset is collected from real roll-to-roll production
+lines and provides spatially aligned visible-light and X-ray
+observations, enabling evaluation under an inline-compatible
+
+
+Figure 3: Quantitative and qualitative comparison of standard FPS and density-aware FPS. (a) FPR95 and (b) AUROC under
+different coreset ratios, reported as mean and standard deviation. (c, d) UMAP visualizations of randomly sampled 20,000 VIS
+normal patches and the coresets selected by standard FPS and density-aware FPS, respectively.
+Density weight λ
+FPR95 ↓
+0.0
+0.604 ± 0.037
+0.3
+0.571 ± 0.031
+0.4
+0.582 ± 0.033
+0.5
+0.568 ± 0.051
+0.6
+0.562 ± 0.044
+0.7
+0.543 ± 0.057
+0.8
+0.547 ± 0.053
+0.9
+0.544 ± 0.048
+1.0
+0.555 ± 0.051
+Table 3: Sensitivity analysis of the density weight λ using a
+coreset ratio of 0.05.
+VIS+X-ray inspection setting. LIBAD differs from exist-
+ing object-centric datasets because electrode patches are
+highly homogeneous and defect evidence can be modality-
+dependent, often weak or inconsistent across imaging set-
+tings.
+Our benchmark results show that existing multimodal
+anomaly detection methods developed for RGB-3D inspec-
+tion have limited transferability to LIBAD. Although VIS and
+X-ray provide complementary evidence, false-positive con-
+trol remains a key challenge for existing methods, motivating
+our design. We therefore proposed DA-Core, a density-aware
+memory-based baseline that improves coreset construction
+by up-weighting features in dense normal regions during se-
+lection. DA-Core achieves better FPR95 than adapted multi-
+modal baselines while preserving the efficiency of memory-
+based detection. However, despite the relative improvement,
+the absolute FPR95 remains too high for direct deployment,
+indicating that LIBAD is still an open and challenging bench-
+mark.
+We expect LIBAD to encourage further study of multi-
+modal IAD in process manufacturing and, together with the
+proposed method, to contribute to safer battery manufac-
+turing, ultimately benefiting the reliability of electric vehi-
+cles and energy storage systems. Future work includes devel-
+oping fusion strategies that account for modality disagree-
+ment, classifying detected anomalies into specific defect cat-
+egories, and efficient inline deployment, with the longer-term
+goal of supporting closed-loop process control.
+Acknowledgments
+The authors thank Guangdong Canrd New Energy Technol-
+ogy Co., Ltd. for manufacturing and labeling the electrode
+samples used in this study. This work received funding from
+Horizon Europe through the MSCA Doctoral Network RE-
+LIANCE, grant no. 101073040, as well as from an internal
+research grant of Thermo Fisher Scientific (CRC D23016).
+
+
+References
+[1] Attia, P. M.; Moch, E.; and Herring, P. K. 2025. Chal-
+lenges and opportunities for high-quality battery pro-
+duction at scale. Nature Communications, 16: 611.
+[2] Bergmann, P.; Fauser, M.; Sattlegger, D.; and Steger, C.
+2019. MVTec AD–A comprehensive real-world dataset
+for unsupervised anomaly detection. In Proceedings
+of the IEEE/CVF conference on computer vision and
+pattern recognition, 9592–9600.
+[3] Bergmann, P.; Jin, X.; Sattlegger, D.; and Steger, C.
+2021. The mvtec 3d-ad dataset for unsupervised 3d
+anomaly detection and localization.
+arXiv preprint
+arXiv:2112.09045.
+[4] Bonfiglioli, L.; Toschi, M.; Silvestri, D.; Fioraio, N.;
+and De Gregorio, D. 2022.
+The eyecandies dataset
+for unsupervised multimodal anomaly detection and
+localization. In Proceedings of the Asian Conference
+on Computer Vision, 3586–3602.
+[5] Cohen, N.; and Hoshen, Y. 2020. Sub-image anomaly
+detection with deep pyramid correspondences. arXiv
+preprint arXiv:2005.02357.
+[6] Costanzino, A.; Ramirez, P. Z.; Lisanti, G.; and Di Ste-
+fano, L. 2024. Multimodal industrial anomaly detection
+by crossmodal feature mapping. In Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, 17234–17243.
+[7] Defard, T.; Setkov, A.; Loesch, A.; and Audigier, R.
+2021. Padim: a patch distribution modeling framework
+for anomaly detection and localization. In International
+conference on pattern recognition, 475–489. Springer.
+[8] Guo, Y.; Zhang, W.; and Wang, X. 2026. Remove the
+Ambiguity: Few-shot Multimodal Anomaly Detection
+Using Crossmodal Feature Replacers. In Forty-third
+International Conference on Machine Learning.
+[9] Lambert, S. M.; Armstrong, M.; Attidekou, P. S.; Chris-
+tensen, P. A.; Widmer, J. D.; Wang, C.; and Scott, K.
+2017. Rapid Nondestructive-Testing Technique for In-
+Line Quality Control of Li-Ion Batteries. IEEE Trans-
+actions on Industrial Electronics, 64(5): 4017–4026.
+[10] Li, M.; He, J.; Li, J.; Han, D.; Wan, J.; and Li, G. 2025.
+HGCF: Hierarchical Geometry-Color Fusion for Mul-
+timodal Industrial Anomaly Detection. In Proceedings
+of the 33rd ACM International Conference on Multime-
+dia, 1023–1031.
+[11] Li, W.; Zheng, B.; Xu, X.; Gan, J.; Lu, F.; Li, X.; Ni,
+N.; Tian, Z.; Huang, X.; Gao, S.; et al. 2025. Multi-
+sensor object anomaly detection: Unifying appearance,
+geometry, and internal properties. In Proceedings of the
+computer vision and pattern recognition conference,
+9984–9993.
+[12] Li, Z.; Yan, Y.; Wang, X.; Ge, Y.; and Meng, L. 2025.
+A survey of deep learning for industrial visual anomaly
+detection. Artificial Intelligence Review, 58(9): 279.
+[13] Lin, Y.; Chang, Y.; Tong, X.; Yu, J.; Liotta, A.; Huang,
+G.; Song, W.; Zeng, D.; Wu, Z.; Wang, Y.; and Zhang,
+W. 2025. A survey on RGB, 3D, and multimodal ap-
+proaches for unsupervised industrial image anomaly
+detection. Information Fusion, 121: 103139.
+[14] Liu, J.; Xie, G.; Wang, J.; Li, S.; Wang, C.; Zheng,
+F.; and Jin, Y. 2024. Deep industrial image anomaly
+detection: A survey. Machine Intelligence Research,
+21(1): 104–135.
+[15] Luo, A.; Wen, G.; Cheng, Y.; Mei, S.; Dong, H.; and
+Liu, X. 2024. DMMGNet: A discrimination mapping
+and memory bank mean guidance-based network for
+high-performance few-shot industrial anomaly detec-
+tion. Neurocomputing, 610: 128622.
+[16] Ma, H.; Yang, G.; Zhao, D.; Ji, Y.; and Zuo, W. 2025.
+ReMP-AD: Retrieval-enhanced Multi-modal Prompt
+Fusion for Few-Shot Industrial Visual Anomaly De-
+tection. In Proceedings of the IEEE/CVF International
+Conference on Computer Vision, 20425–20434.
+[17] Roche, A.; Malandain, G.; Pennec, X.; and Ayache,
+N. 1998.
+The correlation ratio as a new similarity
+measure for multimodal image registration. In Wells,
+W. M.; Colchester, A.; and Delp, S., eds., Medical Im-
+age Computing and Computer-Assisted Intervention —
+MICCAI’98, 1115–1124. Springer Berlin Heidelberg.
+ISBN 978-3-540-49563-5.
+[18] Roth, K.; Pemula, L.; Zepeda, J.; Schölkopf, B.; Brox,
+T.; and Gehler, P. 2022. Towards total recall in industrial
+anomaly detection. In Proceedings of the IEEE/CVF
+conference on computer vision and pattern recognition,
+14318–14328.
+[19] Siméoni, O.; Vo, H. V.; Seitzer, M.; Baldassarre, F.;
+Oquab, M.; Jose, C.; Khalidov, V.; Szafraniec, M.; Yi,
+S.; Ramamonjisoa, M.; et al. 2025. Dinov3. arXiv
+preprint arXiv:2508.10104.
+[20] Sui, W.; Lichau, D.; Lefèvre, J.; and Phelippeau, H.
+2025. Incomplete multimodal industrial anomaly de-
+tection via cross-modal distillation. Information Fu-
+sion, 103572.
+[21] Tao, C.; Cao, X.; and Du, J. 2025.
+G2SF:
+Geometry-Guided Score Fusion for Multimodal In-
+dustrial Anomaly Detection.
+In Proceedings of the
+IEEE/CVF International Conference on Computer Vi-
+sion, 20551–20560.
+[22] Wang, Y.; Peng, J.; Zhang, J.; Yi, R.; Wang, Y.; and
+Wang, C. 2023. Multimodal industrial anomaly detec-
+tion via hybrid fusion. In Proceedings of the IEEE/CVF
+conference on computer vision and pattern recognition,
+8032–8041.
+[23] Zhao, Y.; Zhang, X.; Lu, H.; and Zhang, L. 2026.
+Complementary Prototype Mapping for Efficient Mul-
+timodal Anomaly Detection.
+In Proceedings of the
+IEEE/CVF Conference on Computer Vision and Pat-
+tern Recognition, 14178–14187.
+[24] Zhu, W.; Wang, L.; Zhou, Z.; Wang, C.; Pan, Y.;
+Zhang, R.; Chen, Z.; Cheng, L.; Gao, B.-B.; Zhang, J.;
+et al. 2025. Real-iad d3: A real-world 2d/pseudo-3d/3d
+dataset for industrial anomaly detection. In Proceed-
+ings of the Computer Vision and Pattern Recognition
+Conference, 15214–15223.
+
+
+Appendix
+Note 1: Production Line, Electrode Materials, and
+Multimodal Acquisition
+The dataset used in this study was constructed from electrode
+samples collected on an automated roll-to-roll lithium-ion
+battery electrode production line under standard manufac-
+turing operation as shown in Figs. S1, S2.
+Figure S1: Coating module in roll-to-roll electrode manu-
+facturing. Photograph of the coating section of an industrial
+roll-to-roll electrode production line, where active material
+slurry is continuously deposited onto the current collector.
+This stage represents the upstream process during which lo-
+calized coating non-uniformities or material-related anoma-
+lies may originate and subsequently propagate downstream.
+LIBAD contains both anode and cathode samples col-
+lected across multiple material categories and production
+conditions. Because the exact active-material formulations
+of all samples are commercially confidential, their detailed
+compositions are unavailable. We therefore performed X-ray
+fluorescence (XRF) analysis to infer the most likely ma-
+terial families from the detected elemental signatures. The
+resulting labels should be interpreted as approximate mate-
+rial categories rather than confirmed chemical formulations.
+Samples that could be identified as cathodes but could not
+be reliably assigned to a specific chemistry were grouped as
+cathodes with unspecified composition. Among the 744 sam-
+Figure S2: Rewinding module in roll-to-roll electrode
+manufacturing. Photograph of the rewinding section of the
+same production line, where the coated electrode web is me-
+chanically guided and rewound.
+ples, 313 are anode samples and 431 are cathode samples,
+accounting for 42.1% and 57.9% of the dataset, respectively.
+Following physical extraction from the electrode web,
+multimodal images were acquired for each electrode patch
+using separate visible-light and X-ray imaging systems.
+Visible-light images were obtained under controlled illumi-
+nation conditions to capture surface features from both sides
+of the double-coated electrodes (Fig. S3). High-resolution
+X-ray radiographs were acquired offline to provide subsur-
+face contrast that is not accessible through optical inspection
+(Fig. S4). In addition, inline-compatible low-resolution X-ray
+measurements were acquired under throughput-constrained
+conditions representative of roll-to-roll manufacturing. Fur-
+ther details of the acquisition system are omitted due to com-
+mercial confidentiality.
+Note 2: Sample-region Extraction and Multimodal
+Registration
+Raw acquisition images may contain multiple electrode
+patches within a single field of view. Before multimodal reg-
+istration, we therefore first detect and extract each individual
+sample region. For each modality, the outer contour of every
+electrode patch is detected after modality-specific intensity
+
+
+Electrode material
+# Samples
+Percentage
+Anode
+313
+42.1%
+NMC/NCM cathode
+296
+39.8%
+LFP cathode
+79
+10.6%
+LCO cathode
+4
+0.5%
+Cathode, unspecified
+52
+7.0%
+Total
+744
+100.0%
+Table S1: Distribution of approximate electrode material cat-
+egories in LIBAD. Because the exact active-material for-
+mulations are commercially confidential, the reported ma-
+terial families are inferred from XRF elemental signatures
+and should not be interpreted as confirmed chemical com-
+positions. NMC and NCM records are grouped into a sin-
+gle nickel–manganese–cobalt cathode category. Samples that
+can be identified as cathodes but cannot be reliably assigned
+to a specific material family are grouped as cathodes with
+unspecified composition. Percentages are calculated over all
+744 electrode samples.
+Figure S3: Visible-light image acquisition setup and illus-
+tration figure of co-axial illumination. Photograph of the
+visible-light imaging system used for patch-level data acqui-
+sition. The setup consists of an industrial camera combined
+with a coaxial illumination configuration, enabling consistent
+surface imaging of both sides of double-coated electrodes un-
+der controlled lighting conditions.
+preprocessing. The in-plane orientation of each valid sam-
+ple is estimated from its detected region. Each patch is then
+rotated to a common orientation and cropped as an inde-
+pendent sample image. Figure S5 shows an example X-rayH
+acquisition image containing six electrode samples and the
+detected contours used for orientation correction and sample
+extraction.
+After sample extraction and orientation correction, images
+from different modalities are transformed into a common
+spatial coordinate system using the registration procedure
+described in the main paper. VIS is used as the fixed refer-
+ence, and the corresponding X-ray image is transformed into
+the VIS coordinate system. Figure S6 presents representative
+registration overlays for four samples. In each panel, the VIS
+image is shown in grayscale, while the registered X-rayH
+radiograph is displayed as a semitransparent heatmap. The
+close agreement between electrode boundaries and other spa-
+Figure S4: High-resolution X-ray radiography acquisition
+setup. Photograph of the high-resolution X-ray imaging sys-
+tem used for offline characterization of excised electrode
+patches. This setup provides subsurface contrast at a spatial
+resolution exceeding that of inline-compatible X-ray inspec-
+tion and was used exclusively for post-extraction analysis.
+tially corresponding structures provides qualitative evidence
+of reliable cross-modal alignment. These examples comple-
+ment the landmark-based registration error reported in the
+main paper.
+
+
+Figure S5: Sample-region detection and orientation esti-
+mation. Example raw X-rayH acquisition image containing
+six electrode patches. The overlaid contours indicate the au-
+tomatically detected sample boundaries. These regions are
+used to estimate the in-plane orientation of each patch, cor-
+rect its rotation, and crop it as an individual sample before
+multimodal registration. The same sample-region extraction
+principle is applied to all imaging modalities, with modality-
+specific preprocessing where required.
+Figure S6: Qualitative visualization of VIS–X-rayH reg-
+istration. Representative registration results for four elec-
+trode samples. In each panel, the VIS image is shown in
+grayscale, and the registered X-rayH radiograph is overlaid
+as a semitransparent heatmap. The agreement between elec-
+trode boundaries and other corresponding spatial structures
+demonstrates the effectiveness of the multimodal registration
+procedure.
+
+
+Note 3: Dataset Re-annotation and Representative
+Defect Examples
+After completing high-resolution X-ray acquisition and mul-
+timodal registration, we performed an exploratory analysis
+of the complete image collection. During this analysis, we
+found that some samples had been assigned labels under the
+original taxonomy, whereas their X-ray images revealed sub-
+surface density irregularities inconsistent with those labels.
+We therefore conducted a re-annotation of the entire dataset
+using the registered visible-light and X-ray observations. Be-
+cause manufacturing-data access and sampling practices are
+governed by customer confidentiality and operational con-
+straints, certain quantities, such as the absolute prevalence
+of individual defect types and the exact sampling fraction
+relative to total production, cannot be disclosed or retrospec-
+tively quantified. LIBAD is therefore intended to support
+comparative analysis of defect observability across sensing
+modalities under realistic industrial conditions, rather than to
+represent production-level defect prevalence. Representative
+examples of 11 defect classes are shown in Figs. S7–S8.
+Figure S7: Examples of Wrinkling, Particle, Pit, Unevenness,
+Barefoil, and Scratch defects (rows) shown across visible-
+light imaging of side A (VIS A), visible-light imaging of
+side B (VIS B), low-resolution inline X-ray (X-rayL), and
+high-resolution X-ray radiography (X-rayH) (columns).
+Figure S8: Examples of Polarity, Debonding, Crack, Streak
+and Pinhole defects (rows) shown across visible-light imag-
+ing of side A (VIS A), visible-light imaging of side B (VIS
+B), low-resolution inline X-ray (X-rayL), and high-resolution
+X-ray radiography (X-rayH) (columns).
+Note 4: Modality-dependent Defect Visibility
+Defect visibility was assessed through manual inspection
+of the modality images. Before inspection, each image was
+percentile-rescaled to enhance defect contrast and suppress
+the influence of extreme-intensity noise. A defect was consid-
+ered visible in a modality when its anomalous region could
+be visually localized from that modality after rescaling. For
+samples in which the spatial correspondence between modal-
+ities was difficult to assess directly, the mutual-information
+score obtained during multimodal registration was addition-
+ally consulted as a reference for evaluating the reliability of
+the cross-modal correspondence.
+LIBAD exhibits clear modality-dependent defect visibil-
+ity. Among the 383 anomalous samples, 312 could be local-
+ized from VIS and 341 could be localized from X-rayH. Of
+these, 270 samples were visible in both modalities, 42 were
+visible only in VIS, and 71 were visible only in X-rayH.
+As summarized in Table S2, 29.5% of all anomalous sam-
+ples were visible in only one modality, including 11.0% that
+were visible only in VIS and 18.5% that were visible only in
+X-rayH. This modality-selective subset provides direct evi-
+dence of cross-modal anomaly inconsistency in LIBAD and
+demonstrates that neither modality alone provides complete
+defect coverage.
+
+
+Defect visibility
+# Samples
+Percentage
+VIS only
+42
+11.0%
+X-rayH only
+71
+18.5%
+Visible in both modalities
+270
+70.5%
+Total
+383
+100.0%
+Table S2: Modality-dependent visibility of anomalous sam-
+ples in LIBAD, determined by manual inspection after
+percentile-based intensity rescaling. A total of 113 anoma-
+lous samples, corresponding to 29.5% of all defects, are
+visible in only one of the two modalities.
+Note 5: Effect of Backbone Selection
+Table S3 compares DINOv1, DINOv2, and DINOv3 as the
+feature backbone for the adapted multimodal baselines. DI-
+NOv3 consistently achieves the best results across all four
+methods and all three evaluation metrics. The improvement
+is particularly evident in FPR95. For example, replacing DI-
+NOv1 with DINOv3 reduces FPR95 from 81.7% to 61.8%
+for CFM, from 77.8% to 61.6% for M3DM, from 77.5% to
+68.1% for CFR, and from 75.0% to 59.5% for G2SF. We
+therefore use DINOv3 for all adapted baselines in the main
+benchmark to provide a stronger and more consistent com-
+parison.
+Note 6: Experimental Environment and
+Implementation Details
+All experiments are conducted on a workstation running
+Ubuntu 22.04, equipped with an NVIDIA RTX PRO 6000
+Blackwell GPU with 96 GB of GPU memory and a 300 W
+power limit, an Intel Xeon w5-2455X CPU, and 256 GB
+of system memory. The software environment uses Python
+3.12.13, PyTorch 2.12.1, and CUDA 13.0. Computational
+resource allocation and job scheduling are managed using
+Slurm 25.05.0. The batch size is set to 16 for both training
+and inference-time evaluation.
+The frozen DINOv3 backbone is evaluated using BF16
+precision. Memory-bank distance matrices and nearest-
+neighbor distances are computed in FP32, with TF32 dis-
+abled to ensure consistent numerical precision across all
+methods. The OCSVM-based decision-fusion module is im-
+plemented using scikit-learn’s SGDOneClassSVM and ex-
+ecuted on the CPU. All methods are evaluated under the
+same hardware, software, numerical-precision, and input-
+resolution settings.
+For runtime evaluation, the first inference batch is treated
+as a warm-up and excluded from the runtime statistics.
+CUDA synchronization is applied immediately before and
+after each timed batch, and wall-clock time is measured us-
+ing a high-resolution timer. The reported time per electrode
+sample is calculated by dividing the accumulated runtime of
+all measured batches by the corresponding number of sam-
+ples. Each runtime experiment is repeated three times, and
+the mean runtime is reported.
+The timed section includes input preprocessing after data
+loading, input transfer and preparation, backbone feature
+extraction, modality-specific feature processing, memory-
+bank nearest-neighbor matching, image-level anomaly scor-
+ing, OCSVM-based decision fusion, and the post-processing
+required to produce the final anomaly scores. Data loading,
+evaluation-metric computation, visualization, and file I/O are
+excluded.
+
+
+DINOv3
+DINOv2
+DINOv1
+Method
+AUROC ↑
+AUPR ↑
+FPR95 ↓
+AUROC ↑
+AUPR ↑
+FPR95 ↓
+AUROC ↑
+AUPR ↑
+FPR95 ↓
+CFM
+0.834
+0.947
+0.618
+0.765
+0.925
+0.802
+0.737
+0.912
+0.817
+M3DM
+0.862
+0.957
+0.616
+0.852
+0.956
+0.661
+0.786
+0.932
+0.778
+CFR
+0.833
+0.948
+0.681
+0.786
+0.932
+0.789
+0.754
+0.917
+0.775
+G2SF
+0.852
+0.953
+0.595
+0.843
+0.952
+0.667
+0.755
+0.920
+0.750
+Table S3: Effect of the backbone version on adapted multimodal anomaly detection methods under the VIS+X-rayL setting. All
+methods use the same evaluation protocol, and results are averaged over the 10 official splits. The best result for each method
+and metric is highlighted in bold. Replacing the original DINOv1 or DINOv2 backbone with DINOv3 consistently improves
+anomaly-ranking performance and reduces FPR95.

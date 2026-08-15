@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-15T20:17:30.381832+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.07958v1",
+      "source": "arxiv",
+      "title": "LIBAD: A Multimodal Anomaly Detection Benchmark for Li-Ion Battery Electrode Manufacturing",
+      "abstract": "Multimodal industrial anomaly detection has largely focused on discrete products using strongly correlated RGB and 3D observations, leaving continuous process manufacturing and weakly correlated sensing modalities underexplored. We introduce LIBAD, the first multimodal anomaly detection benchmark for Li-ion battery electrode manufacturing. Collected from real roll-to-roll production lines, LIBAD provides aligned double-sided visible-light imaging, high-resolution X-ray radiography, and inline-compatible low-resolution X-ray radiography. Electrode patches in LIBAD exhibit highly homogeneous material appearance, while defect evidence can be strong in one modality but weak or absent in another, resulting in pronounced cross-modal anomaly inconsistency. Benchmarks of representative methods under the inline-compatible visible-light and low-resolution X-ray setting exhibit limited transferability and consistently high false-positive rates. We therefore propose DA-Core, a memory-based method that jointly considers feature-space coverage and local density of normal features during coreset selection, allowing compact memory banks to better preserve fine-grained normal variations. With a coreset ratio of 0.05, DA-Core reduces FPR95 from 60.4% to 54.3% compared with standard farthest point sampling. At this ratio, DA-Core also outperforms the best standard coreset result (obtained at 0.20) while reducing inference time by 43.9%. These results suggest that both the data distribution of normal features and the modality relationship itself require explicit consideration when designing anomaly detection methods for process manufacturing.",
+      "authors": [
+        "Wenbo Sui",
+        "Daniel Lichau",
+        "Harold Phelippeau",
+        "Zhao Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-08-08T06:43:25+00:00",
+      "link": "https://arxiv.org/pdf/2608.07958v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "relevance to lithium-ion battery electrode manufacturing and processing",
+      "llm_evidence_cn": "涉及锂离子电池电极制造与处理相关的数据基准",
+      "llm_evidence": "涉及锂离子电池电极制造与处理相关的数据基准",
+      "canonical_evidence": "涉及锂离子电池电极制造与处理相关的数据基准",
+      "llm_tldr_en": "Introduces LIBAD, the first multimodal anomaly detection benchmark for Li-ion battery electrode manufacturing, with aligned visible and X-ray imaging from real production lines.",
+      "llm_tldr_cn": "针对锂离子电池电极制造过程中缺陷检测缺乏多模态基准的问题，提出了LIBAD基准数据集。该数据集来自实际卷对卷生产线，包含对齐的双面可见光成像、高分辨率X射线成像和在线低分辨率X射线成像。电极区域外观高度均匀，而缺陷信息在不同模态间强弱不一，突出了跨模态异常检测的挑战。该工作为电极制造过程的自动质检提供了标准测试床。",
+      "llm_tldr": "针对锂离子电池电极制造过程中缺陷检测缺乏多模态基准的问题，提出了LIBAD基准数据集。该数据集来自实际卷对卷生产线，包含对齐的双面可见光成像、高分辨率X射线成像和在线低分辨率X射线成像。电极区域外观高度均匀，而缺陷信息在不同模态间强弱不一，突出了跨模态异常检测的挑战。该工作为电极制造过程的自动质检提供了标准测试床。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "processing of battery materials for electrodes",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

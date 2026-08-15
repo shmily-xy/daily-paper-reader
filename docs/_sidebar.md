@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-15 <!--dpr-date:20260815-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/15/2608.07958v1-libad-a-multimodal-anomaly-detection-benchmark-for-li-ion-battery-electrode-manufacturing" data-sidebar-item="{&quot;title&quot;: &quot;LIBAD: A Multimodal Anomaly Detection Benchmark for Li-Ion Battery Electrode Manufacturing&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.07958v1-libad-a-multimodal-anomaly-detection-benchmark-for-li-ion-battery-electrode-manufacturing&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;涉及锂离子电池电极制造与处理相关的数据基准&quot;}">LIBAD: A Multimodal Anomaly Detection Benchmark for Li-Ion Battery Electrode Manufacturing</a>
   * 2026-08-13 <!--dpr-date:20260813-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/13/2608.07960v1-splashing-velocity-of-a-viscous-liquid-squeezed-between-two-parallel-disks" data-sidebar-item="{&quot;title&quot;: &quot;Splashing velocity of a viscous liquid squeezed between two parallel disks&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.07960v1-splashing-velocity-of-a-viscous-liquid-squeezed-between-two-parallel-disks&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;平行圆盘间挤压薄膜流体动力学与双行星搅拌机的混合机理相关。&quot;}">Splashing velocity of a viscous liquid squeezed between two parallel disks</a>
