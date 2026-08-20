@@ -1,0 +1,315 @@
+Title: From suspensions to porous multilayers: microstructure formation and particle packing in drying colloidal films
+
+URL Source: https://arxiv.org/pdf/2608.13761v1
+
+Published Time: Mon, 17 Aug 2026 00:14:09 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# From suspensions to porous multilayers: microstructure formation and particle packing in drying colloidal films 
+
+Qingguang Xie 1, ∗ and Jens Harting 1, 2, †
+
+> 1
+
+Helmholtz Institute Erlangen-N¨ urnberg for Renewable Energy (IET-2), Forschungszentrum J¨ ulich, Cauerstraße 1, 91058 Erlangen, Germany 
+
+> 2
+
+Department of Chemical and Biological Engineering and Department of Physics, Friedrich-Alexander-Universit¨ at Erlangen-N¨ urnberg, Cauerstraße 1, 91058 Erlangen, Germany 
+
+Drying particle suspensions is widely used to assemble particles and to fabricate porous functional layers for various applications, in which microstructural properties critically influence the overall device performance. Understanding the mechanisms governing drying-induced microstructure for-mation is therefore essential for predictive control of the resulting structures. In this work, we numerically investigate the evolution of microstructures during the drying of particle suspension films, with a particular focus on the role of particle–particle interactions. For weakly interacting particles, the particles assemble into hexagonal structures at the interface, and upon drying, trig-ger subsequent layer-by-layer assembly. We present a simple theoretical model to predict the time evolution of the layer thickness, validated against our simulation results. With strong particle in-teractions, the particles aggregate and form a network-like structure during drying, leading to a porous deposit. The porosity of the structure follows a power-law relationship with a dimensionless adhesion parameter that characterizes the particle–particle interaction force relative to the capillary force. By systematically varying the adhesion parameter, three packing regimes of the final struc-ture are identified: hexagonal close packing, random close packing, and adhesive packing. Overall, our results demonstrate that particle–particle interactions play a decisive role in determining the final porous structure, providing practical guidance for tailoring functional layers through controlled manipulation of particle interactions. 
+
+I. INTRODUCTION 
+
+Drying of particle-based films is a common approach to assemble particles and produce functional layers for a wide range of applications, including catalyst layers in electrochemical devices such as electrolyzers [1, 2] and fuel cells [3], porous electrodes in batteries [4] and print-able electronic devices [5, 6]. The performance of these devices is strongly governed by the microstructural prop-erties of the deposited layers. In particular, characteris-tics such as particle packing and porosity play a critical role in determining transport properties, electrochemical activity, and overall efficiency. Despite their importance, controlling the microstruc-tures of drying particle-based films remains a signifi-cant challenge due to the complex and coupled physical processes involved. During drying, evaporation-induced flows, interparticle interactions, and particle–substrate interactions occur simultaneously and collectively influ-ence the final structure [7]. These competing dynamics make it difficult to predict and precisely tailor the re-sulting porous morphology. Experimental studies were carried out to explore how evaporation rate, salt con-centration, and the intrinsic properties of the particles (e.g., size and dispersity) shape the final deposit [8–10]. Directly monitoring the evolution of the microstructure, however, is highly challenging, owing to the opacity of the   
+
+> ∗q.xie@fz-juelich.de
+> †j.harting@fz-juelich.de
+
+materials and the constraints of available measurement techniques. Consequently, numerical simulations have increasingly been used to investigate these processes, as they enable direct tracking of microstructural evolution and system-atic variation of individual parameters while holding oth-ers fixed [11, 12]. For example, Jung et al. [13, 14] studied the temporal evolution of microstructures in ver-tically drying colloidal films, focusing on the interplay among evaporation, diffusion, and sedimentation. In their model, however, colloidal interactions were repre-sented by a simple repulsive potential, even though par-ticle–particle interactions can play a crucial role in struc-ture formation. More recently, Tatsumi et al. [15] em-ployed Langevin dynamics simulations to examine the influence of DLVO interactions on drying behavior. They showed that strong attractive interactions promote par-ticle aggregation, leading to looser structures—an obser-vation later supported by Moon et al. [16] using Brown-ian dynamics simulations. Nevertheless, these models ne-glect hydrodynamic particle–particle interactions as well as capillary interactions at the interface, both of which are expected to be important in evaporating colloidal sys-tems [17]. In this work, we investigate the drying dynamics of thick colloidal films using a coupled lattice Boltz-mann–discrete element method framework. The lattice Boltzmann method resolves fluid flow and evaporation-driven transport, while the discrete element method cap-tures particle dynamics at the individual level. This combined approach enables direct resolution of parti-cle–particle interactions together with particle–fluid cou-arXiv:2608.13761v1 [cond-mat.soft] 13 Aug 2026 2pling, providing a comprehensive description of mi-crostructural evolution during drying. For weak inter-particle interactions, particles self-assemble into multi-layer hexagonal structures. In contrast, strong attrac-tive interactions promote aggregation and the formation of network-like structures, resulting in highly porous de-posits. To rationalize these observations, we develop a simple theoretical model that predicts the time evolu-tion of layer thickness in the weakly interacting regime. Furthermore, by systematically varying interparticle in-teractions, we identify a transition between three distinct particle packing regimes: hexagonal close packing, ran-dom close packing, and cohesive packing.  
+
+> II. METHODS
+
+We employ the lattice Boltzmann method (LBM), a mesoscopic computational approach for modeling fluid dynamics that provides a versatile framework for sim-ulating complex flow phenomena [18]. Unlike conven-tional computational fluid dynamics methods that di-rectly solve the Navier–Stokes equations, the LBM is based on kinetic theory and describes fluid behavior through the evolution and collision of particle distribu-tion functions on a discrete lattice. In the limit of small Knudsen and Mach numbers, the Navier–Stokes equa-tions are recovered [19]. Over the past two decades, the LBM has become a robust and widely used tool for nu-merical simulations of fluid flows [18]. The method has been extended to model multiphase and multicomponent fluids [20], as well as suspensions of particles with vary-ing shapes and wettabilities [21, 22]. Its inherent par-allelizability and flexibility in handling complex geome-tries make the LBM particularly suitable for investigat-ing intricate fluid dynamics problems. In the following, we summarize the aspects of the method relevant to the present work and refer the reader to the literature for detailed descriptions of the methodology and implemen-tation [17, 23, 24]. We employ the pseudopotential multicomponent lat-tice Boltzmann method (LBM) introduced by Shan and Chen [20] with a D3Q19 lattice [25]. In this framework, two fluid components are modeled through the evolution of their respective distribution functions, which are dis-cretized in space and time according to the lattice Boltz-mann equation: 
+
+f ci (x + ei∆t, t + ∆ t) = f ci (x, t ) − ∆tτ c [f ci (x, t ) −
+
+f eq  
+
+> i
+
+(ρc(x, t ), uc(x, t ))] , (1) where i = 0 , ..., 18. f ci (x, t ) denotes the single-particle distribution functions for fluid component c = 1 or 2, and ei represents the discrete velocity in the ith direc-tion. The parameter τ c is the relaxation time for com-ponent c and determines its viscosity. The macroscopic densities and velocities for each component are defined as 
+
+ρc(x, t ) = ρ0
+
+P 
+
+> i
+
+f ci (x, t ), where ρ0 is a reference density, and uc(x, t ) = P 
+
+> i
+
+f ci (x, t )ei/ρ c(x, t ), respectively. Here, 
+
+f eq  
+
+> i
+
+is the second-order equilibrium distribution function defined as 
+
+f eq  
+
+> i
+
+(ρc, uc) = ωiρc
+
+
+
+1 + ei · uc
+
+c2
+
+> s
+
+− (uc · uc)2c2
+
+> s
+
++ (ei · uc)2
+
+2c4
+
+> s
+
+
+
+, (2) where ωi is a coefficient depending on the direction: ω0 =1/3 for the zero velocity, ω1,..., 6 = 1 /18 for the six nearest neighbors and ω7,..., 18 = 1 /36 for the nearest neighbors in diagonal direction. cs = 1√3∆x 
+
+> ∆t
+
+is the speed of sound. For convenience, we set the lattice spacing ∆ x, the timestep ∆ t, the reference density ρ0, and the relaxation time τ c to unity. This choice yields a kinematic viscosity of νc = 16 in lattice units. The pseudopotential multicomponent model intro-duces a mean-field interaction force between fluid com-ponents c and ¯ c [20], 
+
+Fc(x, t ) = −Ψc(x, t ) X
+
+> ¯c
+
+X
+
+> i
+
+ωigc¯cΨ¯c(x + ei, t )ei, (3) where gc¯c denotes the coupling constant governing the interaction strength between the two fluid components, ultimately leading to phase separation. We denote the surface tension of the interface by γ. Ψ c(x, t ) represents an “effective mass” and is chosen as the functional form Ψc(x, t ) ≡ Ψ( ρc(x, t )) = 1 − e−ρc(x,t ) . (4) This force Fc(x, t ) is then incorporated into the dynamics of component c by adding a shift ∆ uc(x, t ) = τ cFc(x,t )
+
+> ρc(x,t )
+
+to the velocity uc(x, t ) in the equilibrium distribution. When the interaction parameter gc¯c in Eq. (3) is cho-sen appropriately, the fluid components undergo phase separation, resulting in the formation of distinct phases. Each component separates into a denser majority phase with density ρma and a lighter minority phase with den-sity ρmi . Owing to the diffuse nature of the interface, stress singularities at the moving contact line are natu-rally avoided, in contrast to sharp-interface models where such singularities commonly arise. To induce evaporation, we impose a constant density value ρcH for component c at the boundary sites zH by prescribing the corresponding distribution functions of component c as [24] 
+
+f ci (zH , t ) = f eq  
+
+> i
+
+(ρcH , ucH (zH , t )) . (5) where the boundary velocity is set to ucH (zH , t ) = 0. When the imposed density ρcH is smaller than the equi-librium minority density ρcmi , a density gradient devel-ops in the vapor phase of component c. This gradient drives the diffusion of component c toward the evapo-ration boundary. The diffusion coefficient of component 
+
+c is given as Dc = c2
+
+> s
+
+(τ − 12 ) ρ¯c 
+
+> ρc+ρ¯c
+
+− c2  
+
+> sρcg¯cc Ψ′
+> cΨ¯c
+> ρc+ρ¯c
+
+, where Ψ′ = dΨ/dρ [24, 26]. It should be emphasized that our 3evaporation model is diffusion-dominated, as validated in our prior work [24]. The colloidal particles are discretized on the fluid lattice, and their coupling to the fluid components is enforced via a modified bounce-back boundary condi-tion, following the approach introduced by Ladd and Aidun [21, 27]. The particle dynamics are then described by the classical equations of motion: 
+
+Fp = m dup
+
+dt (6) Here, Fp denotes the total force acting on a particle with mass m, and up is its velocity. The particle trajectories are updated using a leap-frog integration scheme. Since the colloids are modeled as rigid spheres, rotational dy-namics and particle deformation are neglected. The momentum exchange between particles and the surrounding fluid gives rise to hydrodynamic forces, in-cluding drag and lift contributions. The model accu-rately resolves lubrication interactions provided that the interparticle separation is at least one lattice spacing. For smaller separations, i.e., when the distance drops below one lattice site, a lubrication correction is intro-duced [21, 23]. In the limit of small separation h = ( rij − 2R) ≪ R,the van der Waals force Fvdw between two spherical par-ticles with identical radii R is approximated as [28] 
+
+Fvdw = AH R
+
+12 1
+
+h2 ˆrij , for rs ≤ rij ≤ rc , (7) where AH denotes the Hamaker constant and rc = 2 R+4 is long-range cutoff radius. We set the short-range cutoff radius to rs = 2 R + 0 .3 in our simulations to eliminate the divergence of the van der Waals interaction as the particles approach contact. To prevent particle overlap, a Hertz potential is ap-plied between neighboring particles [29]. The Hertz hard-sphere potential governs particle-particle interactions at close contact, thereby removing the need for an explicit contact model. Furthermore, to ensure that particles do not penetrate the substrate and to model particle adsorp-tion onto the substrate, a Lennard-Jones (LJ) potential is introduced between particles and the substrate [17]. Our numerical models have been previously validated against a range of benchmark cases, including capillary interactions between neighboring particles at fluid inter-faces [30], the evolution of the interface position during the drying of a pure liquid film and a floating droplet [24], as well as the velocity field in evaporating sessile droplets, where results were compared with theoretical predictions and experimental measurements [31, 32]. We further note that the evaporation-driven dynamics in drying colloidal films are primarily controlled by vapor diffusion through the surrounding gas phase, while the detailed properties of the surrounding fluid have only a negligible effect on the overall behavior. For this reason, we employ a multi-component formulation rather than a multiphase model, to enhance numerical stability. The parameter set used in our simulations is chosen to represent colloidal particles with a characteristic ra-dius of order 100nm − 1μm suspended in water. The fluid properties correspond to standard values for wa-ter, namely a dynamic viscosity of ηw = 10 −3Pa · s, a density of ρw = 10 3kg /m3, and a surface tension of 
+
+σw = 7 .2 × 10 −2N/m. We focus on a regime in which particle transport by diffusion is significantly slower than the motion of the evaporating liquid interface. This sep-aration of time scales corresponds to a fast-evaporation limit, characterized by a large P´ eclet number, P e ≫ 1, defined as the ratio between the characteristic timescale of interface motion and that of particle diffusion. Under these conditions, Brownian motion of the colloidal par-ticles is neglected. In addition, we assume the particle density to be comparable to that of the surrounding fluid, which renders gravitational settling of particles negligible over the timescales considered.  
+
+> III. RESULTS
+
+# z0
+
+# zH
+
+FIG. 1: Sketch of a thick colloidal film sitting on a substrate and covered by another fluid. The initial height of the film is z0, and the distance between the evaporation boundary and the substrate is zH .We study the evaporation of a planar colloidal film deposited on a solid substrate, as schematically shown in Fig. 1. Unless stated otherwise, all simulations are performed in a computational domain of size 64 ×64 ×128 lattice nodes. Initially, the system is prepared with one region filled by fluid component c and the complemen-tary region occupied by an equally dense fluid ¯ c. This configuration gives rise to a well-defined fluid–fluid in-terface located at an initial position z0. We identify the interface position as the position where the densities of the two components are equal, i.e., ρc = ρ¯c.For the fluid–fluid interactions, we set the coupling strength in Eq. (3) to gc¯c = 3 .6, which produces a diffuse interface spanning approximately five lattice nodes. This choice corresponds to a surface tension of γ ≈ 0.047 and an effective diffusivity of D ≈ 0.12 in lattice units. The 4            
+
+> (a) (b) (c) (d) (e)
+> (f) (g) (h) (i) (j)
+> (k) (l) (m) (n) (o)
+
+FIG. 2: Snapshots of deposition processes on a substrate (light green) for different particle-particle interactions, characterized by the adhesion parameter a)-e) χ = 0 .02 , f)-j) χ = 0 .2 and k)-o) χ = 10 .0. The solvent is represented by the red color. computational domain includes a solid substrate repre-sented by a wall of thickness three lattice nodes located at the bottom of the system and aligned parallel to the initial interface. This wall is implemented using stan-dard bounce-back boundary conditions. In the directions perpendicular to the substrate, periodic boundary con-ditions are applied. We choose particles with a radius of 3 and include particle–particle interactions consisting of van der Waals forces, as specified in Eq. (7), and a Hertz potential, while particle–substrate interactions are modeled via a Lennard–Jones potential. During drying, particles tend to aggregate into clus-ters and network-like structures due to attractive van der Waals interactions. In contrast, the descending liquid in-terface acts as a compressive agent: capillary forces gen-erated by the moving interface compact the particle as-semblies, often leading to partial collapse or densification of clusters and network structures. The strength of this compressive effect is primarily controlled by the surface tension and the particle size. To quantify the competition 5between these two mechanisms, we introduce a dimen-sionless adhesion parameter χ = |F ∗
+
+> vdW
+
+|/γR , which com-pares the characteristic van der Waals attractive force to the capillary force scale. Here, |F ∗
+
+> vdW
+
+| denotes the magnitude of the van der Waals force evaluated at the minimal interparticle surface separation allowed in the simulations, h = 0 .1R, ensuring a consistent estimate of the strongest attractive interaction within the numerical framework. The particles are randomly initialized in the solvent with a volume concentration ϕ ≈ 0.2 (Fig. 2a). Under a weak attractive interaction χ ≈ 0.02, the interface de-scends upon drying. Particles are then absorbed at the interface and reorganize into a hexagonal arrangement at the topmost layer (Fig. 2b). This hexagonal order-ing is primarily driven by confined packing of spherical particles at the interface. As drying proceeds, particles accumulate near the top interface and reorganize beneath the topmost layer. The close-packed first layer acts as a template that directs the ordered arrangement of parti-cles in the second layer, as shown in Fig. 2b and Fig. 2c. Similarly, the subsequent layers form sequentially in a layer-by-layer manner, resulting in well-ordered multi-layer structures (Fig. 2d). At the final stage, the liquid drains through the particle assembly, introducing small fluctuations and local rearrangements that lead to minor defects, as shown in Fig. 2e. We increase the adhesion parameter to χ ≈ 0.2 by in-creasing the van der Waals interaction strength, while keeping the surface tension constant for simplicity. The same initial particle configuration is used for comparison (Fig. 2f). Upon drying, particles are adsorbed at the in-terface and initially form a well-ordered layer (Fig. 2g). However, particles in the subsurface region quickly ag-gregate into small clusters, as shown in Fig. 2g. These clusters develop into supporting structures that destabi-lize the ordered arrangement in the upper layers (Fig. 2h and Fig. 2i). Meanwhile, the liquid drains through the particles, generating capillary pressure that compresses the structures and leads to densification of the clusters. Eventually, a partially ordered structure is obtained. These results indicate that stronger attractive interac-tions promote particle clustering beneath the interface and lead to defects in the crystallization process. With a further increase in the adhesion parameter to χ ≈ 10 .0, while using the same initial configuration (Fig. 2k), particles rapidly form larger clusters at an early stage, as depicted in Fig. 2l. These clusters can-not be reorganized into the well-ordered arrangement fa-vored by confined sphere packing at the interface. As drying proceeds, the interface descends while the liquid drains through the emerging cluster network (Fig. 2l and Fig. 2m). This cluster network is capable of withstand-ing the compressive effects of capillary pressure. Instead of forming close-packed layers, the system ultimately de-velops into a highly porous network-like solid structure (Fig. 2n). The time evolution of the vertical distribution of the 0.0 0.2 0.4 0.6 0.8                                 
+
+> solid volume fraction
+> 0.0 0.2 0.4 0.6 0.8
+> z/zH
+> t*= 0.71
+> t*= 2.14
+> t*= 6.42
+> (a) χ= 0 .02 0.0 0.2 0.4 0.6 0.8
+> solid volume fraction
+> 0.0 0.2 0.4 0.6 0.8
+> z/zH
+> t*= 0.71
+> t*= 2.14
+> t*= 6.42
+> (b) χ= 0 .20.0 0.2 0.4 0.6 0.8
+> solid volume fraction
+> 0.0 0.2 0.4 0.6 0.8
+> z/zH
+> t*= 0.71
+> t*= 2.14
+> t*= 6.42
+> (c) χ= 10 .0
+
+FIG. 3: Solid volume fraction ϕ along the vertical direction z/z H for different interactions a) χ = 0 .02, b) 
+
+χ = 0 .2 and c) χ = 10 .0. The initial particle volume fraction ϕ0 = 0 .2. The normalized time t∗ in the legends equals t∗ = tD/L 2.particle volume fraction, ϕ, during drying at different 6interaction strengths is shown in Fig. 3. The particle volume fraction ϕ is defined as the ratio of the number of lattice sites occupied by particles to the total number of lattice sites in the x–y plane. The normalized time 
+
+t∗ is defined as t∗ = tD/L 2, where D is the diffusivity of the liquid and L is the system size in the x and y
+
+directions. Under weak attractive interaction, χ ≈ 0.02 (Fig. 3a), at an early stage ( t∗ = 0 .71), the topmost layer exhibits a peak particle volume fraction of about 0.78, indicating a hexagonal arrangement. For reference, the ideal hexagonal packing of two-dimensional disks in a plane yields a volume fraction of approximately 0 .9. The lower value of particle volume fraction measured here is attributed to finite-size effects and the discretized rep-resentation of the particles. Below the topmost layer, the particle volume fraction gradually (with some fluctu-ations) decreases toward its initial value, ϕ ≈ 0.2. This region can be identified as a transition region. Further below, the volume fraction fluctuates around the initial value, corresponding to the bulk region, where particle aggregation is absent. Near the bottom, a slight increase in particle volume fraction is observed, possibly due to confinement effects imposed by the wall. As drying pro-ceeds, the dense region expands (e.g., t∗ = 2 .14, dotted line in Fig. 3a), indicating a layer-by-layer assembly pro-cess. At later times ( t∗ = 6 .42, solid line in Fig. 3a), the system exhibits a periodic distribution of the particle volume fraction, arising from the stacking of hexagonally ordered layers. As the adhesion parameter increases to 
+
+χ ≈ 0.2, the particle volume fraction at the topmost layer still reaches ϕ ≈ 0.78 (dashed line in Fig. 3b). However, fluctuations in the bulk region become more pronounced, indicating the onset of particle aggregation. After dry-ing, the particle volume fraction exhibits a periodic pro-file, but with larger-amplitude fluctuations (solid line in Fig. 3b), suggesting the stacking of more disordered lay-ers. With a further increase in the adhesion parameter to χ ≈ 10 .0, the particle volume fraction at the topmost layer decreases significantly to ϕ ≈ 0.35 (dashed line in Fig. 3c), which is much lower than the values observed at a lower adhesion parameter. In this regime, particles are unable to form a hexagonally ordered arrangement due to strong attractive interactions that promote aggre-gation. Interestingly, the particle volume fraction near the bottom decreases markedly. This behavior is primar-ily attributed to clustering and an upward migration of particles driven by interparticle attraction. While parti-cles near the top are effectively confined at the interface, those in the lower region remain mobile due to weak par-ticle–substrate adhesion and are therefore drawn upward into aggregates. At late times, the particle volume frac-tion remains highly fluctuating (dotted and solid lines in Fig. 3c), indicating the formation of a highly porous, disordered structure. As shown in Fig. 2, particles form hexagonally packed layers at the interface at a low adhesion parameter ( χ ≈
+
+0.02), and the thickness of this region increases over time. To describe the temporal evolution of this hexagonally or-dered region, we introduce a simple model based on mass conservation and liquid diffusion. The time evolution of the interface position zi in our system can be written as [17] 
+
+zi = zH −
+
+"
+
+(zH − z0)2 + 2 D(ρmi − ρH )
+
+ρma − ρmi −ρH
+
+> 2
+
+t
+
+#1/2
+
+. (8) The evaporated liquid volume Ve corresponding to the interface position at zi is given by 
+
+Ve = A(z0 − zi) = A(z0 − zH )+A
+
+"
+
+(zH − z0)2 + 2D(ρmi − ρH )
+
+ρma − ρmi −ρH
+
+> 2
+
+t
+
+#1/2
+
+. (9) We assume that the particles corresponding to the evap-orated liquid accumulate in the upper hexagonal packing region, and thus obtain the particle volume in this region as 
+
+Vp = Veϕ0
+
+(1 − ϕ0) . (10) The layer thickness of the hexagonal packing region can be written as 
+
+Lt = Vp
+
+Aϕ m
+
+= A(z0 − zi)ϕ0
+
+(1 − ϕ0)Aϕ m
+
+= (z0 − zi)ϕ0
+
+(1 − ϕ0)ϕm
+
+, (11) where zi is described by Eq. (8), ϕ0 is the initial particle volume fraction, ϕm is the close packing fraction, and we take it approximately as ϕm = 0 .56. 0 2 4 6 8 10 normalized time [ tD /L2]0246810 normalized layer thickness [ Lt/R]
+
+> sim
+> Eq . (11)
+
+FIG. 4: Time evolution of the normalized thickness 
+
+Lt/R of the upper hexagonal packing region with weak attractive interactions between particles ( χ ≈ 0.02). The symbols represent simulation data and the solid line corresponds to Eq. (11). In the simulations, we define the thickness of the hexagonal packing region as the portion where the chunk-averaged volume fraction exceeds a threshold value of 
+
+ϕt = 0 .4. To improve statistical accuracy, we use a chunk 7size of 2 R to calculate the chunk-averaged particle vol-ume fraction along the vertical direction. We first scan the chunk-averaged volume fraction profile from the top downward and define the position at which ϕt = 0 .4 as 
+
+zu. We then scan from the bottom upward and define the corresponding position as zd. The layer thickness is therefore given by Lt = zu − zd. Fig. 5 shows that the analytical prediction Eq. (11) (solid line) agrees well with simulation results (symbols) for the case of weakly attractive interactions χ ≈ 0.02. Particle–particle interactions strongly influence the porosity of the resulting structures. In Fig. 5, we present the porosity ψ as a function of the adhesion parameter, χ.For χ ≪ 1, the porosity varies smoothly over a relatively narrow range, as capillary interactions dominate over van der Waals interactions. In this regime, the fluid interface effectively acts as a compressive agent, promoting denser packing of particles. As χ increases into the intermediate regime ( χ ≈ 1), van der Waals interactions become in-creasingly significant and eventually dominate over capil-lary interactions. Correspondingly, the porosity exhibits a rapid—approximately exponential—increase with in-creasing χ. For χ ≫ 1, however, the porosity appears to approach an upper limit, suggesting a saturation behav-ior at a higher adhesion parameter. Motivated by this observation, we propose a power-law relationship of the form ψ = ψ0 +aχ b to describe the dependence of porosity on χ. The simulation data are fitted using this expres-sion, and the resulting fit, with a power-law exponent 
+
+b = 2 /3, is shown as a solid line in Fig. 5. 10 −1 10 0 10 1   
+
+> force ratio χ
+> 0.45 0.50 0.55 0.60 0.65
+> porosity  ψ
+> sim
+> ψ∼χ2/3
+
+FIG. 5: Porosity ψ as a function of adhesion parameter 
+
+χ, the interplay between van der Waals attractive force and capillary force. The solid line is a power-law function fitting of simulation data (symbols). The coordination number N characterizes the number of contacts made by each particle. For hexagonal close packing (HCP), the coordination number is 12: each par-ticle is supported by three particles in the layer below, is in contact with six particles within the same layer, and supports three particles in the layer above. In con-
+
+> (a)
+> (b)
+> (c)
+
+FIG. 6: The packing structures for different particle interaction strength: (a) hexagonal close packing with 
+
+χ ≈ 0.02, (b) random close packing with χ ≈ 1.0, and (c) cohesive packing with χ ≈ 14 .0. The color represents the coordination number N .trast, for random close packing (RCP), the coordination number varies more widely, with average values of ap-proximately 6 − 8, reflecting the disordered nature of the structure [33–35]. The average coordination number decreases further to a range of around 3–5 in cohesive packing (CP) [33, 36]. We note that the coordination number depends on the critical separation distance be-low which two particles are considered to be in contact. In this work, we set the critical separation distance to 
+
+R + 1. In Fig. 6, the final packing structures for different particle interaction strengths are visualized and colored according to the local coordination number. The figure reveals a range of distinct packing regimes as the ad-hesion parameter increases, including HCP with minor 8defects (Fig. 6a, χ ≈ 0.02), RCP (Fig. 6b, χ ≈ 1.0), and CP characterized by larger pores and network-like struc-tures (Fig. 6c, χ ≈ 14 .0). Across these regimes, the coor-dination number progressively decreases on average and becomes increasingly heterogeneous, reflecting the tran-sition from ordered structures to more disordered and weakly connected networks. Consequently, these results demonstrate that a wide spectrum of packing states can be accessed by tuning the relative strength of interpar-ticle forces, through manipulating particle-particle inter-action, surface tension, or, equivalently through changes in particle size that modify the adhesion parameter. Regarding the experimental realization of our simula-tion results, variations in the van der Waals interaction strength in the simulations can be mapped to the use of particles with different sizes, or different particle materi-als in experiments, such as silica, glass, or polystyrene. In addition, the interparticle interaction can be further tuned through changes in the surrounding medium. For example, the addition of salt or adjustments in pH can screen electrostatic repulsion or modify surface charge density, thereby effectively altering the attractive inter-actions. These mechanisms have been demonstrated ex-perimentally to produce qualitatively different assembly behaviors and particle packings, ranging from dispersed structures to compact aggregates and percolated net-works [37–39].  
+
+> IV. CONCLUSION
+
+In this work, we numerically investigate the mi-crostructure evolution during the drying of thick colloidal particle films. We systematically vary the strength of particle–particle interactions and study their influence on both the dynamic evolution and the final structure. During drying under strong attractive interactions, parti-cles rapidly aggregate into clusters that further connect to form an extended network. This aggregation-driven assembly results in a highly porous, loosely connected structure. Notably, the porosity of the final deposit can be described by a power-law dependence on the ratio be-tween the van der Waals attractive force and the cap-illary force. In contrast, under weak attractive interac-tions, the drying process is dominated by front-driven ordering. Well-aligned particle layers first form at and near the interface. In this regime, particles organize into hexagonally packed layers, leading to a final more homo-geneous and densely packed solid structure. We propose a simple theoretical model that captures the temporal evolution of the layer thickness, showing good agreement with the simulation results. By systematically varying the adhesion parameter be-tween van der Waals attraction and capillary pressure, we identify a continuous transition between three distinct packing regimes: hexagonal close packing, random close packing, and cohesive packing. This transition highlights how progressively stronger interparticle attractions drive the system from ordered crystalline-like structures to-ward increasingly disordered and ultimately weakly con-nected networks. Overall, our results demonstrate that particle–particle interactions play a decisive role in gov-erning drying-induced self-assembly and determine the heterogeneity and porosity of the final structure. These findings provide practical guidelines for tailoring porous materials in applications such as electrochemical energy storage, catalysis, and filtration, where transport prop-erties are strongly linked to microstructure and porosity. Future work will extend the present framework by in-corporating additional physical effects, including sedi-mentation and diffusion, variations in the initial parti-cle concentration, and particle polydispersity. Moreover, extending the model to anisotropic particles, such as el-lipsoids [40], cubes [41] and fibres [42], is expected to reveal a broader spectrum of structures in realistic col-loidal systems. 
+
+> ACKNOWLEDGMENTS
+
+We acknowledge financial support from the Deutsche Forschungsgemeinschaft (DFG, German Research Foun-dation) – Project-ID 528402728 (research group “3D-HF-MID”) and Project-ID 416229255 (CRC 1411 “Design of Particulate Products”). We thank the Gauss Centre for Supercomputing e.V.( www.gauss-centre.eu ) for fund-ing this project by providing computing time through the John von Neumann Institute for Computing (NIC) on the GCS Supercomputer JUWELS at J¨ ulich Super-computing Centre (JSC). 
+
+> DATA AVAILABILITY
+
+The data generated during the current study are avail-able at 10.5281/zenodo.21917418.              
+
+> [1] R. Liu, Z. Xu, F. Li, F. Chen, J. Yu, Y. Yan, Y. Chen, and B. Xia. Recent advances in proton exchange membrane water electrolysis. Chem. Soc. Rev. , 52:5652–5683, 2023. [2] N. Du, C. Roy, R. Peach, M. Turnbull, S. Thiele, and C. Bock. Anion-exchange membrane water electrolyzers.
+> Chem. Rev. , 122:11830–11895, 2022. [3] F. Van Der Linden, E. Pahon, S. Morando, and D. Bouquain. A review on the proton-exchange mem-brane fuel cell break-in physical principles, activation procedures, and characterization methods. J. Power Source , 575:233168, 2023.
+
+9
+
+[4] L. Pan, Z. Guo, H. Li, Y. Wang, H. Rao, Q. Jian, J. Sun, J. Ren, Z. Wang, B. Liu, M. Han, Y. Li, X. Fan, W. Li, and L. Wei. High-performance porous electrodes for flow batteries: Improvements of specific surface areas and re-action kinetics. ChemElectroChem , 11:e202400460, 2024. [5] A.F.W Willoughby. Design and processing of porous ma-terials for electronic applications. Philos. Trans. R. Soc. A, 364:175–187, 2005. [6] M. Steinberger, Q. Xie, O. J. J. Ronsin, P. Maisch, K. C. Tam, A. Distler, J. Harting, C. J. Brabec, and H. Egel-haaf. Challenges and opportunities in upscaling inkjet-printing of OPV. Flex. Print. Electron. , 9:043001, 2024. [7] N. Vogel, M. Retsch, C.-A. Fustin, A. del Campo, and U. Jonas. Advances in colloidal assembly: The design of structure and hierarchy in two and three dimensions. 
+
+Chem. Rev. , 115:6265–6311, 2015. [8] E. Hooiveld, L. Rijnders, B. van der Meer, J. van der Gucht, J. Sprakel, and H. M. van der Kooij. Self-stratification and phase separation in drying binary col-loidal films. J. Colloid Interface Sci. , 679:324–333, 2025. [9] A. Lesaine, D. Bonamy, C. L. Rountree, G. Gauthier, M. Imp´ eror-Clerc, and V. Lazarus. Role of particle ag-gregation in the structure of dried colloidal silica layers. 
+
+Soft Matter , 17:1589–1600, 2021. [10] B. Chen, Y. Zhou, J. Kang, J. Wang, P. Ming, and B. Li. Drying-controlled catalyst layer crack morphology for en-hanced proton exchange membrane fuel cell performance. 
+
+Int. J. Hydrog. Energy , 193:152401, 2025. [11] M. Wang and J. F. Brady. Microstructures and me-chanics in the colloidal film drying process. Soft Matter ,13:8156–8170, 2017. [12] A. F Routh and W. B Zimmerman. Distribution of par-ticles during solvent evaporation from films. Chem. Eng. Sci. , 59:2961–2968, 2004. [13] B. Chun, T. Yoo, and H. W. Jung. Temporal evolution of concentration and microstructure of colloidal films during vertical drying: a lattice Boltzmann simulation study. 
+
+Soft Matter , 16:523–533, 2020. [14] J. Yun, B. Chun, and H. W. Jung. Microstructural evo-lution in drying colloidal films driven by evaporation and sedimentation: lattice boltzmann simulation and a math-ematical model. Soft Matter , 21:2430–2444, 2025. [15] R. Tatsumi, O. Koike, Y. Yamaguchi, and Y. Tsuji. Con-trolling the drying characteristics of suspensions via col-loidal interactions: Particle-scale modeling. Chem. Eng. Sci. , 280:118993, 2023. [16] S. Moon, L. Kim, E. Yang, S. Lee, and J. D. Park. Effect of interparticle interactions on colloidal film formation during the drying process: A study using Brownian dy-namics simulation. Phys. Fluids , 37:013364, 2025. [17] Q. Xie, T. Du, C. J. Brabec, and J. Harting. Effect of particle and substrate wettability on evaporation-driven assembly of colloidal monolayers. Langmuir , 41:14995– 15003, 2025. [18] S. Succi. The lattice Boltzmann equation for fluid dy-namics and beyond . Oxford University Press, 2001. [19] T. Kr¨ uger, H. Kusumaatmaja, A. Kuzmin, O. Shardt, G. Silva, and E. M. Viggen. The Lattice Boltzmann Method: Principles and Practice . Springer International Publishing, Cham, 2017. [20] X. Shan and H. Chen. Lattice Boltzmann model for simu-lating flows with multiple phases and components. Phys. Rev. E , 47:1815–1820, 1993. [21] A. J. C. Ladd and R. Verberg. Lattice-Boltzmann sim-ulations of particle-fluid suspensions. J. Stat. Phys. ,104:1191–1251, 2001. [22] Q. Xie and J. Harting. Controllable capillary assem-bly of magnetic ellipsoidal janus particles into tunable rings, chains and hexagonal lattices. Advanced Materi-als , 2021:2006390, 2021. [23] S. Frijters, F. G¨ unther, and J. Harting. Effects of nanoparticles and surfactant on droplets in shear flow. 
+
+Soft Matter , 8:6542–6556, 2012. [24] D. Hessling, Q. Xie, and J. Harting. Diffusion dominated evaporation in multicomponent lattice Boltzmann simu-lations. J. Chem. Phys. , 146:054111, 2017. [25] Y. H. Qian, D. D’Humi` eres, and P. Lallemand. Lattice BGK models for Navier-Stokes equation. EPL , 17:479– 484, 1992. [26] X. Shan and G. Doolen. Multicomponent lattice-boltzmann model with interparticle interaction. J. Stat. Phys. , 81:379–393, 1995. [27] C. K. Aidun, Y. Lu, and E.-J. Ding. Direct analysis of particulate suspensions with inertia using the discrete Boltzmann equation. J. Fluid Mech. , 373:287–311, 1998. [28] H.C. Hamaker. The london—van der waals attraction between spherical particles. Physica , 4:1058–1072, 1937. [29] H. Hertz. ¨Uber die Ber¨ uhrung fester elastischer K¨ orper. 
+
+Journal f¨ ur die reine und angewandte Mathematik ,92:156, 1881. [30] Q. Xie, G.B. Davies, and J. Harting. Controlled capil-lary assembly of magnetic Janus particles at fluid-fluid interfaces. Soft Matter , 12:6566–6574, 2016. [31] Q. Xie and J. Harting. From dot to ring: the role of friction on the deposition pattern of a drying colloidal suspension droplet. Langmuir , 34:5303, 2018. [32] J. Sch¨ ottner, Q. Xie, G. Nath, and J. Harting. Self-assembled filament layers in drying sessile droplets: From morphology to electrical conductivity. Langmuir ,42:8592–8605, 2026. [33] H. Iwata and T. Homma. Distribution of coordination numbers in random packing of homogeneous spheres. 
+
+Powder Technology , 10:79–83, 1974. [34] R. Y. Yang, R. P. Zou, and A. B. Yu. Computer sim-ulation of the packing of fine particles. Phys. Rev. E ,62:3900–3908, 2000. [35] A. Zaccone. Explicit analytical solution for random close packing in d = 2 and d = 3. Phys. Rev. Lett. , 128:028002, 2022. [36] W. Liu, S. Li, and S. Chen. Computer simulation of random loose packings of micro-particles in presence of adhesion and friction. Powder Technology , 302:414–422, 2016. [37] W. Liu, M. Kappl, W. Steffen, and H.-J. Butt. Control-ling supraparticle shape and structure by tuning colloidal interactions. J. Colloid Interface Sci. , 607:1661–1670, 2022. [38] P. Groppe, J. Reichstein, S. Carl, C. Cuadrado Collados, B.-J. Niebuur, K. Zhang, B. Apeleo Zubiri, J. Libuda, T. Kraus, T. Retzer, M. Thommes, E. Spiecker, S. Wintzheimer, and K. Mandel. Catalyst supraparticles: Tuning the structure of spray-dried Pt/SiO2 supraparti-cles via salt-based colloidal manipulation to control their catalytic performance. Small , 20:2310813, 2024. [39] L. J. Roemling, G. De Angelis, A. Mauch, E. Amstad, and N. Vogel. Control of buckling of colloidal supra-particles. Small , 21:2411772, 2025. 10 
+
+[40] M. Yetkin, Y. M. Wani, A. Nikoubashman, H.-J. Butt, and M. Kappl. Tuning the morphology and struc-ture of supraparticles composed of ellipsoids. Langmuir ,41:7845–7855, 2025. [41] B. Liu, G. S. Grest, and S. Cheng. Effect of particle shape on stratification in drying films of binary colloidal mixtures. J. Chem. Phys. , 163:034904, 2025. [42] B. Zhao, L. G. Greca, and B. D. Mattos. Parti-cle–nanofiber superstructures. Acc. Mater. Res. , 7:461– 472, 2026.
