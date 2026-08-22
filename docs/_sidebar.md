@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-08-22 <!--dpr-date:20260822-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/22/2608.17764v1-rheology-and-dynamic-arrest-in-colloidal-depletion-gels-mediated-by-surface-brush-density" data-sidebar-item="{&quot;title&quot;: &quot;Rheology and Dynamic Arrest in Colloidal Depletion Gels Mediated by Surface Brush Density&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.17764v1-rheology-and-dynamic-arrest-in-colloidal-depletion-gels-mediated-by-surface-brush-density&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;胶体凝胶的屈服应力、储能模量等流变特性与电池电极浆料流变学密切相关&quot;}">Rheology and Dynamic Arrest in Colloidal Depletion Gels Mediated by Surface Brush Density</a>
   * 2026-08-20 <!--dpr-date:20260820-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202608/20/2608.13761v1-from-suspensions-to-porous-multilayers-microstructure-formation-and-particle-packing-in-drying-colloidal-films" data-sidebar-item="{&quot;title&quot;: &quot;From suspensions to porous multilayers: microstructure formation and particle packing in drying colloidal films&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2608.13761v1-from-suspensions-to-porous-multilayers-microstructure-formation-and-particle-packing-in-drying-colloidal-films&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;equipment&quot;}], &quot;evidence&quot;: &quot;干燥悬浮液中的颗粒堆积与浆料流变学&quot;}">From suspensions to porous multilayers: microstructure formation and particle packing in drying colloidal films</a>

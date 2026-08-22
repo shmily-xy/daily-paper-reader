@@ -1,0 +1,55 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-22T20:25:03.413320+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 11,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2608.17764v1",
+      "source": "arxiv",
+      "title": "Rheology and Dynamic Arrest in Colloidal Depletion Gels Mediated by Surface Brush Density",
+      "abstract": "We use the density of surface-grafted polymers as a geometry-preserving control parameter for tuning the rheology of colloidal depletion gels. Reducing brush density accelerates gelation and produces gels with higher plateau storage modulus and yield stress. This mechanical enhancement is not accompanied by increased local densification; low-brush networks exhibit lower average contact number and reduced spatial heterogeneity while displaying stronger elastic responses than their high-brush counterparts. Our findings demonstrate a reduced coordination threshold to form elastic nodes in the low-brush gel network. In addition, low-brush gels relax more slowly, accumulate less creep deformation, and exhibit lower effective noise temperatures within the Soft Glassy Rheology framework. These results establish surface-brush density as an experimentally accessible control parameter for colloidal depletion gel rheology with coupled changes in effective attraction, network architecture, and contact kinematics.",
+      "authors": [
+        "Ziye Zhuang",
+        "Robert A. Campbell",
+        "Safa Jamali",
+        "Ali Mohraz"
+      ],
+      "primary_category": "cond-mat.soft",
+      "categories": [
+        "cond-mat.soft"
+      ],
+      "published": "2026-08-18T13:29:41+00:00",
+      "link": "https://arxiv.org/pdf/2608.17764v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Colloidal gel rheology with yield stress and storage modulus directly informs slurry rheology in battery electrode manufacturing",
+      "llm_evidence_cn": "胶体凝胶的屈服应力、储能模量等流变特性与电池电极浆料流变学密切相关",
+      "llm_evidence": "胶体凝胶的屈服应力、储能模量等流变特性与电池电极浆料流变学密切相关",
+      "canonical_evidence": "胶体凝胶的屈服应力、储能模量等流变特性与电池电极浆料流变学密切相关",
+      "llm_tldr_en": "This paper tunes colloidal depletion gel rheology via surface-grafted polymer brush density, finding lower brush density accelerates gelation with higher storage modulus and yield stress. These insights on gel elasticity, relaxation, and creep transfer to controlling slurry rheology in battery electrode manufacturing.",
+      "llm_tldr_cn": "针对电池电极浆料等复杂颗粒悬浮液的流变调控需求，本文以表面接枝聚合物刷密度为控制参数研究胶体耗尽凝胶的流变与动态阻滞行为。研究发现降低刷密度会加速凝胶化，使凝胶具有更高的平台储能模量和屈服应力，同时网络接触数更低。低刷网络还表现出更慢的松弛、更少的蠕变变形和更低的等效噪声温度。该结果揭示了弹性节点形成的配位阈值降低机制，为理解浆料屈服应力与结构关系提供了可迁移的流变学方法。",
+      "llm_tldr": "针对电池电极浆料等复杂颗粒悬浮液的流变调控需求，本文以表面接枝聚合物刷密度为控制参数研究胶体耗尽凝胶的流变与动态阻滞行为。研究发现降低刷密度会加速凝胶化，使凝胶具有更高的平台储能模量和屈服应力，同时网络接触数更低。低刷网络还表现出更慢的松弛、更少的蠕变变形和更低的等效噪声温度。该结果揭示了弹性节点形成的配位阈值降低机制，为理解浆料屈服应力与结构关系提供了可迁移的流变学方法。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "slurry rheology in battery electrode manufacturing",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

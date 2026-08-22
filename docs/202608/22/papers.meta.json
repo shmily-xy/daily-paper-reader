@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-22",
+  "date": "2026-08-22",
+  "generated_at": "2026-08-22T20:26:32",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/22/2608.17764v1-rheology-and-dynamic-arrest-in-colloidal-depletion-gels-mediated-by-surface-brush-density",
+      "section": "quick",
+      "title_en": "Rheology and Dynamic Arrest in Colloidal Depletion Gels Mediated by Surface Brush Density",
+      "authors": "Ziye Zhuang, Robert A. Campbell, Safa Jamali, Ali Mohraz",
+      "date": "2026-08-18",
+      "pdf": "https://arxiv.org/pdf/2608.17764v1",
+      "score": "6.0",
+      "evidence": "胶体凝胶的屈服应力、储能模量等流变特性与电池电极浆料流变学密切相关",
+      "tldr": "胶体耗尽凝胶的流变特性通常通过改变粒子浓度或耗尽力调节，但表面接枝聚合物密度提供了一种保持几何结构不变的调控途径。本研究发现，降低刷密度会加速凝胶化，并显著提高平台储能模量和屈服应力，同时网络接触数更低、空间异质性更弱，弹性响应反而更强。低刷网络仅需更少的配位数即可形成弹性节点，且弛豫更慢、蠕变变形更小，有效噪声温度更低。该工作确立了表面刷密度作为可实验访问的调控参数，能够同时耦合并改变有效吸引、网络构型和接触运动学。",
+      "tags": "query:equipment",
+      "abstract_en": "We use the density of surface-grafted polymers as a geometry-preserving control parameter for tuning the rheology of colloidal depletion gels. Reducing brush density accelerates gelation and produces gels with higher plateau storage modulus and yield stress. This mechanical enhancement is not accompanied by increased local densification; low-brush networks exhibit lower average contact number and reduced spatial heterogeneity while displaying stronger elastic responses than their high-brush counterparts. Our findings demonstrate a reduced coordination threshold to form elastic nodes in the low-brush gel network. In addition, low-brush gels relax more slowly, accumulate less creep deformation, and exhibit lower effective noise temperatures within the Soft Glassy Rheology framework. These results establish surface-brush density as an experimentally accessible control parameter for colloidal depletion gel rheology with coupled changes in effective attraction, network architecture, and contact kinematics.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
