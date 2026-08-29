@@ -1,12 +1,12 @@
 {
   "label": "2026-08-29",
   "date": "2026-08-29",
-  "generated_at": "2026-08-29T03:34:08",
+  "generated_at": "2026-08-29T22:37:53",
   "count": 1,
   "papers": [
     {
       "paper_id": "202608/29/2608.27423v1-high-order-stabilized-matrix-free-simulation-of-rotating-mixing-devices-using-the-mortar-element-method",
-      "section": "deep",
+      "section": "quick",
       "title_en": "High-order stabilized matrix-free simulation of rotating mixing devices using the Mortar Element Method",
       "authors": "B. Campos, P. Munch, V. O. Ferreira, D. C. Boffito, X. Banquy, B. Blais",
       "date": "2026-08-27",

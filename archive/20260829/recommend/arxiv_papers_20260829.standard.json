@@ -1,17 +1,18 @@
 {
   "mode": "standard",
-  "generated_at": "2026-08-29T03:30:59.938625+00:00",
+  "generated_at": "2026-08-29T22:36:45.798319+00:00",
   "stats": {
     "mode": "standard",
     "tag_count": 1,
-    "deep_divecandidates": 1,
+    "deep_divecandidates": 0,
     "deep_cap": 6,
-    "deep_selected": 1,
-    "quick_candidates": 0,
+    "deep_selected": 0,
+    "quick_candidates": 1,
     "quick_skim_target": 11,
-    "quick_selected": 0
+    "quick_selected": 1
   },
-  "deep_dive": [
+  "deep_dive": [],
+  "quick_skim": [
     {
       "id": "2608.27423v1",
       "source": "arxiv",
@@ -36,22 +37,22 @@
         "keyword:equipment",
         "query:equipment"
       ],
-      "llm_score": 8.0,
-      "llm_evidence_en": "Simulation of rotating mixing devices relevant to planetary and dispersion mixers",
-      "llm_evidence_cn": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
-      "llm_evidence": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
-      "canonical_evidence": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
-      "llm_tldr_en": "A finite element framework using mortar elements simulates rotating mixing devices, modeling rotor-stator interaction for high-order stabilized Navier-Stokes solutions.",
-      "llm_tldr_cn": "旋转混合设备在工业中广泛使用，但其内部流动和混合机理难以直接观测。该论文提出一种基于Mortar单元法的有限元框架，将计算域划分为转子和定子，通过任意拉格朗日-欧拉法处理相对运动。采用无矩阵高阶连续伽辽金法求解Navier-Stokes方程，并结合SUPG/PSPG稳定化。该方法可用于分析双行星搅拌釜和高速分散机等旋转混合设备的混合机理，为设备设计提供仿真工具。",
-      "llm_tldr": "旋转混合设备在工业中广泛使用，但其内部流动和混合机理难以直接观测。该论文提出一种基于Mortar单元法的有限元框架，将计算域划分为转子和定子，通过任意拉格朗日-欧拉法处理相对运动。采用无矩阵高阶连续伽辽金法求解Navier-Stokes方程，并结合SUPG/PSPG稳定化。该方法可用于分析双行星搅拌釜和高速分散机等旋转混合设备的混合机理，为设备设计提供仿真工具。",
+      "llm_score": 7.0,
+      "llm_evidence_en": "Simulation of rotating mixing devices relevant to mixing mechanism analysis",
+      "llm_evidence_cn": "旋转混合设备模拟，与混合机理分析相关",
+      "llm_evidence": "旋转混合设备模拟，与混合机理分析相关",
+      "canonical_evidence": "旋转混合设备模拟，与混合机理分析相关",
+      "llm_tldr_en": "Presents a high-order finite element framework for simulating rotating mixing devices, using mortar elements for rotor-stator coupling. Captures complex flows relevant to understanding mixing mechanisms in industrial mixers.",
+      "llm_tldr_cn": "针对旋转混合设备数值模拟中转子-定子耦合处理的难题，本文提出基于砂浆单元法的高阶有限元框架，结合无矩阵Navier-Stokes求解器与任意拉格朗日-欧拉方法，精确模拟混合设备内的流动。通过流线迎风/压力稳定化方法保证数值稳定，可捕捉转子与定子间的复杂相互作用。该方法为分析双行星搅拌釜与分散机等装备的混合机理提供了强有力的仿真工具，有助于设备选型与工艺放大。",
+      "llm_tldr": "针对旋转混合设备数值模拟中转子-定子耦合处理的难题，本文提出基于砂浆单元法的高阶有限元框架，结合无矩阵Navier-Stokes求解器与任意拉格朗日-欧拉方法，精确模拟混合设备内的流动。通过流线迎风/压力稳定化方法保证数值稳定，可捕捉转子与定子间的复杂相互作用。该方法为分析双行星搅拌釜与分散机等装备的混合机理提供了强有力的仿真工具，有助于设备选型与工艺放大。",
       "llm_tags": [
         "query:equipment"
       ],
       "matched_query_tag": "query:equipment",
       "matched_query_text": "mixing mechanism in double planetary and dispersion mixer",
       "matched_requirement_id": "req-2",
-      "selection_source": "fresh_fetch"
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
     }
-  ],
-  "quick_skim": []
+  ]
 }
