@@ -1,0 +1,24 @@
+{
+  "label": "2026-08-29",
+  "date": "2026-08-29",
+  "generated_at": "2026-08-29T03:34:08",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "202608/29/2608.27423v1-high-order-stabilized-matrix-free-simulation-of-rotating-mixing-devices-using-the-mortar-element-method",
+      "section": "deep",
+      "title_en": "High-order stabilized matrix-free simulation of rotating mixing devices using the Mortar Element Method",
+      "authors": "B. Campos, P. Munch, V. O. Ferreira, D. C. Boffito, X. Banquy, B. Blais",
+      "date": "2026-08-27",
+      "pdf": "https://arxiv.org/pdf/2608.27423v1",
+      "score": "8.0",
+      "evidence": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
+      "tldr": "旋转混合设备模拟需处理转子-定子相对运动与非一致界面网格。基于Mortar单元域分解及无矩阵高阶连续Galerkin，结合任意拉格朗日-欧拉与SUPG/PSPG稳定化，以弱形式施加界面连续性。二维算例证实最优收敛阶，三维强扩展理想；Rushton叶轮与斜叶涡轮的功率数曲线与实验吻合，能量耗散为1%-10%。该框架稳健高效，为旋转几何流场模拟提供了准确可扩展的数值方案。",
+      "tags": "query:equipment",
+      "abstract_en": "We present a finite element framework to simulate rotating mixing devices using the Mortar Element Method as a domain decomposition strategy. The model is implemented within a matrix-free Navier-Stokes framework which uses a high-order Continuous Galerkin method. The discretized domain is subdivided into rotor and stator parts. An Arbitrary Lagrangian-Eulerian approach accounts for the relative rotor-stator motion, and stabilization is ensured through the Streamline-Upwind/Petrov-Galerkin and Pressure-Stabilizing Petrov-Galerkin methods. The rotor-stator domains are connected by an interface composed of mortar cells, and continuity is weakly enforced in a Discontinuous Galerkin fashion by accounting for boundary integrals at the rotor-stator interface. Verifications of the convergence order in two-dimensional steady and transient examples report optimal rates. The geometric non-conformity created at the mortar interface due to rotor rotation does not introduce significant error in the solution. A three-dimensional example is used to investigate the model's scalability, which yields ideal strong scaling for large problems. A two-dimensional Rushton impeller example uses a torque analysis to showcase the mesh convergence, and the corresponding velocity profile is in agreement with existing numerical results. In a three-dimensional pitched blade turbine case, the power number curve (Np vs Re) shows good agreement with experimental data for Reynolds number values from 1 to 2000. An energy balance analysis reports a numerical dissipation of 1% for Re=200 and of 10% for Re=2000. By exploiting modern hardware capabilities through matrix-free methods, the proposed model is a robust, accurate, and efficient framework suitable for simulating flows with rotating geometries.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,1084 @@
+Title: High-order stabilized matrix-free simulation of rotating mixing devices using the Mortar Element Method
+
+URL Source: https://arxiv.org/pdf/2608.27423v1
+
+Published Time: Fri, 28 Aug 2026 01:30:10 GMT
+
+Number of Pages: 49
+
+Markdown Content:
+# Highlights 
+
+High-order stabilized matrix-free simulation of rotating mixing de-vices using the Mortar Element Method 
+
+Bruna Campos, Peter Munch, Victor Oliveira Ferreira, Daria Camilla Boffito, Xavier Banquy, Bruno Blais • Novel Continuous-Discontinuous Galerkin model high-order matrix-free framework • Geometric non-conformity at the mortar interface does not introduce additional error • Verification study shows optimal convergence rates for high-order ele-ments • Validation case shows good experimental agreement for Reynolds num-bers from 1 to 2000 • Energy balance analysis in 3D mixer shows numerical dissipation as low as 1% arXiv:2608.27423v1 [physics.flu-dyn] 27 Aug 2026 High-order stabilized matrix-free simulation of rotating mixing devices using the Mortar Element Method 
+
+Bruna Campos a, Peter Munch b, Victor Oliveira Ferreira a, Daria Camilla Boffito a, Xavier Banquy c, Bruno Blais a, ∗
+
+> a
+
+Department of Chemical Engineering, Polytechnique Montréal, PO Box 6079, Stn Centre-Ville, Montreal, H3C 3A7, Québec, Canada 
+
+> b
+
+Institute of Mathematics, Technical University of Berlin, Straße des 17. Juni 135, Berlin, 10623, Germany 
+
+> c
+
+Faculty of Pharmacy, Université de Montréal, PO Box 6128, Montreal, H3C 3J7, Québec, Canada 
+
+Abstract 
+
+We present a finite element framework to simulate rotating mixing devices using the Mortar Element Method as a domain decomposition strategy. The model is implemented within a matrix-free Navier-Stokes framework which uses a high-order Continuous Galerkin method. The discretized domain is subdivided into rotor and stator parts. An Arbitrary Lagrangian-Eulerian approach accounts for the relative rotor-stator motion, and stabilization is ensured through the Streamline-Upwind/Petrov-Galerkin and Pressure-Stabilizing Petrov-Galerkin methods. The rotor-stator domains are con-nected by an interface composed of mortar cells, and continuity is weakly enforced in a Discontinuous Galerkin fashion by accounting for boundary in-tegrals at the rotor-stator interface. Verifications of the convergence order in two-dimensional steady and transient examples report optimal rates. The ge-ometric non-conformity created at the mortar interface due to rotor rotation does not introduce significant error in the solution. A three-dimensional ex-ample is used to investigate the model’s scalability, which yields ideal strong 
+
+> ∗
+
+Corresponding author 
+
+Email addresses: bruna.campos@polymtl.ca (Bruna Campos), 
+
+muench@math.tu-berlin.de (Peter Munch), victor.oliveira-ferreira@polymtl.ca 
+
+(Victor Oliveira Ferreira), daria-camilla.boffito@polymtl.ca (Daria Camilla Boffito), xavier.banquy@umontreal.ca (Xavier Banquy), bruno.blais@polymtl.ca 
+
+(Bruno Blais) scaling for large problems. A two-dimensional Rushton impeller example uses a torque analysis to showcase the mesh convergence, and the corresponding velocity profile is in agreement with existing numerical results. In a three-dimensional pitched blade turbine case, the power number curve ( Np vs Re )shows good agreement with experimental data for Reynolds number values from 1 to 2000. An energy balance analysis reports a numerical dissipation of 1% for Re = 200 and of 10% for Re = 2000 . By exploiting modern hardware capabilities through matrix-free methods, the proposed model is a robust, accurate, and efficient framework suitable for simulating flows with rotating geometries. 
+
+Keywords: Mortar element method, Finite element method, Matrix-free computation, Domain decomposition, High performance computing, Computational fluid dynamics, Implicit large-eddy simulation 
+
+1. Introduction 
+
+Rotating geometries are a category of engineering systems that encom-pass various devices such as spinning disc mixers [1], mixing tanks [2], and wind turbines [3]. Applications of rotating mixing systems comprise, for in-stance, polymer manufacturing [4], pharmaceutical manufacturing [5], and food processing [6]. Numerical simulation of this type of device is essential for understanding, monitoring and optimizing the aforementioned processes which are often limited by fluid dynamics or other transport processes which are flow-driven (e.g., mass transfer, heat transfer). Simulations are essen-tial since these systems are difficult to investigate experimentally, consider-ing that they may possess complex geometries and exhibit turbulent flows. From a domain discretization perspective, large mesh deformation can hap-pen due to the rotating motion, and thus remeshing is needed. A feasible alternative to avoid remeshing and maintain accuracy is the Mortar Element Method (MEM), a domain decomposition technique that was initially em-ployed in the context of spectral elements to allow geometric and polynomial non-conformity [7, 8]. It is noteworthy that domain decomposition methods encompass non-overlapping subdomains [9] as well as overlapping meshes for spectral elements [10, 11]. Alternatives to sliding mesh techniques to simulate rotating mixing de-vices, other approaches comprise (i) rotating frame of reference (RFR) and (ii) the immersed boundary (IB) methods. In the RFR technique, a non-2Galilean frame of reference is adopted, and governing equations of fluid mo-tion must account for Coriolis and centrifugal forces [12]. Employing multiple reference frames limits the type of flow that can be simulated, since variables must not significantly change in space or time [13]. In the IB implementation, the rotating part (e.g., impeller) is discretized separately, and its movement is imposed on the immersed boundary by strategies such as the Nitsche method [14, 15] or continuous forcing [2]. A disadvantage of IB methods is that most of them degrade the order of accuracy of the underlying numerical method. Although some works propose high-order compatible IB [16], they often yield linear systems with deteriorated condition number. This deterioration can be highly detrimental at higher Reynolds number, where an accurate repre-sentation of the boundary layer flow on the blades of the impeller is necessary to obtain a precise prediction of the transient flow structures. The MEM consists in subdividing the discretized problem into non-over-lapping subdomains, and then weakly enforcing continuity at the generated interface – as an alternative to strong point-wise continuity. This interface between subdomains is discretized into the so-called mortar elements [7]. For rotating mixing devices, two subdomains are generated (rotor and stator), and mortar elements are placed at the rotor-stator interface; the rotor domain contains the rotating element (blades or discs, for instance). Besides employ-ing the MEM for spectral elements [17, 18, 19], other studies extended it to finite element models [9, 20], coupling of spectral and finite elements [21, 22], and of finite and boundary elements [23]. Mortar methods can be classified according to how the boundary integrals at the subdomains intersection are constructed: using Lagrange multipliers or the Nitsche method. The mortar method with Lagrange multipliers has been frequently used in the context of contact problems [24, 25, 26], since it provides a variation-ally consistent form of contact imposition even for non-conforming grids [27]. Examples include modeling of point, line and surface contact [27] and large deformation friction [28]. It was also employed to simulate fluid-structure interactions (FSI) such as slender bodies with fluids [29] and to model one-dimensional fibers into three-dimensional fluid flow [30]. Other studies have explored dual-mortar formulations, in which the additional degrees of free-dom added by the Lagrange multipliers are condensed [31, 32]. A drawback from employing Lagrange multipliers is the mesh locking that can become an issue, for instance, when significant difference between refinement of sub-domains leads to an over-constrained problem [33]. The Nitsche mortar method (or Nitsche mortaring) uses the interior 3penalty method to enforce continuity at the mortar interface [34]. Gustafsson 
+
+et al. [35, 36] employed it for elastic contact problems, comparing formula-tions with different stabilizing techniques. Bansal et al. [37] used the Nitsche method for coupling porous media with Navier-Stokes flow within a finite el-ement discretization, and the Nitsche mortaring approach was also used to model incompressible FSI problems in Burman et al. [14]. In the latter study, the Nitsche penalty and the pressure stabilization terms were identified as the main source of consistency error. Formaggia et al. [38] modeled mov-ing structures in the FSI context by employing an extended finite element method (FEM) formulation coupled with a Nitsche mortar at the contact interface. In terms of the finite element approximation, both aforementioned cate-gories of MEM implementation usually rely on a Continuous Galerkin (CG) formulation. Discontinuous Galerkin (DG) formulations, nonetheless, have also been widely explored within the context of, for instance, hp -mortar framework [39] and sliding meshes for computational fluid dynamics (CFD) [40]. Kopera [41] studied mass conservation for Euler equations and non-conforming meshes for both DG and CG cases. The results between DG and CG formulations were almost identical, and it was shown that non-conformity does not introduce additional errors. Examples of DG models for non-conforming meshes were presented for three-dimensional sliding meshes [42], compressible Navier-Stokes spectral element model [40], and high-order approximation discretization of rotating devices [43]. The relative motion between the rotor and stator domains requires that the underlying numerical model accounts for such motion – and hence still satisfies its conservation laws. This is commonly done by employing the Arbitrary Lagrangian Eulerian (ALE) framework [44, 45]. It consists of a hybrid method that combines the advantages of both Lagrangian (simple and accurate definition and monitoring of boundaries) and Eulerian (grid movement independent of fluid particle motion) points of view [46]. This way, the domain velocity is determined arbitrarily, avoiding constant remeshing – and possible errors associated with it. The ALE method is often used in FSI problems such as in Dutta et al. [47], where a dual-mortar FEM model is proposed, and in Zhao et al. [48] where a coupled system of incompressible fluid and porous media flow is presented. Although the MEM is a variationally consistent and highly accurate tool, it requires increased numerical effort due to the necessity of (i) continuous creation of mortar cells via intersection of the stator and rotor meshes, and 4(ii) computing additional boundary integrals [49]. In this sense, efficient parallelization is essential to improve the method’s computational cost, es-pecially when simulating large problems. A Message Passing Interface (MPI) parallel implementation for non-conforming grids was discussed by [50], and Mayr & Popp [49] implemented a bins system to improve parallel processing. Another strategy used for high-performance computing (HPC) is the use of matrix-free algorithms [51], which take advantage of computer floating-point operations to reduce memory bandwidth limitations of matrix-based solvers [52]. Recent related works presented high-order matrix-free solvers for the Navier-Stokes in a CG [53] and a DG [54] framework. It is noteworthy that high-order FE approximations are useful techniques to reduce the need for excessive mesh refinement by improving accuracy of coarser grids [55]. Previous works employed high-order methods to simulate sliding domains [56, 43], DG compressible Navier-Stokes equations [54, 40], and DG spectral formulation for hyperbolic-parabolic systems [50]. Leveraging MEM imple-mentation with HPC algorithms such as matrix-free methods is a crucial step to counter-balance the computational cost of mortar operators, and this is yet to be presented in the literature. Given the need of robust, efficient, and accurate models to simulate ro-tating mixing devices, this work presents a novel model which combines the mortar element method (MEM) with a matrix-free FEM solver. The model is implemented in Lethe [57], an open-source software based on the deal.II li-brary [58, 59] that solves the incompressible Navier-Stokes equations using an implicit Large-Eddy Simulation (LES) approach and a Continuous Galerkin framework. The matrix-free solver described in [53] is employed, and numeri-cal stability is ensured by employing the Streamline-Upwind/Petrov-Galerkin and Pressure-Stabilizing Petrov-Galerkin methods. Relative rotor-stator mo-tion is accounted for through an ALE formulation, and continuity at the rotor-stator interface is enforced by adding boundary terms in a Discontin-uous Galerkin fashion with a Symmetric Interior Penalty Galerkin (SIPG) method [60]. A global coarsening geometric multigrid (GCMG) preconditioner [61] is employed, which is compatible with the matrix-free architecture. To this end, the novelty of our model lies in the combination of the MEM with a matrix-free FEM framework, an approach that overcomes possible memory bandwidth bottlenecks created by using high-order FEM approximations. The computational implementation of the model relies on on-the-fly vector-matrix multiplication in batches, hence taking advantage of modern hardware 5vectorization and current HPC architectures. This paper is structured as follows. The governing equations and dis-cretized system of the MEM CFD model are presented in Section 2, and details on the computational implementation are mentioned in Section 3. Section 4 contains steady-state and transient verification cases, a three-dimensional scalability study, and a validation example against experimental results for a pitched blade impeller in a baffled stirred tank. Finally, conclu-sions and further research are discussed. 
+
+2. Governing equations 
+
+The incompressible Navier-Stokes in ALE form for a domain Ω with a boundary ∂Ω are given by 
+
+∇ · u = 0 , (0 , T ] × Ω (1a) 
+
+∂tu + ( u · ∇ )u − (uALE · ∇ )u + ∇p∗ − ν∇2u − f = 0 , (0 , T ] × Ω. (1b) in which u is the fluid velocity, uALE is the mesh velocity, p∗ = p/ρ is the kinematic pressure, ρ is the fluid density, ν is the kinematic viscosity, and f
+
+is a source term. The space-discretized form of Eq. (1) is obtained using the FEM, where the computational domain ¯Ω (triangulation of Ω) is subdivided into k ele-ments such that ¯Ω = ∪ ¯Ωk and ∂ ¯Ω is the boundary of ¯Ω. By multiplying (1a) and (1b) by test functions q and v, respectively, and summing them, we obtain the following weighted-residual form at the element level: 
+
+(q, ∇ · u)¯Ωk + ( v, ∂ tu)¯Ωk + ( v, u · ∇ u)¯Ωk − (v, uALE · ∇ u)¯Ωk (2) 
+
++( v, ∇p∗)¯Ωk − (v, ν ∇2u)¯Ωk − (v, f )¯Ωk = 0; 
+
+here we use the following notation for the integrals: 
+
+(a, b )¯Ωk = X
+
+> k
+
+Z
+
+ab d ¯Ωk. (3) 
+
+2.1. Mortar element method 
+
+The subdivision of rotor and stator regions relies on the Mortar Element Method (MEM) [7, 8, 21], which assumes that the discretized domain ¯Ω is subdivided into n non-overlapping subdomains such that 
+
+¯Ω = ∪ ¯Ωn, ¯Ωl ∩ ¯Ωm = ∅, ∀ l, m, l ̸ = m, n = 1 , · · · , N, (4) 6Regular quadrature Mortar quadrature Mortar interface Edges alignments Figure 1: Schematic of curved mortar cells (represented in red) at the interface between rotor ( ¯Ω−) and stator ( ¯Ω+) domains. The mortar interface is partitioned at every inter-section with a cell edge, considering both rotor and stator sides. A regular quadrature defined at the boundary cells is mapped into each mortar segment. 
+
+where N is the total number of subdomains; for the rotor-stator configura-tion, N = 2 . In this case, the rotor and stator subdomains are indicated by ¯Ω− and ¯Ω+, respectively. Figure 1 depicts the cell configuration at the interface between subdomains; we assume that the rotor and stator sides contain the same number of equally spaced elements. Hence, we allow a non-conforming sliding interface in which each stator cell is subdivided by a rotor cell edge at most once. In a d-dimensional domain, the ( d − 1)-dimensional mortar cells are created based on the intersections between the edge of the boundary cells and the mortar interface. Let us indicate the rotor and stator sides at the mortar interface by ∂ ¯Ω−
+
+and ∂ ¯Ω+, respectively, such that ∂ ¯Ω∗ 
+
+> k
+
+= ∂ ¯Ωk ∩ (∂ ¯Ω− ∪ ∂ ¯Ω+) refers to element boundaries coincident with the rotor-stator interface and ∂ ¯Ω∗ 
+
+> k, all
+
+are all the element boundaries of cells at the interface. We define the average {{·} } and jump J·K operators of a generic field ξ as: 
+
+{{ξ}} = ξ− + ξ+
+
+2 , JξK = ξ+ − ξ−. (5) The boundary integrals are implemented based on the DG method for incompressible flows proposed by Fehn et al. [62, 63]. Continuity on the velocity and pressure fields is ensured by integrating by parts the pressure 7and viscous terms in (2); for the former, using a central approximation of the numerical flux, we have: 
+
+(v, ∇p∗)¯Ωk := −(∇v, p ∗)¯Ωk + ( v, {{p∗}}n)∂ ¯Ω∗ 
+
+> k
+
+. (6) For the viscous term, we employ the symmetric interior penalty Galerkin (SIPG) method [64, 65] to obtain the following weak form: 
+
+−(v, ν ∇2u)¯Ωk := ( ∇v, ν ∇u)¯Ωk − (∇v, ν
+
+2 JuK ⊗ n)∂ ¯Ω∗ 
+
+> k
+
+− (v, ν {{∇ u}} · n)∂ ¯Ω∗
+
+> k
+
++ ( v, ντ kJuK)∂ ¯Ω∗ 
+
+> k
+
+, (7) where the penalty parameter τk for each element is defined according to the work of Hillewaert [66]: 
+
+τk = F (P + 1) 2 A(∂ ¯Ω∗
+
+> k, all
+
+\∂ ¯Ω∗
+
+> k
+
+)/2 + A(∂ ¯Ω∗
+
+> k
+
+)
+
+V ( ¯Ωk) . (8) In this expression, F is a factor that controls the amount of penalization (generally chosen in the range of 1 to 10 [60]), P is the polynomial degree of the FE approximation, V ( ¯Ωk) = R d ¯Ωk is the element volume, and A
+
+is the surface area of the interior ( ∂ ¯Ω∗
+
+> k, all
+
+\∂ ¯Ω∗
+
+> k
+
+) and exterior ( ∂ ¯Ω∗
+
+> k
+
+) element boundaries. Regarding the mass conservation term, we integrate it by parts twice and adopt the strong DG formulation to improve mass conservation given by [62]: 
+
+(q, ∇ · u)¯Ωk := ( q, ∇ · u)¯Ωk − (q, 12JuK · n)∂ ¯Ω∗ 
+
+> k
+
+. (9) Substituting relations (6), (7), and (9) into Eq. (2), we have: 
+
+F ∗ 
+
+> N S
+
+:=( q, ∇ · u)¯Ω − (q, 12JuK · n)∂ ¯Ω∗ + ( v, ∂ tu)¯Ω + ( v, u · ∇ u)¯Ω (10) 
+
+− (v, uALE · ∇ u)¯Ω − (∇v, p ∗)¯Ω + ( v, {{p∗}}n)∂ ¯Ω∗ + ( ∇v, ν ∇u)¯Ω
+
+− (∇v, ν
+
+2 JuK ⊗ n)∂ ¯Ω∗ − (v, ν {{∇ u}} · n)∂ ¯Ω∗ + ( v, ντ kJuK)∂ ¯Ω∗ − (v, f )¯Ω.
+
+2.2. Numerical stabilization 
+
+We ensure the stabilization of the weak form by using the Streamline-Upwind/Petrov-Galerkin (SUPG) and Pressure-Stabilizing Petrov-Galerkin 8(PSPG) approaches [57], and the terms aSUPG , a PSPG are added into the weak form: 
+
+ˆF ∗ 
+
+> N S
+
+:= F ∗ 
+
+> N S
+
++ ( τu(u − uALE ) · ∇ v, Ru)¯Ωk
+
+| {z }
+
+> aSUPG
+
++ ( τu∇q, Ru) ¯Ωk
+
+| {z }
+
+> aPSPG
+
+. (11) The strong residual of the momentum conservation Ru is defined as: 
+
+Ru = ∂tu + ( u · ∇ )u − (uALE · ∇ )u + ∇p∗ − ν∇2u − f , (12) and τu is a stabilization parameter defined according to Tezduyar [67]: 
+
+τu =
+
+" 1∆t
+
+2
+
++
+
+2|| u − uALE || 
+
+hconv 
+
+2
+
++ 9 
+
+ 4νh2
+
+> diff
+
+2#−1/2
+
+(13) where ∆t is the time step and hconv = hdiff = h is the element size given by the diameter of the corresponding area-equivalent circle. 
+
+2.3. Finite element discretization 
+
+Considering the Galerkin method, the weak form in Eq. (10) can be dis-cretized in space by employing the following representation of v, u, q, p ∗:
+
+v =
+
+> Nu
+
+X
+
+> i=1
+
+vi ϕi, u =
+
+> Nu
+
+X
+
+> j=1
+
+uj ϕj , q =
+
+> Np
+
+X
+
+> k=1
+
+qk ψk, p∗ =
+
+> Np
+
+X
+
+> l=1
+
+p∗ 
+
+> l
+
+ψl,
+
+(14) in which ϕi, ϕj , ψ k, ψ l are Lagrange polynomials of degree P, and vi, u j , q k, p ∗
+
+> l
+
+are nodal values. The nonlinear system is solved using Newton’s method, where a linear system of equations of the form: 
+
+J [δu, δp ∗]⊤ = −R (15) is solved. The weak form of the Jacobian and residual are given by J and 
+
+R, respectively, and [δu, δp ∗]⊤ are the computed increments. Writing the linear system in matrix form, we have that: 
+
+ ˆA ˆB
+
+ˆC ˆD
+
+  δu
+
+δp ∗
+
+
+
+= −
+
+Ru
+
+Rp
+
+
+
+. (16) 9The stabilized Jacobian sub-matrices are given by: 
+
+ˆAkij = Akij 
+
++ ( τu(u − uALE ) · ∇ ϕi, ∂ tϕj + ϕj · ∇ u + ( u − uALE ) · ∇ ϕj − ν∇2ϕj )¯Ωk
+
++ ( τu(ϕj − uALE ) · ∇ ϕi, ∂ tu + ( u − uALE ) · ∇ u − ν∇2u + ∇p∗ − f )¯Ωk ,
+
+(17) 
+
+ˆBkij = Bkij + ( τu(u − uALE ), ∇ψj )¯Ωk , (18) 
+
+ˆCkij = Ckij + ( τu∇ψi, ∂ tϕj + ϕj · ∇ u + ( u − uALE ) · ∇ ϕj − ν∇2ϕj )¯Ωk , (19) 
+
+ˆDkij = Dkij + ( τu∇ψi, ∇ψj )¯Ωk , (20) where 
+
+Akij = ( ϕi, ∂ tϕj )¯Ωk + ( ϕi, ∇u · ϕj )¯Ωk + ( ϕi, u · ∇ ϕj )¯Ωk − (ϕi, uALE · ∇ ϕj )¯Ωk
+
++ ( ∇ϕi, ν ∇ϕj )¯Ωk − (∇ϕi, ν
+
+2 Jϕj K ⊗ n)∂ ¯Ω∗ 
+
+> k
+
+− (ϕi, ν {{∇ ϕj }} · n)∂ ¯Ω∗
+
+> k
+
++ ( ϕi, ντ kJϕj K)∂ ¯Ω∗ 
+
+> k
+
+, (21) 
+
+Bkij = −(∇ϕi, ψ j )¯Ωk + ( ϕi, {{ ψj }} n)∂ ¯Ω∗ 
+
+> k
+
+, (22) 
+
+Ckij = ( ψi, ∇ · ϕj )¯Ωk − (ψi, 12Jϕj K · n)∂ ¯Ω∗ 
+
+> k
+
+, (23) 
+
+Dkij = 0 , (24) and Ru, Rp are the discretized residual terms. 
+
+3. Software implementation 
+
+The mortar method is implemented in Lethe [57], an open-source CFD software that is based on the deal.II finite element library [59] and uses 
+
+p4est for mesh management [68], Trilinos for numerical linear algebra [69], and MPI for parallelization. Although the present work relies on the matrix-free implementation, the MEM implementation is compatible with both matrix-based and matrix-free architectures; more on the implementa-tion and verification of the matrix-free solver can be found in [53]. Three main components are used to integrate the mortar method: Mortar Manager , Coupling Operator , and Coupling Evaluation . The Mortar Manager is responsible for storing information regarding mesh alignment, mortar-cell indices, weights and normal vectors of the quadrature points. The 
+
+Mortar Manager accounts for the generation of curved mortar cells within 10 the circular geometry of the rotor-stator interface. Such interface is approx-imated with high-order polynomials and hence the normals are determined exactly. The Coupling Operator stores information corresponding to each interface side ( ∂ ¯Ω+ and ∂ ¯Ω−, as described in Section 2.1), computes the cell penalty factor, and updates the constraints related to the complete system of equations. Lastly, the Coupling Evaluation computes the mortar terms represented in Eq. (10). 
+
+3.1. Grid generation and updated configuration 
+
+The grids for the rotor and stator subdomains are generated separately and merged into a unique triangulation. We assume that the number of elements on both sides of the mortar interface is equal, and that such elements are equally sized and spaced. In three-dimensional cases, this restriction is enforced in the planes perpendicular and parallel to the rotation axis. As mentioned in Section 2, the displacement of the rotor domain mesh (due to an imposed angular velocity) may lead to non-conforming configurations of the rotor-stator interface, and thus, each boundary cell may be connected to up to two mortar cells. Although this assumption of equal angular length of the boundary cells at the mortar interface seems restrictive, it has been a common choice in MEM applications [42, 56, 40] and could be alleviated in future work by allowing more than two mortar cells to be connected to a single regular cell in either ¯Ω+ or ¯Ω−.The rotated rotor domain is obtained by a mapping of the initial con-figuration, using the following relation for the transformation of each node position: 
+
+x = R x 0, (25) where x0 is the initial node coordinate, x is the updated coordinate, and R
+
+is the rotation matrix with respect to the origin. The latter is defined for two-dimensional cases as: 
+
+R := 
+
+cos[ θ(t)] − sin[ θ(t)] sin[ θ(t)] cos[ θ(t)] 
+
+
+
+; (26) in three dimensions, R is given by: 
+
+R := cos[ θ(t)] I + sin[ θ(t)] W + (1 − cos[ θ(t)]) r ⊗ r (27) where r is the rotation axis vector around the origin, I is the identity tensor, and W is the skew symmetric tensor of r.11 3.2. Creation of mortar operators 
+
+Let us consider the following boundary integral computed at mortar cells, as indicated in Eq. (21): 
+
+(ϕi, ντ kJϕj K)∂ ¯Ω∗ 
+
+> k
+
+≈
+
+> nq
+
+X
+
+> q=1
+
+(ϕi(q) ντ kJϕj (q)K) wq(det Jk), (28) where we approximate the integral with a summation over Gauss quadrature points q (q = 1 , . . . , n q); wq is the weight of each quadrature point, and Jk is the Jacobian matrix of the transformation from the Cartesian coordinates x
+
+to the mapped reference system ξ.As indicated in Figure 1, the quadrature and weights at the mortar cells are obtained by mapping a reference quadrature into each mortar segment. The determinant of the Jacobian of this transformation is computed as: 
+
+det Jk = Rδ 0δ1, (29) in which R is the radius of the in-plane rotor-stator interface, δ0 is the an-gle corresponding to the mortar segment at the plane perpendicular to the rotation axis, given by: 
+
+δ0 =
+
+
+
+2πR nR
+
+, for aligned meshes ,α or 2πR nR
+
+− α, for misaligned meshes ,
+
+(30) where α is the angle between two vertices in the rotor and stator sides (see misalignment example in Figure 1), and nR is the in-plane number of subdi-visions. In (29), δ1 is the cell height along the rotation axis, given by: 
+
+δ1 = HnH
+
+, (31) where H is the out-of-plane dimension and nH is the corresponding number of subdivisions. Since we assume that the element size is the same in the in-plane and out-of-plane configurations, the Jacobian of the transformation is constant. The integration is performed in two steps. First, we evaluate the vari-ables at the mortar quadrature points and store the result. For instance, to compute the jump values Jϕj (q)K we evaluate the ϕj (q) at both sides of the 12 interface. For the boundary terms containing the normal unit vector n, it is decomposed into n− and n+. Communication is the next step, where data is exported from local ( ¯Ω−) to ghost ( ¯Ω+) side. After that, we load the stored data and perform the integration of the boundary term. The matrix-free eval-uation is performed via the algorithm described in [70, 71], which aims to optimize repeated computations on cached data to adapt to the capabilities of modern hardware. The computation of the remaining boundary integrals at the mortar interface follow the same steps as the one herein described. 
+
+3.3. Mesh parallel decomposition 
+
+The mesh parallel decomposition relies on the p4est library [68]. It parti-tions space-fitting curves, and allows the attribution of different cell weights to be taken into account during load balancing. In the current application, the space-fitting curve is the composition of the stator and rotor sides of the mortar interface. Figure 2 depicts an example of domain partitioning over processes during mesh refinement of a steady case, while Figure 3 shows the partitioning as the rotor domain mapping is rotated. We do not attempt to keep the rotor-stator interface cells within a single process. Child cells do not necessarily remain on the same process as their original unrefined cell, while rotated cells are still owned by the same initial rank. 
+
+> Figure 2: Cell ownership as the mesh is refined; the colors indicate the seven subdomains (ranks), and an iso-parametric mapping is used.
+
+3.4. Geometric multigrid preconditioner 
+
+The GCMG preconditioner builds a hierarchy of discretizations through geometric coarsening of the mesh ( h) and reduction of the polynomial de-gree ( P), applying a smoother on each level and a coarse-grid solver on the 13 Figure 3: Cell ownership as the rotor mesh is rotated anti-clockwise; the colors indicate the seven subdomains (ranks), and an iso-parametric mapping is used. 
+
+coarsest one. Available coarse-grid solvers in Lethe include a direct solver, an algebraic multigrid (AMG) solver, an incomplete LU factorization (ILU), and an iterative generalized minimal residual method (GMRES), preconditioned by AMG or ILU. As smoother, we use an inverse diagonal (ID) or the Ad-ditive Schwarz method (ASM) accelerated by a relaxation scheme [53]. The GCMG preconditioner does not require global matrices to be assembled, and hence it is compatible with the matrix-free architecture. More details on the GCMG deal.II architecture can be found in [61], while its implementation in Lethe is further described in [53]. The contributions from the mortar interface integrals need to be ac-counted on each level, in particular, in the smoother and coarse-grid solver. To this end, the relevant element matrices (or their diagonals) are recon-structed column-by-column, and hence the storage of full matrices is avoided – a common approach in matrix-free algorithms. The corresponding pseu-docodes are presented in Algorithms 1 and 2. 
+
+4. Numerical examples 
+
+In this section we present study cases to verify and validate the MEM im-plementation within Lethe . A steady-state two-dimensional example is de-scribed in Section 4.1, where a manufactured solution is employed so that the convergence rate of high-order polynomial approximations can be observed. In Section 4.2, a transient two-dimensional Taylor-Green vortex example is used to verify the convergence order of viscid and inviscid flows. In both two-dimensional cases, we study the change in error norms due to different 14 Algorithm 1 Reconstruction of mortar contribution to matrix diagonal. The loop over cells cm refers to the cells located at either side of the mortar interface. 
+
+for each cell cm do for each local DoF i do 
+
+Create basis vector ei associated with the shape function Ni
+
+Evaluate ei at quadrature points Integrate mortar contributions 
+
+Acm (i, i ) ← i-th entry of resulting vector 
+
+end for 
+
+Assemble global diagonal 
+
+end for Algorithm 2 Reconstruction of mortar contribution to matrix A. The loop over cells cm refers to the cells located at either side of the mortar interface. 
+
+for each cell cm do for each local DoF i do 
+
+Create basis vector ei associated with the shape function Ni
+
+Evaluate ei at quadrature points 
+
+end for end for 
+
+Communicate evaluated values to ghost cells 
+
+for each cell cm do for each relevant DoF i do 
+
+Integrate mortar contributions 
+
+for each local DoF j do 
+
+Acm (j, i ) ← j-th entry of resulting vector 
+
+end for end for 
+
+Assemble global matrix 
+
+end for 
+
+mesh alignment patterns at the interface. The performance of the solver is assessed in Section 4.3, where a three-dimensional example is used to show strong and weak scalability of the model. Following that, Sections 4.4 and 4.5 showcases simulations of stirred mixing tanks in two- and three-dimensions, respectively, to investigate mesh convergence and validate the model with 15 existing numerical and experimental data. In the following examples, unless otherwise stated, we solve the linearized Navier-Stokes equations using the GMRES method, a GCMG preconditioner [72, 61] and an inverse diagonal smoother as a relaxation scheme. In the tran-sient examples, a second-order implicit backward-difference time integration scheme (BDF2) is employed. The following examples employ equal high-order elements QP QP (P ≥ 2, where P is the polynomial order) for the velocity and pressure fields. While the SUPG-PSPG is a robust stabilization for the CG framework of the Navier-Stokes solver, the introduction of the DG mortar interface generated pressure instability for the linear polynomial approximation Q1Q1. Additional tests have shown that adding a bubble-type enrichment function [73] to the velocity field recovers the interface continuity in the matrix-based solver. Numerical examples considering enriched Q1Q1
+
+elements, as well as a discussion on alternative stabilization methods for the linear approximation, will be addressed in future work. 
+
+4.1. Steady-state manufactured solution 
+
+We verify the MEM implementation by simulating a two-dimensional steady-state problem with the Method of Manufactured Solutions (MMS). The manufactured problem is: 
+
+u = −2 sin( πx )2 cos( πy ) sin( πy ), (32) 
+
+v = 2 cos( πx ) sin( πx ) sin( πy )2, (33) 
+
+p∗ = sin( πx ) sin( πy ), (34) where u, v are the x and y components of the velocity vector u. The problem domain is a combination of a plate with a hole and a circle, which yields a simple merged geometry that still allows us to evaluate the MEM accuracy (see Figure 4a ). The combined rotor-stator domain is defined in [−1, 1] ×
+
+[−1, 1] , with the circular interface located at a radial distance of 0.5 from the center point. In this example, no rotation velocity is imposed on the rotor domain ( ω = 0 ). The simulation is carried out for a kinematic viscosity of ν = 1 , four refinement levels (the refinement level l = 1 contains 80 elements), and poly-nomial approximations from P = 2 to P = 5 . In this steady case, the time-dependent term indicated in Eq. (1) is neglected. Figure 5 depicts the L2 error norms, where we notice the optimal O(hP+1 ), O(hP ) rates for 16 velocity and pressure fields, respectively. Since the rotor-stator mesh is non-uniform, the reported values of ˜h refer to a characteristic mesh size based on the average element area. The L2 norms of the error are compared to refer-ence values (indicated as (R) in Figure 5), in which the same parameters and mesh are used to simulate the MMS case without a mortar interface. Said error norms are identical for the subdivided rotor-stator domain and for the reference case.                   
+
+> (a) Mesh configuration (refinement level l= 4 )used in the two-dimensional MMS simulation (Section 4.1) and TGV case (Section 4.2). The corresponding domain is Ω = [ −1,1] ×[−1,1]
+> and the rotor-stator interface is placed at a ra-dial distance of 0.5from the center point.
+> (b) Mesh configuration (refinement level l=2) used in three-dimensional MMS scalability study (Section 4.3). The corresponding domain is Ω = [ −1,1] ×[−1,1] ×[0 ,2] and the cylindrical mortar interface is located at radial distance of
+> 0.5from the rotation axis z.
+
+Figure 4: Mesh discretization for (a) two-dimensional and (b) three-dimensional manufac-tured solution examples. 
+
+Considering the same problem, we analyze the dependence of the error on the rotor mesh rotation. The goal is to verify whether the alignment of the mortar cells with respect to the stator boundary cells (see illustration in Fig-ure 1) interferes in the accuracy of the solution. Considering that the angular length of each interface cell in the coarsest mesh is θmax = 0 .3926 rad, we take 200 sampling values in the interval [0 , θ max ] to verify the corresponding error norms. Figure 6 depicts the L2 error norm for four refinement levels, considering Q2Q2 and Q3Q3 elements. Regardless of the refinement level, the error norms for both velocity and pressure fields remain constant, confirming that the geometric incompatibility generated at the interface due to mortar 17 0.01 0.02 0.04 0.06 0.10                     
+
+> h
+> 10 11
+> 10 9
+> 10 7
+> 10 5
+> 10 3
+> 10 1
+> eu 2
+> 3.01 3.93 5.04 5.92
+> 0.01 0.02 0.04 0.06 0.10
+> h
+> 10 11
+> 10 9
+> 10 7
+> 10 5
+> 10 3
+> 10 1
+> ep 2
+> 2.04 3.08 3.99 5.05
+> Mortar No-mortar Reference Q2Q2Q3Q3Q4Q4Q5Q5
+
+Figure 5: L2 norm of the error of velocity (left) and pressure (right) fields for the two-dimensional MMS case. In the reference case, the mesh in Figure 4a is used without a mortar interface. For the rotor-stator mesh, no rotor rotation was imposed. 
+
+cell misalignment does not lead to loss of convergence properties. This con-clusion is in alignment with the fact that a reference quadrature is mapped into each mortar segment intersected by the boundary cells edges (Figure 1), and thus the quadrature order is preserved regardless of the mortar element size. The same behavior has been observed in [42] for a DG formulation. 0.0 0.1 0.2 0.3 0.4 [rad]    
+
+> 10 3
+> 10 2
+> 10 1
+> L2 error norm
+
+Q2Q2         
+
+> 0.0 0.1 0.2 0.3 0.4 [rad]
+> 10 5
+> 10 4
+> 10 3
+> 10 2
+> 10 1
+> L2 error norm
+
+Q3Q3           
+
+> l= 0 l= 1 l= 2 l= 3 eu2ep2
+
+Figure 6: L2 error norm for the two-dimensional MMS problem considering different initial rotation angles of the rotor mesh. The points in each curve are taken from the interval 
+
+[0 , θ max ], where θmax = π/ 8 is the cell angular length at the mortar interface for the coarsest refinement level. 
+
+18 4.2. Taylor-Green vortex 
+
+The transient MEM implementation is verified with a two-dimensional Taylor-Green vortex (TGV) case. The same domain geometry and mesh discretization from Section 4.1 is employed, as indicated in Figure 4a, and an angular velocity ω is prescribed in the rotor domain. The initial condition is given by: 
+
+u = cos( x) sin( y), (35) 
+
+v = − sin( x) cos( y), (36) 
+
+p = −14[cos(2 x) + cos(2 y)] , (37) in which u, v are the x and y components of the velocity vector u, respectively. The simulation considers a kinematic viscosity of ν = 1 and a time step of 
+
+∆t = 10 −4 s during tend = 0 .1 s. The corresponding analytical solution is given by: 
+
+u = exp( −2νt ) cos( x) sin( y), (38) 
+
+v = − exp( −2νt ) sin( x) cos( y). (39) 
+
+Figure 7 shows velocity L2 error norms for a case with no rotor mesh rotation ( ω = 0 ), as well as other randomly chosen values of rotor angular velocity. The expected convergence rate O(hP+1 ) is obtained for all ω in the 
+
+Q3Q3 case. For P = 2 , convergence is deteriorated due to the odd-degree structure of the velocity Taylor expansion. Additional tests showed that the same pattern is observed for fourth-order polynomial shape functions and that fifth-order polynomials ( Q5Q5) recovered the expected order O(hP+1 ).Convergence rates for ω = 0 .001 to ω = 0 .3 rad/s are almost identical to the case with no mesh rotation, which can be noticed as the error markers overlap. The difference in error norms spans from zero to 10 −4, decreasing with element size. To verify the accuracy of the scheme in the absence of viscous dissipation effects, we repeated the convergence analysis for an inviscid case ( Re → ∞ ), assuming ν = 0 . Figure 7 depicts the convergence rates for the velocity field considering the same rotating speeds as in the viscid case. The difference in error norms also stays in the order of 10 −4 when we compare ω̸ = 0 to the stationary case, and we observe the same convergence trends for P = 2 , 3
+
+from the viscid case. 19 Considering a diagonal cross-section from (−1, −1) to (1 , 1) , we compare the numerical results with the analytical solution as depicted in Figure 8 ,and good agreement is achieved. In this case, the finest refinement level reported in the convergence study (Figure 7), i.e. 5120 elements, is employed. The computed absolute errors vary between 10 −4 and 10 −13 , and higher values are reported in the stator mesh, where the average element size is larger than in the rotor mesh. 0.02 0.04 0.10 0.30    
+
+> h
+> 10 5
+> 10 3
+> 10 1
+> eu 2
+> 2.23 3.98
+
+= 0       
+
+> 0.02 0.04 0.10 0.30
+> h
+> 10 5
+> 10 3
+> 10 1
+> eu 2
+> 2.71 4.11
+
+= 1        
+
+> Q2Q2Q3Q3=0
+> =0.001 =0.003 =0.010 =0.030 =0.100 =0.300
+
+Figure 7: L2 error of velocity field in the two-dimensional TGV problem for different angular velocities of the rotor mesh, considering viscid (left, ν = 1 ) and inviscid (right, 
+
+ν = 0 ) cases. The shaded gray triangles indicate the convergence rate for all angular velocity values, which have units of rad/s. 
+
+4.3. Performance and scalability tests 
+
+To verify scalability of the matrix-free MEM implementation, we study a three-dimensional MMS case in which the mortar interface is introduced by combining a cylinder and an extruded plate with hole, as depicted in 20 2 0 2Distance [m] 0.050          
+
+> 0.025
+> 0.000 0.025 0.050 u [m/s]
+> 202Distance [m] 0.050
+> 0.025
+> 0.000 0.025 0.050 v [m/s]
+> Analytical MEM Figure 8: Comparison between analytical and numerical solution for two-dimensional TGV case in a diagonal cross-section from ( x=−1, y =−1) to ( x= 1 , y = 1 ).
+
+Figure 4b . The manufactured solution is expressed as: 
+
+u = 2 π2[−3 cos(2 πx ) + 2] sin( πy ) sin( πz ) cos( πy ) cos( πz )+ π[2 cos( πy )2 − cos( πz )2] sin( πx )3 sin( πy )2 sin( πz )2 cos( πx ), (40) 
+
+v = 2 π2[−3 cos(2 πy ) + 2] sin( πx ) sin( πz ) cos( πx ) cos( πz )+ π[2 cos( πx )2 − cos( πz )2] sin( πx )2 sin( πy )3 sin( πz )2 cos( πy ), (41) 
+
+w = 4 π2[3 cos(2 πz ) − 2] sin( πx ) sin( πy ) cos( πx ) cos( πy )+ 2 π[cos( πx )2 + cos( πy )2] sin( πx )2 sin( πy )2 sin( πz )3 cos( πz ), (42) 
+
+p = 0 . (43) The steady-state problem is tested with two mesh configurations with the number of cells at the coarse level equal to l0 = 18 and l0 = 40 , for 
+
+P = 2 and P = 3 . The corresponding number of cells and degrees of freedom (DoFs) are reported in Table 1 . For the Q3Q3 case, we use an hp -multigrid preconditioner so that the polynomial degree of the coarsest grid level is reduced by one order, i.e. P = 2 (the limitation on using P = 1 is discussed at the beginning of Section 4). The simulations are run on the Trillium distributed memory cluster of the Digital Research Alliance of Canada [74] and use up to 64 nodes with 192 CPU cores each (12,288 CPU cores in total). The average number of linear solver iterations per Newton iteration for each refinement level are reported in Table 2 ; in all cases, the solver needed three non-linear Newton iterations. To evaluate the performance of the 21 Table 1: Number of cells and degrees of freedom (DoFs) for each refinement level employed in the scalability study of Section 4.3. 
+
+l0 l Cells DoFs ( Q2Q2) DoFs ( Q3Q3)4 164 k 5.4M 18 M40 5 1.3M 43 M 143 M6 10 .5M 338 M 1.1B18 5 590 k 19 M 64 M6 4.7M 152 M 513 Msmoother preconditioner (i.e., relaxation scheme), results for both inverse diagonal (ID) and Additive Schwarz Method (ASM) options are presented. Furthermore, we consider a reference no-mortar case – same mesh configura-tion with a merged rotor-stator interface – to evaluate the impact that the mortar cells have on the solver convergence. The case with l0 = 40 yields less iterations overall; this can be related to the fact that such discretization contains cells with a more uniform aspect ratio compared to when l0 = 18 .We conclude that the number of linear solver iterations is more affected by the aspect ratio of the cells than the presence of the mortar interface. In terms of the smoother preconditioner type, ASM yields about a third less iterations than ID; however, it can take up to 3.4 times more computa-tional time depending on the mesh refinement and the number of computer nodes. This result is expected considering the nature of these two relaxation schemes; while ID has a low cost for setup and application, ASM setup is more expensive while it usually leads to less iterations [53]. When comparing the mortar ( m) and the no-mortar ( n) cases, a similar number of iterations is shown for the ASM scheme. Meanwhile, a higher iteration count for the n
+
+case is noticed for the ID scheme when l0 = 18 when compared to the mortar results. 
+
+Figure 9 depicts the total wallclock time for the simulated cases. The strong scaling for the coarser meshes shows poorer results since very few cells are contained within each core, and hence communication significantly affects the wallclock time. Furthermore, the solution of a steady case can be harder compared to transient cases, since the flow needs to be solved at once. Significant improvement can be noticed for the two finest meshes, where the 
+
+Q3Q3 curve shows an almost ideal strong scaling. The black arrows in the figure indicate the weak scalability, showing an increase in simulation time 22 when both the mesh and the number of nodes are increased by a factor of 
+
+8. From 163 .8k to 1.3M cells this increase is ∼ 41% , while from 1.3M to 
+
+10 .5M cells is ∼ 105% . We highlight that weak scaling is also affected by the mismatch between the coarse meshes and the elevated number of nodes, where the communication cost predominates. 
+
+Table 2: Average number of linear iterations per Newton iteration for each refinement level obtained in the scalability study of Section 4.3. Results are reported for two relaxation schemes: inverse diagonal (ID) and Additive Schwarz Method (ASM). For each scheme, the rotor-stator results (indicated by m) are compared to a reference no-mortar case (indicated by n) in which the rotor-stator interface is merged – leading to the same number of cells but less DoFs. 
+
+Q2Q2 Q3Q3
+
+l0 l Cells ID ASM ID ASM 
+
+m n m n m n m n
+
+4 164 k 21 17 7 5 18 19 8 8
+
+40 5 1.3M 23 19 7 6 20 20 8 76 10 .5M 25 21 7 5 21 21 7 7
+
+18 5 590 k 25 33 10 10 27 46 11 15 6 4.7M 29 50 10 11 30 63 11 14 1 2 4 8 16 32 64 Nodes (x 192 CPUS) 10 1
+
+> 10 0
+> 10 1
+> 10 2
+> Total wallclock time [s]
+
+Q2Q2       
+
+> 124816 32 64 Nodes (x 192 CPUS) 10 1
+> 10 0
+> 10 1
+> 10 2
+> Total wallclock time [s]
+
+Q3Q3      
+
+> 163.8k 589.8k 1.3M 4.7M 10.5M Ideal Weak Scaling
+
+Figure 9: Scalability study for a three-dimensional MMS problem considering the total wallclock time. The ideal strong scaling for each refinement level is indicated by dashed lines, while the black arrows indicate the weak scaling for the current case. 
+
+23 As noted in Figure 10 , the mortar setup follows the same scalability trend as the total wallclock time. The reported values include time spent in creation of mortar operators, computation of boundary integrals, and up-date of the rotor mapping. Although the overall cells are distributed among processes considering load balancing, we assume that the cells at the rotor-stator interface and the remaining cells have the same weight. A question that arises is whether the load imbalance of mortar cells could have an effect on the efficiency of the solver. For such analysis, we first define an ideal workload as: 
+
+Lideal =
+
+Pnp 
+
+> i
+
+mi
+
+np
+
+, (44) in which np is the total number of processes and mi is the number of mortar cells at each process i. The actual workload imbalance is computed as the ratio between the maximum number of cells in a process mmax and the ideal workload: 
+
+L = mmax 
+
+Lideal 
+
+. (45) 1 2 4 8 16 32 64 Nodes (x 192 CPUS) 10 1             
+
+> 10 0
+> 10 1
+> 10 2
+> Mortar setup [s]
+> Q2Q2
+> 124816 32 64 Nodes (x 192 CPUS) 10 1
+> 10 0
+> 10 1
+> 10 2
+> Mortar setup [s]
+> Q3Q3
+> 163.8k 589.8k 1.3M 4.7M 10.5M Ideal Weak Scaling
+
+Figure 10: Scalability study for a three-dimensional MMS problem considering the mortar setup time. The ideal strong scaling for each refinement level is indicated by dashed lines, while the black arrows indicate the weak scaling for the current case. 
+
+The computed workload imbalance is reported in Figure 11 , as well as the percentage of time spent within the mortar setup. The latter varies around 20 to 50% of the total time, significantly contributing to the total wallclock time. Since different weights are not attributed to mortar cells during load balancing, workload imbalance increases significantly with the 24 1 2 4 8 16 32 64 Nodes (x 192 CPUS) 0510 15 20 25 Workload imbalance [-]  Q2Q2           
+
+> 124816 32 64 Nodes (x 192 CPUS) 0510 15 20 25 Workload imbalance [-]  Q3Q3
+> 020 40 60 80 100 Mortar setup [%] 020 40 60 80 100 Mortar setup [%] 163.8k 589.8k 1.3M 4.7M 10.5M Time
+
+Figure 11: Mortar workload imbalance for a three-dimensional MMS problem. The solid lines represent the workload imbalance reported in left y-axis, while the dashed lines indicate the percentage of mortar setup time with respect to the total simulation time and are reported in the right y-axis. 
+
+number of processes. Its deviation from the ideal ratio of 1 can be improved if we increase the weight of mortar cells, which consists in our next verification. For that, we vary the ratio between the mortar cell weight wm and the regular cell weight wr, monitoring the mortar workload imbalance factor. For the case of 1.3M cells, Figure 12 depicts the mortar workload imbal-ance for various numbers of nodes (each node corresponds to 192 CPU cores). The workload stabilizes at approximately 2.5 when wm/w r > 50 ; to analyze the impact that the mortar load balancing has on the simulation time, we choose wm/w r = 20 . When looking at the total wallclock time, especially in the Q3Q3 case, the cell weight ratio of 20 yields a good balance between improving the load imbalance without significantly increasing the computing time. Figure 13 compares the total wallclock time and the mortar workload imbalance for wm/w r = 1 and wm/w r = 20 . Even though the load imbalance is significantly reduced – up to five times less, small variations are observed in the simulation time. In fact, performing the workload balancing requires slightly more time, confirming that it is an unnecessary step in the present mortar approach. 
+
+4.4. Two-dimensional Rushton mixer 
+
+To evaluate the MEM implementation in the context of an engineering ap-plication, we simulate a two-dimensional Rushton mixer proposed by Karim-25 1 20 50 100 
+
+> wm/wr
+> 2.5 5.0 7.5 10.0 12.5 15.0 Workload imbalance [-]
+
+Q2Q2   
+
+> 120 50 100
+> wm/wr
+> 2.5 5.0 7.5 10.0 12.5 15.0 Workload imbalance [-]
+
+Q3Q3        
+
+> 0100 200 300 Total wallclock time [s] 0100 200 300 Total wallclock time [s] 124816 32 64 Time Chosen ratio
+
+Figure 12: Mortar workload imbalance for a three-dimensional MMS problem with 1.3Mcells and various number of computing nodes. The solid lines correspond to the left y-axis, and the dashed lines represent the total wallclock time reported in the right y-axis. Each node correspond to 192 CPU cores. The vertical dot-dashed gray line indicates the cell weight ratio that yields lower workload imbalance without significantly increasing the corresponding computing time. 1 2 4 8 16 32 64 Nodes (x 192 CPUS) 10 1
+
+> 10 0
+> 10 1
+> 10 2
+> Total wallclock time [s]
+
+Q2Q2       
+
+> 124816 32 64 Nodes (x 192 CPUS) 10 1
+> 10 0
+> 10 1
+> 10 2
+> Total wallclock time [s]
+
+Q3Q3     
+
+> 510 15 20 25 Workload imbalance [-] 510 15 20 25 Workload imbalance [-] Regular, wm/wr= 1 Load balancing, wm/wr= 20
+
+Figure 13: Comparison of the total wallclock time (left y-axis) and the mortar workload imbalance (right y-axis) for (i) the regular case where no additional load balancing is performed and (ii) the case where load balancing is performed considering a cell weight ratio of wm/w r = 20 .
+
+ian and Sewerin [12]. The dimensions indicated in Figure 14a are detailed in Table 3 . This example allows us to verify the solution against exist-26 ing finite-volume numerical results, as well as study the torque convergence with respect to the mesh refinement. We consider a kinematic viscosity of 
+
+ν = 10 −2 m2/s, a unit density ( ρ = 1 kg/m 3) and an impeller angular velocity of ω = 2 π rad/s; the Reynolds number is expressed as: 
+
+Re = ωd 2
+
+> i
+
+2πν , (46) and thus, for the current example, Re = 79 . The simulation is carried out for tend = 20 s, yielding twenty revolutions to ensure that the flow is fully established at the end. The adopted initial time step is ∆t = 10 −4 s and time step adaptation is enabled while the maximum allowed CFL is 1. The initial mesh contains Ne = 4 , 732 biquadratic elements ( 70 , 422 DoFs); maintaining a fixed number of elements at the rotor-stator interface, an adaptive mesh refinement is also enabled ( Figure 14b ). 𝐷    
+
+> 𝑑 𝑖𝑛𝑡
+> 𝑑 𝑖
+> 𝜃 𝑖
+> 𝜃 𝑏
+> 𝑙 𝑏
+> 𝑑 𝑑𝑖𝑠𝑘
+> (a) Geometry (b) Mesh with adaptive refinement
+> Figure 14: Two-dimensional Rushton mixer: (a) geometry and (b) mesh after adaptive refinement at final simulation time. In (b), the refinement level at the rotor-stator inter-face is kept the same throughout the simulation, and thus we ensure that the adaptive refinement does not create mismatching cell sizes at such boundaries.
+
+4.4.1. Unbaffled case: comparison against existing numerical results 
+
+To verify the accuracy of the mortar interface, we compare the result of an unbaffled Rushton mixer against the velocity profile reported by Karimian et al. [12]; the mixer dimensions are as indicated in Figure 14a. In such study, 27 Table 3: Dimensions of Rushton mixer tank example (Figure 14) presented in Section 4.4. 
+
+Parameter Description Value 
+
+D Tank diameter 2 m
+
+dd Disc diameter 0.5 m
+
+di Impeller diameter 0.89 m
+
+θi Blade opening angle 7.5◦
+
+dint Mortar interface diameter D/ 2
+
+θb Baffle opening angle θi
+
+lb Baffle length D/ 10 
+
+a mesh-tying method is used in a finite-volume context, where relative rotor-stator motion is represented by a rotating non-Galilean frame of reference. 
+
+Figure 15a depicts the velocity profile along the x-axis (at t = 1 s) for both the MEM solution and the finite-volume solution obtained in [12], where a good agreement is observed. 0.6 0.8 1.0 Distance [m] 0.0 0.5 1.0 1.5 2.0 2.5 Velocity [m/s] ×10 4        
+
+> FVM MEM Interface
+> (a) Velocity profile at x-axis at t= 1 s; unbaffled (b) Velocity contour at tend = 20 s; baffled
+
+Figure 15: Two-dimensional Rushton mixer: (a) velocity profile for the unbaffled case, where the red dash-dotted line indicates the mortar interface position; (b) velocity field representation at tend for the baffled case. 
+
+4.4.2. Baffled case: torque analysis 
+
+The simulation of the baffled geometry represented in Figure 14a yields the velocity field depicted in Figure 15b at the final simulation time, when 28 steady state is reached. We consider the baffled mixer configuration for a torque analysis study in which a uniform mesh refinement is employed. 
+
+Figure 16 depicts the torque values at the impeller and the sum of torques at all boundaries for four refinement levels; l = 0 corresponds to Ne =412 elements. While mesh convergence is observed for both measurements, it is also noticeable that the sum of torques converge to zero; the latter is an expected behavior given the laminar regime of the problem. Considering the biquadratic approximation of the velocity and pressure fields, we expect a second-order torque convergence rate. We can observe the convergence trend through the change in the steady-state measured values as the mesh is refined. For instance, the variation of the computed torque at the outer wall decreases from approximately 2.7% between l = 0 and l = 1 to 0.3% between 
+
+l = 2 and l = 3 .0 5 10 15 20 Time [s] 0.05                  
+
+> 0.00 0.05 0.10 0.15 0.20 Torque [N  m]
+> 0510 15 20 Time [s] 0.5
+> 0.4
+> 0.3
+> 0.2
+> 0.1
+> 0.0 0.1 0.2 Sum of torques [N  m]
+> 510 15 20 0.16 0.18 0.20
+> 510 15 20 0.01
+> 0.00 0.01
+> l= 0 l= 1 l= 2 l= 3
+
+Figure 16: Torque analysis for two-dimensional Rushton mixer presented in Section 4.4: (a) torque at the impeller and (b) sum of torques at all boundaries. 
+
+4.5. Three-dimensional pitched-blade turbine (PBT) mixer 
+
+In this section we validate the matrix-free MEM solver with a three-dimensional pitched-blade turbine (PBT) mixer for which experimental re-sults were reported by Blais et al. [2]. The geometry is shown in Figure 17 ,and the corresponding dimensions are indicated in Table 4 . The fluid vis-cosity is varied so that we can impose different Reynolds number values; the 29 latter is computed as: 
+
+Re = D2 
+
+> i
+
+Nν , (47) where Di is the impeller diameter in [m] as reported in Table 4, ν is the kinematic viscosity in [m 2/s], and N is the impeller speed in [Hz]. Such rotation speed can also be represented in terms of the angular velocity ω =2πN [rad/s]. For the current problem, N = 16 Hz, which yields a velocity at the tip of the impeller of utip ≈ 2π m/s. While the angular velocity is imposed at the impeller, a no-slip boundary condition is enforced on the outer cylinder, bottom wall, and baffles. A slip condition is applied to the top boundary to simulate a free fluid surface. 𝐷 𝑡  
+
+> 𝐻 𝑡
+> 𝐶 𝑏
+> 𝑆 𝑏
+> 𝑇 𝑏
+> 𝑊 𝑏
+> 𝐷 𝑖
+> 𝐷 𝑠
+> 𝐶 𝑖
+> 𝐻 ℎ
+> 𝑇 𝑖
+> 𝐷 ℎ
+> 𝑊 𝑖 𝜃
+> Figure 17: Geometry of three-dimensional PBT mixer tank.
+
+The experimental dataset [2] provides the power number Np for Re ∈
+
+[1 , 2 × 10 3] interval. The power number is defined as: 
+
+Np = 2πT ρN 2D5
+
+> i
+
+= PρN 3D5
+
+> i
+
+, (48) where T is the torque at the impeller in [N · m] and P = 2 πN T is the power consumption in [W]. The problem is simulated for tend = 0 .2 s, which yields 3.2 impeller rev-olutions. We consider a Newtonian fluid with unit density ( ρ = 1 kg/m 3). 30 Table 4: Dimensions of PBT mixer tank (Figure 17). 
+
+Parameter Description Value 
+
+Dt Tank diameter 0.365 m 
+
+Ht Tank height Dt
+
+Ci Impeller distance to bottom Dt/4
+
+Di Impeller diameter Dt/3
+
+Wi Impeller blade width Di/5
+
+Ti Impeller blade thickness Wi/10 
+
+θ Impeller blade inclination 45 ◦
+
+Ds Shaft diameter Wi cos( θ)
+
+Dh Hub diameter 1.4 Ds
+
+Hh Hub height Wi
+
+Cb Baffle distance to bottom Ci/3
+
+Sb Baffle distance to outer tank wall 19 /20 × Dt
+
+Wb Baffle width Dt/10 
+
+Tb Baffle thickness Wb/3
+
+Similarly to the two-dimensional example from Section 4.4, the maximum allowed CFL is 1, and the initial time step chosen is ∆t = 10 −4 s. The mesh discretization and the mortar interface placement are represented in 
+
+Figure 18 ; the three refinement levels tested for different polynomial ap-proximations are reported in Table 5 . The cell size in the radial x-y plane and in the z-direction must be constant at the mortar interface, which re-stricts further coarsening of the initial configuration. Nonetheless, the use of a matrix-free solver yields reasonable simulation times while the high-order polynomial approximation ensures sufficient accuracy of the solution – as discussed in the following section. 
+
+> Table 5: Number of cells and degrees of freedom (DoFs) for each refinement level in the three-dimensional PBT example.
+
+Level Cells DoFs ( Q2Q2) DoFs ( Q3Q3)0 32k 1M 3.6M 1 252k 8.4M 28M 2 2M 66M -31 (a) Mesh (b) Mortar interface Figure 18: (a) Mesh discretization of the three-dimensional PBT mixer. The coarsest level (herein represented) contains 31 , 459 cells. (b) Mortar interface (indicated in red) with diameter Dint = 1 .2Di, where Di is the impeller diameter (Table 4). The discretization at the interface maintains a uniform cell size in both the x-y plane and z-direction. 
+
+4.5.1. Mesh Sensitivity 
+
+To verify mesh convergence, we choose a Reynolds number of Re = 200 ,and hence ν = 1 .1842 × 10 −3 m2/s. For this case, we monitor the torque computed at the impeller as depicted in Figure 19a . Results are shown for Q2Q2 and Q3Q3 elements; we observe that the refinement level l = 1 of the quadratic approximation yields converged torque values. Furthermore, the variation of the computed torque at the impeller from l = 0 to l = 1 
+
+is approximately 3.34% for P = 2 , and around 1.05% when P = 3 . This indicates that the coarsest mesh level with P = 2 , even with only ≈ 31 k cells, already yields fairly accurate results. Nevertheless, we choose the converged mesh configuration of Q2Q2, l = 1 for the study presented in Section 4.5.3. It is noteworthy that the torque curves, as well as the energy balance curves reported in the upcoming Section 4.5.2, depict an oscillatory pseudo-steady state profile. Part of this oscillation is due to the angular rotation speed imposed in the problem, and is asymptotically vanishing with time and mesh refinement. The second source of oscillation is the interaction between baffles and blades within the domain, causing the solution to converge to a sinusoidal-like signal that depends on the angle between the blades and the baffles. 32 The mesh sensitivity study is extended for Re = 2000 , and the torque evaluated at the impeller is shown in Figure 19b . The increased turbu-lence at this regime leads to more erratic oscillations in the torque curves; nonetheless, results for l = 1 and l = 2 for Q2Q2 elements are very close, and the same is observed for l = 1 when P = 3 . Considering the same solution parameters as in Re = 200 , the results with the coarse mesh ( l = 0 ) for 
+
+Re = 2000 diverged at t ≈ 0.05 s. Consequently, choosing the Q2Q2, l = 1 
+
+mesh discretization still yields converged results at the upper bound of the 
+
+Re interval herein simulated. 0.00 0.03 0.05 0.08 0.10 0.12 0.15 0.18 0.20 Time [s] 1.4 1.6 1.8 2.0 2.2 2.4 2.6 2.8 Torque [×10  3 N m]                            
+
+> Q2Q2, l= 0 Q2Q2, l= 1 Q2Q2, l= 2 Q3Q3, l= 0 Q3Q3, l= 1 Experiment Uncertainty 0.16 0.18 0.20 1.5 1.6 1.7 1.8
+> (a) Re = 200 0.00 0.03 0.05 0.08 0.10 0.12 0.15 0.18 0.20 Time [s] 1.0 1.5 2.0 2.5 3.0 3.5 Torque [×10  3 N m]
+> Q2Q2, l= 0 Q2Q2, l= 1 Q2Q2, l= 2 Q3Q3, l= 0 Q3Q3, l= 1 0.16 0.18 0.20 1.2 1.4 1.6 (b) Re = 2000
+
+Figure 19: Torque analysis at the impeller for three-dimensional PBT mixer. 
+
+4.5.2. Energy Analysis 
+
+Similarly to the energy analysis presented in [75] for a turbulent Taylor-Couette flow case, we evaluate the numerical dissipation inherent to the FEM model herein presented. For a domain Ω, the rate of change of kinetic energy in the system normalized by the density ρ is given by [76]: 
+
+Z
+
+> Ω
+
+∂∂t 
+
+12u2
+
+
+
+dΩ = −
+
+Z
+
+> Ω
+
+∇ · (12u2u) dΩ −
+
+Z
+
+> Ω
+
+∇ · (p∗ u) dΩ + 
+
+Z
+
+> Ω
+
+p∗(∇ · u) dΩ
+
+−
+
+Z
+
+> Ω
+
+∇(τ · u) dΩ + 
+
+Z
+
+> Ω
+
+(τ : ∇u) dΩ, (49) where u is the magnitude of u and τ = −ν(∇u + ∇u⊤) is the deviatoric stress tensor. For a closed domain the first right-hand side (RHS) term is 33 zero, and the third RHS term is also zero for an incompressible flow; we can integrate by parts the remaining RHS terms. Multiplying (49) again by the density so that we recover the physical meaning of the energy balance, the equation reduces to: 
+
+Z
+
+> Ω
+
+∂∂t 
+
+12ρu 2
+
+
+
+dΩ
+
+| {z }
+
+> rate of kinetic energy
+
+= −
+
+Z
+
+> ∂Ω
+
+n · (ρ[τ + p∗] · u) d∂ Ω
+
+| {z }
+
+> power at the wall
+
++
+
+Z
+
+> Ω
+
+ρ(τ : ∇u) dΩ
+
+| {z }
+
+> viscous dissipation
+
+. (50) The first RHS term represents the power applied to the wall, while the second term indicates the viscous dissipation within the domain. To evaluate the magnitude of the numerical dissipation, we rewrite the energy balance in terms of a normalized positive residual εn, such that: 
+
+−εn = 1
+
+T
+
+Z 
+
+> Ω
+
+∂∂t 
+
+12u2
+
+
+
+dΩ + 
+
+Z
+
+> ∂Ω
+
+n · ([ τ + p∗] · u)d∂ Ω + 
+
+Z
+
+> Ω
+
+(−τ : ∇u)dΩ
+
+
+
+,
+
+(51) in which T is the torque power computed at tend for the finest mesh. Fig-ure 20 depicts εn over time; the observed numerical dissipation is around 
+
+2% for the coarsest Q2Q2 mesh, and it reaches approximately 1% for the finest meshes in both P = 2 , 3 cases. At tend = 0 .2 s, approximately 95% 
+
+of the system’s kinetic energy is achieved. Additional tests for a case with 
+
+Q1Q1 elements showed a numerical dissipation of ≈ 10% , which emphasizes the advantage of the high-order approximation. 0.00 0.05 0.10 0.15 0.20 Time [s] 0.00 0.01 0.02 0.03 0.04          
+
+> n [-]
+> Q2Q2
+> 0.00 0.05 0.10 0.15 0.20 Time [s] 0.01 0.02 0.03 0.04
+> n [-]
+> Q3Q3
+> l= 0 l= 1 l= 2
+
+Figure 20: Energy balance for three-dimensional PBT mixer at Re = 200 .
+
+34 As observed in Figure 20, the residual numerical dissipation levels off at around 1% for both P = 2 and P = 3 . To investigate the reason for this, additional tests were carried out by limiting the CFL to 0.5 and hence reducing the maximum time step by half. This change did indeed reduce the residual numerical dissipation, meaning that part of the remaining numerical error is related to the time discretization. Furthermore, the convergence of the individual terms in Eq. (51) might affect the overall convergence pattern. To this end, Figure 21 depicts the kinetic energy and the viscous dissipation rate. The mesh sensitivity of the two terms differs by one order of magnitude, highlighting how the behavior of each term contributes differently to the convergence of the energy balance residual. 0.00 0.03 0.05 0.08 0.10 0.12 0.15 0.18 0.20 Time [s] 0.000 0.025 0.050 0.075 0.100 0.125 0.150 0.175 Kinetic energy [J]                       
+
+> Q2Q2, l= 0 Q2Q2, l= 1 Q2Q2, l= 2 Q3Q3, l= 0 Q3Q3, l= 1 0.16 0.18 0.20 0.14 0.16 0.00 0.03 0.05 0.08 0.10 0.12 0.15 0.18 0.20 Time [s] 2345678910 Viscous dissipation [W]
+> Q2Q2, l= 0 Q2Q2, l= 1 Q2Q2, l= 2 Q3Q3, l= 0 Q3Q3, l= 1 0.16 0.18 0.20 4.0 4.2
+
+Figure 21: Kinetic energy (left) and viscous dissipation rate (right) for three-dimensional PBT mixer at Re = 200 .
+
+The energy balance is also analyzed at Re = 2000 , as depicted in Fig-ure 22 . At this turbulence level, the coarsest mesh ( l = 0 ) is not able to properly represent the flow and hence the linear solver diverges quickly. Nonetheless, results for the other two mesh levels yield satisfactory numer-ical dissipation results: around 10% for l = 1 and 3% for l = 2 with Q2Q2
+
+elements, and around 5% for l = 1 and Q3Q3 elements. Moreover, the maxi-mum CFL allowed in the simulation is 1, and tightening this restriction would reduce the time discretization error and hence the numerical dissipation (as noted for Re = 200 ). It is noteworthy that, while the mesh with refinement 
+
+l = 1 at Re = 2000 is converged with respect to the torque metric, the energy residual remains more mesh sensitive. 35 0.00 0.05 0.10 0.15 0.20 Time [s] 0.0 0.1 0.2 0.3          
+
+> n [-]
+> Q2Q2
+> 0.00 0.05 0.10 0.15 0.20 Time [s] 0.0 0.1 0.2 0.3
+> n [-]
+> Q3Q3
+> l= 1 l= 2 Figure 22: Energy balance for three-dimensional PBT mixer at Re = 2000 .
+
+4.5.3. Power Number Curve 
+
+Based on the mesh convergence study and the energy analysis, in this section we obtain the power number curve for the three-dimensional PBT mixer considering a mesh with Q2Q2 elements and refinement level l = 1 
+
+(see Table 5). Twenty-four sample points were chosen in the Reynolds num-ber interval [1 , 2 × 10 3]; the simulations were carried out in the Trillium cluster from the Digital Research Alliance of Canada [74]. The simulation time decreased with the Reynolds number; for Re ≥ 100 , the average total wallclock time is 5h, while for Re < 100 the average running time is 8h. The higher computational time required for low Re could be associated with the laminar nature of the problem. The impeller rotation is abruptly imposed at the first time step; when this boundary condition is associated with the low Re regime, which reaches a pseudo-steady state faster than at high Re , the linear solver requires more iterations to converge. 
+
+Figure 23 depicts the power number as a function of the Reynolds num-ber for the experimental [2] and numerical (MEM) results. A good agreement is observed, especially at higher Re . Previous authors reported numerical re-sults of the same problem configuration using a Nitsche Immersed Boundary (NIB) method [15], which are also included in Figure 23. The NIB and MEM curves are in very close agreement; the latter shows a slightly better estimation of the power number Np at 1 < Re < 100 and at Re > 500 
+
+approximately. In terms of the setup and corresponding wallclock time for both methods, the NIB results reported in [15] considered a matrix-based 36 solver with a Q1Q1 approximation. For a mesh with two million fluid cells and 120 thousand solid cells (i.e., impeller), corresponding to approximately 
+
+1.4M DoFs in total, the study was performed in three nodes of the Narval cluster (with 64 cores each). The comparison with the MEM model parame-ters herein adopted is summarized in Table 6. Even though the second-order approximation in the matrix-free solver increased significantly the number of degrees of freedom, the computational time was similar or even reduced in the MEM cases with Re > 15 . Furthermore, the NIB simulation did not present an energy balance analysis, and hence quantification of the energy dissipation within the system was not verified. 10 0 10 1 10 2 10 3     
+
+> Re [-] 10 0
+> 10 1
+> 10 2
+> Np [-]
+> 0.2 Pa s
+> 1.2 Pa s
+> 4.0 Pa s
+> 8.5 Pa s
+> 32.0 Pa s
+> NIB MEM
+> Figure 23: Power curve for three-dimensional PBT mixer; comparison of the MEM model with experimental results [2] (represented by the various markers for each viscosity value) and with a Nitsche Immersed Boundary (NIB) method [15].
+
+5. Conclusions and further research 
+
+A mortar element method within a matrix-free high-order framework was herein described and employed to simulate rotating mixing devices. The fluid 37 Table 6: Setup configuration and corresponding computational time for the three-dimensional PBT mixer example considering the Mortar Element Method (MEM) and the Nitsche Immersed Boundary (NIB) method results in [2]. The superscripts in the NIB case indicate the number of cells in the fluid (f ) and solid (s) domains. 
+
+Method Solver Degree Cells DoFs Cores Time [h] MEM matrix-free Q2Q2 252 k 8M 1 × 192 4.5 to 12 NIB matrix-based Q1Q1 2M(f )+120 k(s) 1.4M 3 × 64 7.5 to 12.5 domain was discretized using a CG formulation, while the mortar interface was represented with a DG framework. Continuity at such interface was imposed through a weak formulation of boundary integrals and employing a Symmetric Interior Penalty Galerkin method. An Arbitrary Lagrangian-Eulerian approach was used to account for the relative motion of the rotor and stator domains. Two-dimensional examples were used to verify the convergence rate of the MEM matrix-free model. Both steady and transient cases yielded opti-mal rates for velocity and pressure fields, recovering the same order as in a standard (non-mortar) case. Regardless of the rotation angle, the geometric misalignment generated at the interface does not lead to loss of convergence properties. A three-dimensional steady case was used to evaluate the scala-bility of the model. When the problem is sufficiently large for the number of computing cores used, a good strong scalability is achieved. Moreover, improving the load balancing of the mortar cells did not decrease computing time significantly. A two-dimensional Rushton mixer case validated the matrix-free MEM model against existing numerical results, and the presented torque analysis showed the expected convergence. Furthermore, a three-dimensional PBT mixer example validated the model against experimental results, where the MEM power number curve showed great agreement over the Re experimen-tal range. An energy analysis was also performed, in which the numerical dissipation introduced by the model was quantified. The converged meshes yielded ∼ 1% numerical dissipation at Re = 200 and 10% at Re = 2000 ,and thus the implicit Large Eddy Simulation (LES) model herein employed is able to very accurately solve transitional/early turbulent flows. Future work encompasses the simulation of other devices with more com-plex geometries and/or flow patterns to showcase the suitability of the de-veloped matrix-free MEM model to a wide range of engineering applications. 38 A current limitation of the model is the restriction of equal-sized cells at the interface. It could be advantageous, however, to allow an unstructured mesh as well as a varying interface radius so that meshing of more complex geometries is simplified; this will be addressed in future model extensions. Upcoming studies also comprise the extension of the model to couple other physics such as particle transport within a fluid. 
+
+Acknowledgments 
+
+The authors acknowledge collaboration with the deal.II community, and the technical support and computing time provided by the Digital Research Alliance of Canada and Calcul Québec. The authors also acknowledge the financial support of Médicament Québec and the Quebec Consortium for Drug Discovery (CQDM) through the ARENA program, managed by the CQDM. Bruno Blais acknowledges financial support from the Natural Sci-ences and Engineering Research Council of Canada (NSERC) through the RGPIN-2020-04510 Discovery Grant and the funding from the Multiphysics Multiphase Intensification Automatization Workbench (MMIAOW) Cana-dian Research Chair Level 2 in computer-assisted design and scale-up of alter-native energy vectors for sustainable chemical processes (CRC-2022-00340). 39 References 
+
+[1] P. Oxley, C. Brechtelsbauer, F. Ricard, N. Lewis, C. Ramshaw, Evalu-ation of spinning disk reactor technology for the manufacture of phar-maceuticals, Industrial & engineering chemistry research 39 (7) (2000) 2175–2182. doi:10.1021/ie990869u. [2] B. Blais, M. Lassaigne, C. Goniva, L. Fradette, F. Bertrand, Asemi-implicit immersed boundary method and its application to vis-cous mixing, Computers & Chemical Engineering 85 (2016) 136–146. doi:10.1016/j.compchemeng.2015.10.019. [3] F. Zahle, N. N. Sørensen, J. Johansen, Wind turbine rotor-tower in-teraction using an incompressible overset grid method, Wind Energy: An International Journal for Progress and Applications in Wind Power Conversion Technology 12 (6) (2009) 594–619. doi:10.1002/we.327. [4] C. Rauwendaal, Mixing in polymer processing, Vol. 23, CRC Press, 1991. [5] D. Zou, J. Li, J. Deng, Y. Jin, M. Chen, Continuous preparation of size-controllable BaTiO3 nanoparticles in a rotor–stator spinning disk reactor, Industrial & Engineering Chemistry Research 60 (40) (2021) 14511–14518. doi:10.1021/acs.iecr.1c02152. [6] P. J. Cullen, Food mixing: Principles and applications, John Wiley & Sons, 2009. [7] C. Mavriplis, Nonconforming discretizations and a posteriori error es-timators for adaptive spectral element techniques, Ph.D. thesis, Mas-sachusetts Institute of Technology (1989). [8] C. Bernardi, Y. Maday, A. T. Patera, Domain decomposition by the mortar element method, in: Asymptotic and numerical methods for partial differential equations with critical parameters, Springer, 1993, pp. 269–286. [9] F. B. Belgacem, Y. Maday, The mortar element method for three dimen-sional finite elements, ESAIM: Mathematical Modelling and Numerical Analysis 31 (2) (1997) 289–302. doi:10.1051/m2an/1997310202891. 40 [10] B. E. Merrill, Y. T. Peet, P. F. Fischer, J. W. Lottes, A spectrally accurate method for overlapping grid solution of incompressible navier– stokes equations, Journal of Computational Physics 307 (2016) 60–93. doi:10.1016/j.jcp.2015.11.057. [11] A. Hegazy, D. Shaver, R. Uddin, A. Novak, Immersed Boundary Meth-ods for the NekRS Spectral Element Navier-Stokes Solver, Available at SSRN 6834480. [12] K. Karimian, F. Sewerin, A finite volume mesh-tying method for com-puting flows in rotor-stator configurations, Journal of Computational Physics 531 (2025) 113863. doi:10.1016/j.jcp.2025.113863. [13] J. B. Joshi, N. K. Nere, C. V. Rane, B. Murthy, C. S. Math-pati, A. W. Patwardhan, V. V. Ranade, CFD simulation of stirred tanks: Comparison of turbulence models. Part I: Radial flow impellers, The Canadian Journal of Chemical Engineering 89 (1) (2011) 23–82. doi:10.1002/cjce.20446. [14] E. Burman, M. A. Fernández, Explicit strategies for incompressible fluid-structure interaction problems: Nitsche type mortaring versus Robin–Robin coupling, International Journal for Numerical Methods in Engineering 97 (10) (2014) 739–758. doi:10.1002/nme.4607. [15] J. Joachim, C.-A. Daunais, V. Bibeau, L. Heltai, B. Blais, A par-allel and adaptative Nitsche immersed boundary method to simulate viscous mixing, Journal of Computational Physics 488 (2023) 112189. doi:10.1016/j.jcp.2023.112189. [16] L. Barbeau, S. Golshan, J. Deng, S. Étienne, C. Béguin, B. Blais, High-order moving immersed boundary and its application to a re-solved CFD-DEM model, Computers & Fluids 268 (2024) 106094. doi:10.1016/j.compfluid.2023.106094. [17] F. B. Belgacem, Y. Maday, Non-conforming spectral method for second order elliptic problems in 3d, East-West J. Numer. Math 1 (4) (1993) 235–251. [18] H. Feng, C. Mavriplis, R. Van der Feng, R. Biswas, Parallel 3D mortar element method for adaptive nonconforming meshes, Journal of Scien-tific Computing 27 (1) (2006) 231–243. doi:10.1007/s10915-005-9026-z. 41 [19] S. M. Aouadi, C. Bernardi, J. Satouri, Mortar spectral element dis-cretization of the Stokes problem in axisymmetric domains, Numer-ical Methods for Partial Differential Equations 30 (1) (2014) 44–73. doi:10.1002/num.21794. [20] G. S. Abdoulaev, Y. Achdou, Y. A. Kuznetsov, C. Prud’Homme, On a parallel implementation of the mortar element method, ESAIM: Math-ematical Modelling and Numerical Analysis 33 (2) (1999) 245–259. doi:10.1051/m2an:1999113. [21] F. Ben Belgacem, Y. Maday, Coupling spectral and finite elements for second order elliptic three-dimensional equations, SIAM journal on numerical analysis 36 (4) (1999) 1234–1263. doi:10.1137/S0036142997319194. [22] C. Bernardi, N. Debit, Y. Maday, Coupling finite element and spectral methods: First results, Mathematics of Computation 54 (189) (1990) 21–39. doi:10.2307/2008680. [23] Y. Achdou, O. Pironneau, A fast solver for Navier–Stokes equations in the laminar regime using mortar finite element and boundary element methods, SIAM journal on numerical analysis 32 (4) (1995) 985–1016. doi:10.1137/0732046. [24] F. B. Belgacem, P. Hild, P. Laborde, The mortar finite element method for contact problems, Mathematical and Computer Modelling 28 (4-8) (1998) 263–271. doi:10.1016/S0895-7177(98)00121-6. [25] M. A. Puso, T. A. Laursen, A mortar segment-to-segment contact method for large deformation solid mechanics, Computer Methods in Applied Mechanics and Engineering 193 (6-8) (2004) 601–629. doi:10.1016/j.cma.2003.10.010. [26] C. Wilking, M. Bischoff, Alternative integration algorithms for three-dimensional mortar contact, Computational Mechanics 59 (2) (2017) 203–218. doi:10.1007/s00466-016-1345-4. [27] P. Farah, W. Wall, A. Popp, A mortar finite element approach for point, line, and surface contact, International Journal for Numerical Methods in Engineering 114 (3) (2018) 255–291. doi:10.1002/nme.5743. 42 [28] B. Yang, T. A. Laursen, X. Meng, Two dimensional mortar contact methods for large deformation frictional sliding, International Jour-nal for Numerical Methods in Engineering 62 (9) (2005) 1183–1225. doi:10.1002/nme.1222. [29] F. P. Baaijens, A fictitious domain/mortar element method for fluid–structure interaction, International Journal for Numerical Methods in Fluids 35 (7) (2001) 743–761. doi:10.1002/1097-0363(20010415)35:7<743::AID-FLD109>3.0.CO;2-A. [30] N. Hagmeyer, M. Mayr, A. Popp, A fully coupled regularized mortar-type finite element approach for embedding one-dimensional fibers into three-dimensional fluid flow, International Journal for Numerical Meth-ods in Engineering 125 (8) (2024) e7435. doi:10.1002/nme.7435. [31] A. Popp, M. Gitterle, M. W. Gee, W. A. Wall, A dual mortar approach for 3D finite deformation contact with consistent linearization, Inter-national Journal for Numerical Methods in Engineering 83 (11) (2010) 1428–1465. doi:10.1002/nme.2866. [32] A. Popp, B. I. Wohlmuth, M. W. Gee, W. A. Wall, Dual quadratic mortar finite element methods for 3D finite deformation contact, SIAM Journal on Scientific Computing 34 (4) (2012) B421–B446. doi:10.1137/110848190. [33] J. D. Sanders, T. A. Laursen, M. A. Puso, A Nitsche embed-ded mesh method, Computational Mechanics 49 (2) (2012) 243–257. doi:10.1007/s00466-011-0641-2. [34] R. Stenberg, Mortaring by a method of JA Nitsche, Computational Me-chanics – New Trends and Applications. CIMNE, Barcelona (1998). [35] T. Gustafsson, R. Stenberg, J. Videman, Error analysis of Nitsche’s mortar method, Numerische Mathematik 142 (4) (2019) 973–994. doi:10.1007/s00211-019-01039-5. [36] T. Gustafsson, R. Stenberg, J. Videman, On Nitsche’s method for elastic contact problems, SIAM Journal on Scientific Computing 42 (2) (2020) B425–B446. doi:10.1137/19M1246869. 43 [37] A. Bansal, N. A. Barnafi, D. N. Pandey, R. Ruiz-Baier, A Nitsche method for Navier–Stokes/generalized poroelasticity interface problems, arXiv preprint arXiv:2508.09388 (2025). [38] L. Formaggia, F. Gatti, S. Zonca, An XFEM/DG approach for fluid-structure interaction problems with contact, Applications of Mathemat-ics 66 (2) (2021) 183–211. doi:10.21136/AM.2021.0310-19. [39] S. Bertoluzza, M. Pennacchio, C. Prud’Homme, A. Samake, Sub-structuring preconditioners for h-p mortar FEM, ESAIM: Mathe-matical Modelling and Numerical Analysis 50 (4) (2016) 1057–1082. doi:10.1051/m2an/2015065. [40] J. Dürrwächter, M. Kurz, P. Kopper, D. Kempf, C.-D. Munz, A. Beck, An efficient sliding mesh interface method for high-order discon-tinuous Galerkin schemes, Computers & Fluids 217 (2021) 104825. doi:10.1016/j.compfluid.2020.104825. [41] M. A. Kopera, F. X. Giraldo, Mass conservation of the unified continuous and discontinuous element-based Galerkin methods on dynamically adaptive grids with application to atmospheric sim-ulations, Journal of Computational Physics 297 (2015) 90–103. doi:10.1016/j.jcp.2015.05.010. [42] E. Ferrer, R. H. Willden, A high order discontinuous Galerkin– Fourier incompressible 3D Navier–Stokes solver with rotating sliding meshes, Journal of Computational Physics 231 (21) (2012) 7037–7056. doi:10.1016/j.jcp.2012.04.039. [43] E. Laughton, Enabling efficient high-fidelity computational fluid dynam-ics (CFD) for moving geometries, Ph.D. thesis, University of Exeter (2024). [44] C. W. Hirt, A. A. Amsden, J. Cook, An arbitrary Lagrangian-Eulerian computing method for all flow speeds, Journal of computational physics 14 (3) (1974) 227–253. doi:10.1016/0021-9991(74)90051-5. [45] C. S. Venkatasubban, A new finite element formulation for ALE (Arbitrary Lagrangian Eulerian) compressible fluid mechanics, Inter-national journal of engineering science 33 (12) (1995) 1743–1762. doi:10.1016/0020-7225(95)00021-O. 44 [46] F. Duarte, R. Gormaz, S. Natesan, Arbitrary Lagrangian–Eulerian method for Navier–Stokes equations with moving boundaries, Com-puter Methods in Applied Mechanics and Engineering 193 (45-47) (2004) 4819–4836. doi:10.1016/j.cma.2004.05.003. [47] S. Dutta, M. Agrawal, C. Jog, A monolithic, ALE finite-element-based strategy for partially submerged solids in an incompressible fluid flow using the mortar method, Journal of Fluids and Structures 115 (2022) 103780. doi:10.1016/j.jfluidstructs.2022.103780. [48] X. Zhao, C. Chen, Mortar finite element method for the coupling of time dependent Navier-Stokes and Darcy equations, Communications in Computational Physics 37 (3) (2025) 701–739. doi:10.4208/cicp.OA-2023-0009. [49] M. Mayr, A. Popp, Scalable computational kernels for mortar finite element methods, Engineering with Computers 39 (5) (2023) 3691–3720. doi:10.1007/s00366-022-01779-3. [50] N. Krais, A. Beck, T. Bolemann, H. Frank, D. Flad, G. Gassner, F. Hin-denlang, M. Hoffmann, T. Kuhn, M. Sonntag, et al., Flexi: A high order discontinuous galerkin framework for hyperbolic–parabolic conservation laws, Computers & Mathematics with Applications 81 (2021) 186–219. doi:10.1016/j.camwa.2020.05.004. [51] S. A. Orszag, Spectral methods for problems in complex geo-metrics, Journal of Computational Physics 37 (1) (1990) 70–92. doi:10.1016/0021-9991(80)90005-4. [52] M. Kronbichler, W. A. Wall, A performance comparison of continu-ous and discontinuous Galerkin methods with fast multigrid solvers, SIAM Journal on Scientific Computing 40 (5) (2018) A3423–A3448. doi:10.1137/16M110455X. [53] L. Prieto Saavedra, P. Munch, B. Blais, A matrix-free stabilized solver for the incompressible Navier-Stokes equations, Journal of Computa-tional Physics 538 (2025) 114186. doi:10.1016/j.jcp.2025.114186. [54] N. Fehn, W. A. Wall, M. Kronbichler, A matrix-free high-order dis-continuous Galerkin compressible Navier-Stokes solver: A performance 45 comparison of compressible and incompressible formulations for turbu-lent incompressible flows, International Journal for Numerical Methods in Fluids 89 (3) (2019) 71–102. doi:10.1002/fld.4683. [55] Z. J. Wang, K. Fidkowski, R. Abgrall, F. Bassi, D. Caraeni, A. Cary, H. Deconinck, R. Hartmann, K. Hillewaert, H. T. Huynh, et al., High-order CFD methods: current status and perspective, Interna-tional Journal for Numerical Methods in Fluids 72 (8) (2013) 811–845. doi:10.1002/fld.3767. [56] B. Zhang, C. Liang, A simple, efficient, and high-order accurate curved sliding-mesh interface approach to spectral difference method on coupled rotating and stationary domains, Journal of Computational Physics 295 (2015) 147–160. doi:10.1016/j.jcp.2015.04.006. [57] A. Alphonius, L. Barbeau, B. Blais, O. Gaboriault, O. Guévremont, J. Lamouche, P. Laurentin, O. Marquis, P. Munch, V. Oliveira Fer-reira, et al., Lethe 1.0: An open-source high-performance and high-order computational fluid dynamics software for single and multiphase flows, Computer Physics Communications (2025) 109880. [58] D. Arndt, W. Bangerth, D. Davydov, T. Heister, L. Heltai, M. Kronbich-ler, M. Maier, J.-P. Pelteret, B. Turcksin, D. Wells, The deal.II finite ele-ment library: Design, features, and insights, Computers & Mathematics with Applications 81 (2021) 407–422. doi:10.1016/j.camwa.2020.02.022. [59] D. Arndt, W. Bangerth, M. Bergbauer, B. Blais, M. Fehling, R. Gassmöller, T. Heister, L. Heltai, M. Kronbichler, M. Maier, et al., The deal. ii library, version 9.7, Journal of Numerical Mathematics 33 (4) (2025) 403–415. doi:10.1515/jnma-2025-0115. [60] M. G. Larson, F. Bengzon, The finite element method: theory, im-plementation, and applications, Vol. 10, Springer Science & Business Media, 2013. [61] P. Munch, T. Heister, L. Prieto Saavedra, M. Kronbichler, Efficient distributed matrix-free multigrid methods on locally refined meshes for FEM computations, ACM Transactions on Parallel Computing 10 (1) (2023) 1–38. doi:10.1145/3580314. 46 [62] N. Fehn, W. A. Wall, M. Kronbichler, Efficiency of high-performance dis-continuous Galerkin spectral element methods for under-resolved turbu-lent incompressible flows, International Journal for Numerical Methods in Fluids 88 (1) (2018) 32–54. doi:10.1002/fld.4511. [63] N. Fehn, Robust and efficient discontinuous Galerkin methods for incom-pressible flows, Ph.D. thesis, Technische Universität München (2021). [64] D. N. Arnold, An interior penalty finite element method with discon-tinuous elements, SIAM journal on numerical analysis 19 (4) (1982) 742–760. [65] D. N. Arnold, F. Brezzi, B. Cockburn, L. D. Marini, Uni-fied analysis of discontinuous galerkin methods for elliptic prob-lems, SIAM journal on numerical analysis 39 (5) (2002) 1749–1779. doi:10.1137/S0036142901384162. [66] K. Hillewaert, Development of the discontinuous Galerkin method for high-resolution, large scale CFD and acoustics in industrial geometries, Ph.D. thesis, Université de Louvain (2013). [67] T. E. Tezduyar, Stabilized finite element formulations for incompress-ible flow computations, Advances in Applied Mechanics 28 (1991) 1–44. doi:10.1016/S0065-2156(08)70153-4. [68] C. Burstedde, L. C. Wilcox, O. Ghattas, p4est: Scalable algorithms for parallel adaptive mesh refinement on forests of octrees, SIAM Journal on Scientific Computing 33 (3) (2011) 1103–1133. doi:10.1137/100791634. [69] M. A. Heroux, R. A. Bartlett, V. E. Howle, R. J. Hoekstra, J. J. Hu, T. G. Kolda, R. B. Lehoucq, K. R. Long, R. P. Pawlowski, E. T. Phipps, et al., An overview of the trilinos project, ACM Trans-actions on Mathematical Software (TOMS) 31 (3) (2005) 397–423. doi:10.1145/1089014.1089021. [70] J. Heinz, P. Munch, M. Kaltenbacher, High-order non-conforming dis-continuous Galerkin methods for the acoustic conservation equations, International Journal for Numerical Methods in Engineering 124 (9) (2023) 2034–2049. doi:10.1002/nme.7199. 47 [71] M. Bergbauer, P. Munch, W. A. Wall, M. Kronbichler, High-performance matrix-free unfitted finite element operator evaluation, SIAM Journal on Scientific Computing 47 (3) (2025) B665–B689. doi:10.1137/24M1653689. [72] P. Wesseling, C. W. Oosterlee, Geometric multigrid with applica-tions to computational fluid dynamics, Journal of Computational and Applied Mathematics 128 (1-2) (2001) 311–334. doi:10.1016/S0377-0427(00)00517-3. [73] O. C. Zienkiewicz, R. L. Taylor, P. Nithiarasu, J. Zhu, The finite element method, Vol. 3, Elsevier, 1977. [74] Digital Research Alliance of Canada, Trillium documentation, https: //docs.alliancecan.ca/wiki/Trillium , Last accessed 17 December 2025 (2025). [75] L. Prieto Saavedra, J. Archambault, P. Munch, B. Blais, An implicit large-eddy simulation study of the turbulent Taylor-Couette flow with an inner rotating cylinder, Journal of Turbulence 26 (6-7) (2025) 219– 233. doi:10.1080/14685248.2025.2524336. [76] R. B. Bird, W. E. Stewart, E. N. Lightfoot, Transport Phenomena, John Wiley & Sons, 2002. 48

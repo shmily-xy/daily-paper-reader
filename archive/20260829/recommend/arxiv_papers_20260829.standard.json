@@ -1,0 +1,57 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-08-29T03:30:59.938625+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 0,
+    "quick_skim_target": 11,
+    "quick_selected": 0
+  },
+  "deep_dive": [
+    {
+      "id": "2608.27423v1",
+      "source": "arxiv",
+      "title": "High-order stabilized matrix-free simulation of rotating mixing devices using the Mortar Element Method",
+      "abstract": "We present a finite element framework to simulate rotating mixing devices using the Mortar Element Method as a domain decomposition strategy. The model is implemented within a matrix-free Navier-Stokes framework which uses a high-order Continuous Galerkin method. The discretized domain is subdivided into rotor and stator parts. An Arbitrary Lagrangian-Eulerian approach accounts for the relative rotor-stator motion, and stabilization is ensured through the Streamline-Upwind/Petrov-Galerkin and Pressure-Stabilizing Petrov-Galerkin methods. The rotor-stator domains are connected by an interface composed of mortar cells, and continuity is weakly enforced in a Discontinuous Galerkin fashion by accounting for boundary integrals at the rotor-stator interface. Verifications of the convergence order in two-dimensional steady and transient examples report optimal rates. The geometric non-conformity created at the mortar interface due to rotor rotation does not introduce significant error in the solution. A three-dimensional example is used to investigate the model's scalability, which yields ideal strong scaling for large problems. A two-dimensional Rushton impeller example uses a torque analysis to showcase the mesh convergence, and the corresponding velocity profile is in agreement with existing numerical results. In a three-dimensional pitched blade turbine case, the power number curve (Np vs Re) shows good agreement with experimental data for Reynolds number values from 1 to 2000. An energy balance analysis reports a numerical dissipation of 1% for Re=200 and of 10% for Re=2000. By exploiting modern hardware capabilities through matrix-free methods, the proposed model is a robust, accurate, and efficient framework suitable for simulating flows with rotating geometries.",
+      "authors": [
+        "B. Campos",
+        "P. Munch",
+        "V. O. Ferreira",
+        "D. C. Boffito",
+        "X. Banquy",
+        "B. Blais"
+      ],
+      "primary_category": "physics.flu-dyn",
+      "categories": [
+        "physics.flu-dyn",
+        "math.NA"
+      ],
+      "published": "2026-08-27T17:48:45+00:00",
+      "link": "https://arxiv.org/pdf/2608.27423v1",
+      "tags": [
+        "keyword:equipment",
+        "query:equipment"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Simulation of rotating mixing devices relevant to planetary and dispersion mixers",
+      "llm_evidence_cn": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
+      "llm_evidence": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
+      "canonical_evidence": "旋转混合设备的模拟，与双行星和分散搅拌机相关",
+      "llm_tldr_en": "A finite element framework using mortar elements simulates rotating mixing devices, modeling rotor-stator interaction for high-order stabilized Navier-Stokes solutions.",
+      "llm_tldr_cn": "旋转混合设备在工业中广泛使用，但其内部流动和混合机理难以直接观测。该论文提出一种基于Mortar单元法的有限元框架，将计算域划分为转子和定子，通过任意拉格朗日-欧拉法处理相对运动。采用无矩阵高阶连续伽辽金法求解Navier-Stokes方程，并结合SUPG/PSPG稳定化。该方法可用于分析双行星搅拌釜和高速分散机等旋转混合设备的混合机理，为设备设计提供仿真工具。",
+      "llm_tldr": "旋转混合设备在工业中广泛使用，但其内部流动和混合机理难以直接观测。该论文提出一种基于Mortar单元法的有限元框架，将计算域划分为转子和定子，通过任意拉格朗日-欧拉法处理相对运动。采用无矩阵高阶连续伽辽金法求解Navier-Stokes方程，并结合SUPG/PSPG稳定化。该方法可用于分析双行星搅拌釜和高速分散机等旋转混合设备的混合机理，为设备设计提供仿真工具。",
+      "llm_tags": [
+        "query:equipment"
+      ],
+      "matched_query_tag": "query:equipment",
+      "matched_query_text": "mixing mechanism in double planetary and dispersion mixer",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": []
+}
