@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-09-21T22:28:00.124194+00:00",
-  "updated_date": "20260921",
+  "generated_at": "2026-09-22T22:07:13.935663+00:00",
+  "updated_date": "20260922",
   "carryover_days": 9,
   "tag_states": {
     "equipment": {
-      "updated_date": "20260921",
+      "updated_date": "20260922",
       "carryover_days": 9,
       "items": []
     }
